@@ -1,10 +1,19 @@
+<div align="center">
+
 # 大师.skill
 
-> 你想蒸馏的下一个员工，何必是同事，何必是名人。蒸馏一个**行业**。
+### *你不再需要学习和寻找任何 skill。*
+### *只需要大师.skill — 任何行业，它都为你蒸馏出一套最先进、最适合你的 skill。*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-teal)](https://github.com/voidborne-d/master-skill)
+[![Codex](https://img.shields.io/badge/Codex-Skill-black)](https://github.com/voidborne-d/master-skill)
 [![Status](https://img.shields.io/badge/status-v0.1--draft-orange)]()
+
+</div>
+
+> 你想蒸馏的下一个员工，何必是同事，何必是名人。蒸馏一个**行业**。
 
 输入一个行业，自动完成：
 
