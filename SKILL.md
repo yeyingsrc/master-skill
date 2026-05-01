@@ -185,7 +185,16 @@ iter 4 figures 跑通后发现：6 轨之间互相是 bootstrap 输入。Track 0
 
 每个 wave 内可并行启动 subagent。Wave 之间串行，但每 wave 跑完不阻塞用户 —— 模型并行 swarm 的内部时间预算 ≤ 3 min / wave，整体 Phase 1 应在 10-15 min 内拿到完整 6 个 research note 文件。
 
-如果某 wave 内某 track 失败（5 min 没产出有效 source），不阻塞下一 wave。下一 wave 的 seed 来源会少一个输入，subagent 自动 fallback 到「直接 web search 兜底」（每个 track 模板第一步都有兜底路径）。
+**Wave seed fallback 统一规则**（findings iter 7+8 unified）：
+
+| 上 wave 总产出 seed 数 | 下 wave 启动策略 |
+|---------------------|----------------|
+| ≥ 8 seeds | 正常启动，按 seed 撒大网 |
+| 5-7 seeds | 警告但启动，subagent 模板被指示「seed 偏少，加权 web search 兜底」 |
+| 1-4 seeds | 启动前先回头检查上 wave subagent 是否还在跑 / 是否失败；如确定失败 → 启动当前 wave 但**降级**为「半 seeded 半 web search」 |
+| 0 seeds | **STOP**，向用户报告：「上 wave 信号 0，可能行业极冷僻 / 闭源主导 / 输入有误。要继续吗？」用户决定 (a) 等待重试 (b) 切纯 web search 模式 (c) 收回 industry 重新选 |
+
+如果某 wave 内某 track 失败（5 min 没产出有效 source），不阻塞下一 wave，但 seed 总数减少。子 wave 自动按上表表行降级。
 
 启动 wave 1 的 3 个 subagent；Wave 1 完成后启动 wave 2 的 2 个；Wave 2 完成后启动 Wave 3 的 1 个。每个 subagent 任务模板（以 Track A 为例）：
 

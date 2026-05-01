@@ -81,10 +81,14 @@
 - **核心论点 (3-5)**: 这本书的主要 takeaways
 - **读完得到什么**: {{读者读完应该能做什么 / 知道什么}}
 - **难度**: 入门 / 进阶 / 高阶专家
-- **Endorsement evidence**: 至少 3 处独立 endorsement
-  - {{figure A 在 podcast XX 推荐: URL}}
-  - {{conference talk 引用: URL}}
-  - {{大学课程 reading list: URL}}
+- **Endorsement evidence**: 至少 3 处独立 endorsement，**每条标 type**（影响权重）：
+  - `[type: figure_long]` figure A 在 ≥30min podcast / blog 中具体推荐 + 给理由 — **权重最高**
+  - `[type: figure_short]` figure 短推（tweet / quick mention）— 权重中
+  - `[type: course_syllabus]` 大学 / 公开课程 reading list — 权重中
+  - `[type: conf_citation]` conference talk slide / 引用 — 权重中
+  - `[type: blog_secondary]` 第三方教程 / 推荐文章 — 权重低
+  Endorsement 总数要求 ≥ 3，但**至少 1 条必须是 `figure_long` 或 `course_syllabus`**（避免全是 short / blog 这种轻量推荐就过关）
+- **是否被新版 supersede**（iter 9 finding 修正）：如果同作者 / 同主题在 ≤ 4 年内出了显著更新版本（≠ 简单 reprint）→ 标 `superseded_by: {{new title + year}}` 并 DROP 老版条目；除非老版的教学路径仍有独立价值（例：旧版讲的是 pre-LLM era 的核心方法，新版没覆盖）。判定：写一句「为什么旧版仍值得读」，写不出来就 DROP
 - **替代品**: 类似主题但 alternative 视角的书
 - **如果可以只读 1 章**: 推荐 chapter
 - **可信度**: high / medium / low
@@ -116,9 +120,9 @@
 
 - **Lecturer**: {{name}}（与 Track 01 关联）
 - **Institution**: {{}}
-- **Format**: 讲座视频 / 互动 lab / 阅读 + 讨论
-- **Duration**: {{N hours / weeks}}
-- **Year + 最近更新**: {{YYYY-MM}}
+- **Format**: 讲座视频 / 互动 lab / 阅读 + 讨论 / **rolling**（持续更新而非一次性）
+- **Duration**: {{N hours / weeks}}（rolling 格式填 "rolling, ~N hours / month new content"）
+- **Year + 最近更新**: {{YYYY-MM}}（rolling 格式填 `rolling, last 3 months key content: {{摘要}}`）
 - **One-liner**:
 - **完整路径 vs 关键章节**: 完整学完 vs 只看 X / Y / Z 章节的差异
 - **难度 / 先修要求**:
@@ -132,8 +136,11 @@
 ```markdown
 ### 💡 {{N. 概念名}}
 
+- **Tier** (iter 9 finding 修正): `tier-1` (核心，所有从业者必懂，10-15 个) / `tier-2` (周边，资深者熟知，5-15 个)
 - **One-liner**: 一句话定义
-- **来源**: 第一次提出这个概念的论文 / 书 / 人
+- **来源** (支持单 / 多 origin):
+  - 单一来源：`{{paper / book / 人 + 年份}}`
+  - 多 origin（如 RAG 这种「主奠基论文 + 后续显著扩展」）：列 `[primary]` + 1-3 个 `[significant follow-up]`
 - **关联概念**: 与之相邻 / 相对 / 相辅的概念
 - **行业内的当前理解 vs 原始定义**: 是否有演化？
 - **为什么进入 canon**: 这个概念解决了什么问题，为什么大家都在用
