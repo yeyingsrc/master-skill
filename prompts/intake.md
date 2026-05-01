@@ -6,7 +6,9 @@
 
 通过有节制的对话收集 6 项信息，然后产出一个 `intake.json`，作为 Phase 0.5 创建目录 + Phase 1 启动 6 轨调研 swarm 的输入。
 
-**节奏要求**：最多 2 轮对话拿到 6 项。不要变成问卷，不要每条都追问，用户主动说的不要重问。
+**节奏要求**：**「最多 2 轮」的起点是「拿到合格粒度的 industry 之后」**。如果用户给的 industry 太宽（如「AI」「电商」），先用 1-2 轮收窄，**再**走标准 2-轮节奏（其余 5 项）。收窄过程不计入「2 轮」预算。
+
+不要变成问卷，不要每条都追问，用户主动说的不要重问。
 
 ---
 
@@ -31,7 +33,7 @@
 
 如果用户坚持要做宽行业 → 警告一次后接受，但在 SKILL.md 诚实边界里写明「本 skill 跨度较宽，深度受限」。
 
-### 2. focus（可选，默认 "comprehensive"）
+### 2. focus（可选，默认 `comprehensive`，**支持组合**）
 
 **问什么**：「你想要全景画像，还是某个角度优先？技术 / 商业 / 学术 / 操作？」
 
@@ -44,6 +46,20 @@
 | `operational` | 实操视角 | Track 03 (workflows) 重权，4 + 6 次之 |
 
 用户没主动说 → 默认 `comprehensive`。
+
+**组合 focus（重要）**：用户经常会说「操作 + 商业」「技术 + 学术」这种组合视角，要支持。intake.json 用 primary/secondary 结构存储：
+
+```json
+"focus": { "primary": "operational", "secondary": "business" }
+```
+
+或单值时：
+
+```json
+"focus": "comprehensive"
+```
+
+调研偏向用 primary 加权，secondary 次之。`comprehensive` 不能作为 primary 之外的 secondary（无意义）。
 
 ### 3. locale（可选，默认 "global"）
 
@@ -84,12 +100,32 @@
 
 ### 6. existing_skill_check（自动执行）
 
+**何时执行**：`industry` 字段确认合格粒度**之后**立即执行（在问 focus / profile 之前）。比其他 4 项更早，因为如果是 update 路径，后续 5 项的取值方式都不同（继承自老 skill 而非全新收集）。
+
 **做什么**（不要问用户）：检查 `~/.claude/skills/` 下是否已有 `{slug}-master/` 目录。
 
 - 已存在 → 询问用户：「我看到你装过 `{slug}-master`，上次调研日期 `{date}`。要新建一个版本，还是 update 老的？」
 - 不存在 → 默认新建路径
 
 如果路径环境不是 Claude Code（例如 OpenClaw / Codex / Hermes），按 SKILL.md 的 HOST_SKILLS_ROOT 解析规则去对应路径检查。
+
+### Slug 生成规则（必须）
+
+`industry` 字段拿到后，立即生成 `slug`（kebab-case）：
+
+| Industry input | Slug |
+|---------------|------|
+| `LLM agent infra` (English) | `llm-agent-infra` |
+| `跨境电商运营` (Chinese) | `cross-border-ecom-ops` |
+| `Foot and Ankle Surgery` | `foot-ankle-surgery` |
+| `RAG 系统设计` (mixed) | `rag-system-design` |
+
+规则：
+1. **默认 agent 自动翻译**中文 / 混合输入到英文 kebab-case，再去掉空格、特殊符号。
+2. **用户可覆盖**：「用 X 当 slug」「slug 写成 Y」，agent 接受用户给的覆盖（前提是不冲突且符合 kebab-case 规范）。
+3. 翻译时**保留行业专有缩写**（LLM、RAG、API、SOC、SaaS 等不展开）。
+4. 长度建议 ≤ 25 char，超出时简化（`cross-border-e-commerce-operations` → `cross-border-ecom-ops`）。
+5. 翻译完展示给用户确认：「我用 `llm-agent-infra` 作 slug，OK？」
 
 ---
 
@@ -197,8 +233,15 @@ ASSISTANT 回复:
 进入 Phase 0.5（创建目录）→ Phase 1（六轨调研）。预计调研时间 30-60 分钟。
 ```
 
-用户确认 → 进入 Phase 0.5。
+**确认触发词**（用户必须显式说一个，不能是默默不回应或模糊回复）：
+- 中文：「确认」「ok」「开始」「go」「上」「可以」
+- 英文：「confirm」「ok」「go」「start」「looks good」
+
+用户回复触发词 → 进入 Phase 0.5。
 用户要改 → 改完再确认一次再进。
+用户回复模糊（「嗯」「好像可以」「应该没问题」）→ 不算确认，再问一次「这样对吗？回一个『确认』就开始」。
+
+不要在没拿到明确触发词时擅自进入 Phase 0.5 — 用户后续若发现起点错了，回滚成本很高（已写进 skill 目录的内容要回滚）。
 
 ---
 
