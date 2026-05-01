@@ -41,9 +41,13 @@ description: |
   {{industry-cn-name}} ({{industry-en-name}}) Master OS — {{one-sentence value prop, e.g. "automated mastery of LLM agent infrastructure: top builders' mental models, tool stack, current workflows, jargon, and where to keep up".}}
   Trigger this skill when the user works on {{industry-en-name}} problems and wants industry-grade thinking, tool selection, or workflow guidance.
   触发词：「{{trigger-cn-1}}」「{{trigger-cn-2}}」「{{trigger-cn-3}}」「{{trigger-en-1}}」「{{trigger-en-2}}」
+triggers:
+  - "{{keyword-1, e.g. 'agent framework'}}"
+  - "{{keyword-2}}"
+  - "{{keyword-N}}"
 industry: "{{industry-en-name}}"
 industry-cn: "{{industry-cn-name}}"
-locale: "{{en | zh-CN | global}}"
+locale: "{{en | zh-CN | ja | ko | global}}"
 last_research_date: "{{YYYY-MM-DD}}"
 source_count: {{N}}
 profile: "{{practitioner | learner | investor | consultant}}"
@@ -348,8 +352,10 @@ generator: "master-skill v{{X.Y}}"
   "name": "{{industry-slug}}-master",
   "industry": "{{industry-en-name}}",
   "industry_cn": "{{industry-cn-name}}",
-  "locale": "{{en|zh-CN|global}}",
+  "triggers": [],
+  "locale": "{{en|zh-CN|ja|ko|global}}",
   "profile": "{{practitioner|learner|investor|consultant}}",
+  "focus": "{{comprehensive|technical|business|academic|operational}}",
   "last_research_date": "{{YYYY-MM-DD}}",
   "source_count": 0,
   "primary_source_ratio": 0.0,
