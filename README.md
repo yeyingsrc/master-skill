@@ -12,8 +12,6 @@
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/voidborne-d/master-skill)
 [![Status](https://img.shields.io/badge/status-v1.0-brightgreen)]()
 
-[**English**](#english) · 中文
-
 </div>
 
 ---
@@ -219,35 +217,4 @@ Phase 5   双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 
 ## License
 
-MIT
-
----
-
-<div align="center">
-
-<a name="english"></a>
-
-# 大师.skill (English)
-
-### *Stop hunting for the right skill.*
-### *Tell us your industry — we hand you the only skill you'll need.*
-
-</div>
-
-[colleague-skill](https://github.com/titanwings/colleague-skill) distilled **a person** into a skill.
-[nuwa-skill](https://github.com/alchaincyf/nuwa-skill) distilled **anyone's mind** into a skill.
-**master-skill** distills **an entire industry's operating system** into a skill.
-
-Each is a 10× leap — one person you know → anyone alive or dead → an entire field of human knowledge.
-
-Tell master-skill which sub-niche you work in. 30-60 minutes later you get an installable `{industry}-master` skill that loads into any Claude Code / OpenClaw / Codex / Hermes agent and turns it into "the senior practitioner sitting next to you."
-
-Not a Wikipedia stuffed into a prompt. **The mental models, decision heuristics, tool selection trees, current workflows, jargon, anti-patterns, and honest boundaries** of that industry — distilled from public material + your local files into a runnable cognitive OS. Every generated skill ships with an **Agentic Protocol** — when faced with a new problem in this field, the agent researches it the way a senior practitioner would, then applies the OS to deliver judgment. **Not just sounding like a pro. Acting like one.**
-
-```
-> master-skill: LLM agent infrastructure
-> master-skill: cross-border e-commerce operations
-> master-skill: foot-and-ankle surgery
-```
-
-See above (Chinese) for full demos and architecture. Roadmap to v1.0 in [ROADMAP.md](ROADMAP.md).
+MIT · English README → [README_en.md](README_en.md)

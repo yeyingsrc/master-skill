@@ -7,9 +7,20 @@
 credentials.json
 .claude/settings.local.json
 
+# Per-iteration test/cleanup notes (live in memory/, not in repo)
+*.test.md
+references/cleanup-iter*.md
+PROTOTYPE_RUN.md
+
+# Regeneratable prototype intermediates
+prototypes/*/output/references/
+prototypes/*/references/synthesis-summary.*
+prototypes/*/references/quality-check-rubric.*
+
 # Generated research artifacts (when prototyping)
 prototypes/*/knowledge/sources/
 prototypes/*/knowledge/transcripts/
+prototypes/*/sources/
 *.srt
 *.vtt
 *.mp3
