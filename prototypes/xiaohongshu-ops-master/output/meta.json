@@ -17,8 +17,8 @@
     "secondary": "内容种草 + 投流"
   },
   "last_research_date": "2026-05-02",
-  "source_count": 17,
-  "primary_source_ratio": 0.65,
+  "source_count": 110,
+  "primary_source_ratio": 0.76,
   "tracks_covered": [
     "figures",
     "tools",
@@ -27,10 +27,29 @@
     "sources",
     "glossary"
   ],
-  "mental_models_count": 3,
-  "playbook_rules_count": 5,
-  "research_dimensions_count": 3,
-  "sub_skills": [],
+  "mental_models_count": 5,
+  "playbook_rules_count": 9,
+  "research_dimensions_count": 5,
+  "sub_skills": [
+    {
+      "slug": "gumai-jiahe-content",
+      "path": "sub-skills/gumai-jiahe-content/SKILL.md",
+      "figure": "古麦嘉禾创始团队 (吴俊雷)",
+      "perspective": "内容驱动派 / IP 化方法论"
+    },
+    {
+      "slug": "liu-siyi-qunxiang",
+      "path": "sub-skills/liu-siyi-qunxiang/SKILL.md",
+      "figure": "群响刘思毅",
+      "perspective": "操盘手社群头部 / 私域 + 矩阵派"
+    },
+    {
+      "slug": "qiangua-data-driven",
+      "path": "sub-skills/qiangua-data-driven/SKILL.md",
+      "figure": "千瓜数据创始团队",
+      "perspective": "数据驱动派 / 工具派"
+    }
+  ],
   "generator": "master-skill v1.3",
   "version": "1.3",
   "changelog": [
