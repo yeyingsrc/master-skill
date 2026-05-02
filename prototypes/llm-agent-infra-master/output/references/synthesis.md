@@ -1,78 +1,8 @@
----
-name: llm-agent-infra-master
-description: |
-  LLM agent 基础设施 (LLM agent infra) Master OS — automated mastery of LLM agent infra: top builders' mental models, tool stack, current workflows, jargon, and where to keep up.
-  Trigger this skill when the user works on LLM agent infra problems and wants industry-grade thinking, tool selection, or workflow guidance.
-  触发词：「agent framework」「LLM agent」「agent infra」「multi-agent orchestration」「agent runtime」
-triggers:
-  - "agent framework"
-  - "LLM agent"
-  - "agent infra"
-  - "multi-agent orchestration"
-  - "agent runtime"
-  - "tool use"
-  - "RAG"
-  - "agent observability"
-industry: "LLM agent infra"
-industry-cn: "LLM agent 基础设施"
-locale: "global"
-last_research_date: "2026-05-02"
-source_count: 0
-profile: "practitioner"
-generator: "master-skill v0.3"
----
+# LLM agent infra Master OS — Synthesis
 
-# LLM agent 基础设施 · Master OS
+> Phase 2 提炼结果 (prototype iter 21, minimal-viable scope). Phase 3 skill writeup 直接消化本文件.
 
-> This skill makes the agent operate as a senior LLM agent infra practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.
-
-## 激活规则
-
-收到与 LLM agent infra 相关的问题时（关键词：agent framework, LLM agent, agent infra, multi-agent orchestration, agent runtime, tool use, RAG, agent observability），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
-
-如果问题完全跟 LLM agent infra 无关 — 不激活，正常应答。
-
----
-
-## Agentic Protocol（先研究，再发言）
-
-**核心原则**：LLM agent infra 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
-
-### Step 1: 问题分类
-
-| 类型 | 特征 | 行动 |
-|------|------|------|
-| **需要事实** | 涉及具体工具 / 公司 / 版本 / 现状 / 数字 | → Step 2 研究 |
-| **纯框架** | 抽象决策 / 概念辨析 / 入门讲解 | → 直接 Step 3 用心智模型回答 |
-| **混合** | 用具体案例讨论抽象问题 | → 先取事实，再用框架分析 |
-
-判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
-
-### Step 2: LLM agent infra 式研究维度
-
-⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
-
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
-
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
-
-#### 维度 2: ...
-}}
-
-研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
-
-### Step 3: LLM agent infra 式回答
-
-基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
-
----
-
-## 心智模型
+## 1. 心智模型
 
 ### 1.1 Framework as scaffold, not foundation
 
@@ -172,9 +102,7 @@ generator: "master-skill v0.3"
 
 ---
 
-
-
-## 标准 Playbook
+## 2. 标准 Playbook (7 条)
 
 1. **如果开始一个新 agent project**, 则先 build eval set (≥ 50 examples) 再写 agent 代码.
    - 案例: Hamel Husain blog series 反复强调; YC W25 cohort 多家采纳
@@ -199,9 +127,7 @@ generator: "master-skill v0.3"
 
 ---
 
-
-
-## 工具栈与选型决策树
+## 3. 工具栈集成 (来自 Track 02)
 
 详见 `references/research/02-tools.md`. 三层结构:
 - **必备 (3)**: LangChain/LangGraph / OpenAI+Anthropic SDK / LangSmith+LangFuse
@@ -212,9 +138,7 @@ generator: "master-skill v0.3"
 
 Sanity check: 必备 ≥ 3 ✓, 场景化 ≥ 3 (low end of [3, 5] target) ✓, 新兴 ≥ 2 ✓. 通过.
 
-
-
-## 工作流 / Pipeline
+## 4. 工作流集成 (来自 Track 03)
 
 详见 `references/research/03-workflows.md`. 3 个 workflows:
 - Build production-ready RAG agent (high decay)
@@ -227,9 +151,7 @@ Sanity check ✓.
 
 ---
 
-
-
-## 表达 DNA
+## 5. 表达 DNA
 
 **高频黑话** (top 10): RAG (单音节) / ReAct / eval / trace / ship / in production / spaghetti agent / thin vs thick framework / eval-driven / agent-shaped problem
 
@@ -251,9 +173,7 @@ Sanity check ✓.
 
 ---
 
-
-
-## 质量基准 + 反模式
+## 6. 质量基准 + 反模式
 
 ### 什么算「好」 (3-5 条具体可验证):
 
@@ -275,9 +195,7 @@ Sanity check ✓.
 
 ---
 
-
-
-## 智识谱系
+## 7. 智识谱系
 
 ### 主要流派分裂
 
@@ -306,9 +224,7 @@ Sanity check ✓.
 
 ---
 
-
-
-## 诚实边界
+## 8. 诚实边界
 
 1. **信息截止 2026-05**. 工具 / 工作流模块衰减最快 (建议每 3-6 月 update).
 2. **法规 / 标准节衰减极高**. EU AI Act 实施细则、MCP 大版本、China 备案细则都在 active 演化期 (12 月内必更新).
@@ -318,9 +234,7 @@ Sanity check ✓.
 
 ---
 
-
-
-## Agentic Protocol — 研究维度（详细）
+## 9. Agentic Protocol — 研究维度 (5)
 
 ### 9.1 Framework current state
 - **看什么**: GitHub stars / 最近 30 天 commit 频率 / breaking change 历史
@@ -359,26 +273,3 @@ Sanity check ✓.
 - Mental models: 5 retained (3 PASS + 2 industry-amplified)
 - Playbook rules: 7
 - Agentic Protocol dimensions: 5
-
-
-
-
-## Time-decay Registry
-
-This skill's modules decay at different speeds. Re-run `update 大师 {slug}`
-when the dates below cross the recommended cadence (see references/extraction-framework.md § 八).
-
-| Module | last_updated | decay_risk | Recommended refresh cadence |
-|--------|-------------|-----------|---------------------------|
-| Mental models | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Standard playbook | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Tool stack | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Workflows / pipeline | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Expression DNA | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Sources (Track 5) | last_updated: 2026-05-02 | decay_risk: medium | 6 months |
-| Glossary / standards / regulations | last_updated: 2026-05-02 | decay_risk: medium | 6 months (regulations may force sooner) |
-| Intellectual genealogy | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Honest boundaries | last_updated: 2026-05-02 | decay_risk: low | re-assess each refresh |
-
-last_updated values reflect the synthesis date. Individual research notes in
-`references/research/` may have more granular last_checked dates per item.

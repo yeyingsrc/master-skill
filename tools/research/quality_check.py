@@ -105,14 +105,16 @@ def check_mental_model_limits(skill_text: str) -> tuple[str, str]:
 
 
 def check_playbook_count(skill_text: str, meta: dict) -> tuple[str, str]:
-    """Item 3: Playbook rules count in [5, 10]."""
+    """Item 3: Playbook rules count in [5, 10]. Iter 22: also matches friendly
+    headings (## 标准 Playbook) emitted by skill_writer body injection, not just
+    numbered ones (## 2. 标准 Playbook) used in synthesis.md."""
     n_meta = meta.get("playbook_rules_count")
     if n_meta is not None:
         n = n_meta
     else:
-        # Numbered list under ## 2. heading
+        # Numbered list under ## 2. heading or ## heading
         section_match = re.search(
-            r"##\s+2\.\s+标准\s+Playbook(.*?)(?=^##\s|\Z)",
+            r"##\s+(?:2\.\s+)?标准\s+Playbook(.*?)(?=^##\s|\Z)",
             skill_text,
             re.MULTILINE | re.DOTALL,
         )
@@ -129,7 +131,7 @@ def check_playbook_count(skill_text: str, meta: dict) -> tuple[str, str]:
 def check_playbook_cases(skill_text: str) -> tuple[str, str]:
     """Item 4: each playbook rule has ≥ 1 case (— bullet under it)."""
     section_match = re.search(
-        r"##\s+2\.\s+标准\s+Playbook(.*?)(?=^##\s|\Z)",
+        r"##\s+(?:2\.\s+)?标准\s+Playbook(.*?)(?=^##\s|\Z)",
         skill_text,
         re.MULTILINE | re.DOTALL,
     )
@@ -159,7 +161,7 @@ def check_tool_tiers(skill_text: str) -> tuple[str, str]:
     """
     # Count tier mentions in 工具栈 section
     section_match = re.search(
-        r"##\s+3\.\s+工具栈(.*?)(?=^##\s|\Z)",
+        r"##\s+(?:3\.\s+)?工具栈(.*?)(?=^##\s|\Z)",
         skill_text,
         re.MULTILINE | re.DOTALL,
     )
@@ -188,7 +190,7 @@ def check_tool_tiers(skill_text: str) -> tuple[str, str]:
 def check_workflow_senior_differences(skill_text: str) -> tuple[str, str]:
     """Item 6: ≥ 80% workflows have ≥ 2 senior-difference points (skip/optimize/add)."""
     section_match = re.search(
-        r"##\s+4\.\s+工作流(.*?)(?=^##\s|\Z)",
+        r"##\s+(?:4\.\s+)?工作流(.*?)(?=^##\s|\Z)",
         skill_text,
         re.MULTILINE | re.DOTALL,
     )
@@ -223,7 +225,7 @@ def check_voice_dna(skill_text: str) -> tuple[str, str]:
 def check_honest_boundaries(skill_text: str) -> tuple[str, str]:
     """Item 8: ≥ 3 specific honest boundaries."""
     section_match = re.search(
-        r"##\s+8\.\s+诚实边界(.*?)(?=^##\s|\Z)",
+        r"##\s+(?:8\.\s+)?诚实边界(.*?)(?=^##\s|\Z)",
         skill_text,
         re.MULTILINE | re.DOTALL,
     )
@@ -321,7 +323,7 @@ def check_multi_figure_consensus(skill_dir: Path) -> tuple[str, str]:
         return "skipped", "no synthesis.md to analyze figure attribution"
     text = synthesis.read_text(encoding="utf-8")
     section_match = re.search(
-        r"##\s+1\.\s+心智模型(.*?)(?=^##\s|\Z)",
+        r"##\s+(?:1\.\s+)?心智模型(.*?)(?=^##\s|\Z)",
         text,
         re.MULTILINE | re.DOTALL,
     )

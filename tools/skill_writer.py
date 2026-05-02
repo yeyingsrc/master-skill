@@ -163,6 +163,110 @@ def count_protocol_dimensions(section_body: str) -> int:
     return len(re.findall(r"^###\s+9\.\d+\s+", section_body, re.MULTILINE))
 
 
+def count_research_sources(research_dir: Path) -> dict[str, int]:
+    """Iter 22 fix: walk research/*.md and count source markers for
+    primary_source_ratio computation in meta.json. Returns
+    {primary, secondary, reference, total, primary_ratio}."""
+    if not research_dir or not research_dir.exists():
+        return {"primary": 0, "secondary": 0, "reference": 0, "total": 0,
+                "primary_ratio": 0.0}
+    primary = secondary = reference = 0
+    for md_file in research_dir.glob("*.md"):
+        text = md_file.read_text(encoding="utf-8")
+        primary += len(re.findall(r"\[Primary\]", text))
+        secondary += len(re.findall(r"\[Secondary\]", text))
+        reference += len(re.findall(r"\[Reference\]", text))
+    total = primary + secondary + reference
+    return {
+        "primary": primary,
+        "secondary": secondary,
+        "reference": reference,
+        "total": total,
+        "primary_ratio": round(primary / total, 2) if total else 0.0,
+    }
+
+
+def build_time_decay_registry(synthesis_sections: dict[str, str], research_date: str) -> str:
+    """Iter 22 fix #3: emit explicit `last_updated` + `decay_risk` markers per
+    module so quality_check.check_time_decay_marks() finds them. Synthesis often
+    uses prose dates; this registry uses the regex-friendly format.
+    """
+    return f"""
+## Time-decay Registry
+
+This skill's modules decay at different speeds. Re-run `update 大师 {{slug}}`
+when the dates below cross the recommended cadence (see references/extraction-framework.md § 八).
+
+| Module | last_updated | decay_risk | Recommended refresh cadence |
+|--------|-------------|-----------|---------------------------|
+| Mental models | last_updated: {research_date} | decay_risk: low | 1-2 years |
+| Standard playbook | last_updated: {research_date} | decay_risk: low | 6-12 months |
+| Tool stack | last_updated: {research_date} | decay_risk: high | 3-6 months |
+| Workflows / pipeline | last_updated: {research_date} | decay_risk: high | 3-6 months |
+| Expression DNA | last_updated: {research_date} | decay_risk: low | 6-12 months |
+| Sources (Track 5) | last_updated: {research_date} | decay_risk: medium | 6 months |
+| Glossary / standards / regulations | last_updated: {research_date} | decay_risk: medium | 6 months (regulations may force sooner) |
+| Intellectual genealogy | last_updated: {research_date} | decay_risk: low | 1-2 years |
+| Honest boundaries | last_updated: {research_date} | decay_risk: low | re-assess each refresh |
+
+last_updated values reflect the synthesis date. Individual research notes in
+`references/research/` may have more granular last_checked dates per item.
+"""
+
+
+def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
+                          research_date: str) -> str:
+    """Iter 22 fix #1: replace the SKILL.md body (from `## 心智模型` to end-of-template)
+    with synthesis-derived content, instead of the previous shell+stub approach.
+
+    Strategy:
+    - Find the start of the body in the rendered template (`^## 心智模型` or its
+      template-localized variant)
+    - Slice off everything from there onwards
+    - Append synthesis sections 1-9 as the new body, lightly reformatted so the
+      heading anchors used by Agentic Protocol Step 3 (`#心智模型`, `#标准-playbook`,
+      `#表达-dna`) still resolve.
+    """
+    body_marker = re.search(r"^##\s+心智模型", skill_md, re.MULTILINE)
+    if body_marker is None:
+        # Template structure shifted — just append the synthesis content
+        synth_body = "\n\n---\n\n# Synthesized Body\n\n"
+    else:
+        # Cut everything from the body marker onwards
+        skill_md = skill_md[: body_marker.start()].rstrip() + "\n\n---\n\n"
+        synth_body = ""
+
+    # Build body from synthesis sections in order. Strip the leading "## N. " numbering
+    # so headings become anchor-friendly (## 心智模型 not ## 1. 心智模型).
+    section_order = [
+        ("mental_models", "心智模型"),
+        ("playbook", "标准 Playbook"),
+        ("tool_stack", "工具栈与选型决策树"),
+        ("workflows", "工作流 / Pipeline"),
+        ("expression_dna", "表达 DNA"),
+        ("quality_bars", "质量基准 + 反模式"),
+        ("intellectual_genealogy", "智识谱系"),
+        ("honest_boundaries", "诚实边界"),
+        ("agentic_protocol", "Agentic Protocol — 研究维度（详细）"),
+    ]
+
+    parts: list[str] = [synth_body] if synth_body else []
+    for key, friendly_heading in section_order:
+        section = synthesis_sections.get(key, "")
+        # Drop the original "## N. ..." heading line and replace with friendly heading
+        section_body = re.sub(
+            r"^##\s+\d+\.\s+[^\n]+\n", f"## {friendly_heading}\n", section,
+            count=1, flags=re.MULTILINE,
+        )
+        parts.append(section_body.strip())
+        parts.append("")
+
+    # Append the time-decay registry (fix #3)
+    parts.append(build_time_decay_registry(synthesis_sections, research_date))
+
+    return skill_md + "\n\n".join(parts)
+
+
 # ---------------------------------------------------------------------------
 # Writing
 
@@ -270,15 +374,19 @@ def action_create(
     for placeholder, value in sorted(replacements.items(), key=lambda kv: -len(kv[0])):
         skill_md = skill_md.replace("{{" + placeholder + "}}", value)
 
-    # Inject synthesis sections (these are larger blocks, replacing whole {{# ... }} hint comments).
-    # We don't try to be clever here — append a "## Synthesized content" block referencing the
-    # synthesis.md. Actual section-by-section injection is a v0.4 task; for v0.3 we keep the
-    # template's structural shell and let downstream skill consumers reference synthesis.md.
-    skill_md = skill_md + "\n\n---\n\n## Synthesized Content\n\n" + \
-        f"See `references/synthesis.md` for the full Phase 2 output. Counts:\n" + \
-        f"- Mental models: {mm_count}\n" + \
-        f"- Playbook rules: {pb_count}\n" + \
-        f"- Agentic Protocol dimensions: {dim_count}\n"
+    # iter 22 fix #1: inject synthesis body in place of the template's
+    # placeholder body sections. Replaces the previous shell-only output.
+    skill_md = inject_synthesis_body(skill_md, synthesis_sections, research_date)
+
+    # iter 22 fix #2: compute primary_source_ratio from research/ rather than
+    # relying on the (often stale) intake.json value
+    research_stats = count_research_sources(research_dir) if research_dir else {
+        "primary": intake.get("source_count", 0),
+        "secondary": 0,
+        "reference": 0,
+        "total": intake.get("source_count", 0),
+        "primary_ratio": intake.get("primary_source_ratio", 0.0),
+    }
 
     # Write SKILL.md
     skill_md_path = skill_dir / "SKILL.md"
@@ -295,8 +403,10 @@ def action_create(
         "profile": profile,
         "focus": focus,
         "last_research_date": research_date,
-        "source_count": intake.get("source_count", 0),
-        "primary_source_ratio": intake.get("primary_source_ratio", 0.0),
+        "source_count": research_stats["total"] or intake.get("source_count", 0),
+        "primary_source_ratio": research_stats["primary_ratio"]
+            if research_stats["total"] > 0
+            else intake.get("primary_source_ratio", 0.0),
         "tracks_covered": ["figures", "tools", "workflows", "canon", "sources", "glossary"],
         "mental_models_count": mm_count,
         "playbook_rules_count": pb_count,
@@ -320,6 +430,12 @@ def action_create(
         if target_research.exists():
             shutil.rmtree(target_research)
         shutil.copytree(research_dir, target_research)
+    # iter 22: copy synthesis.md alongside research so quality_check item 12
+    # (multi-figure consensus) can find it. Also helps consumers read the full
+    # Phase 2 output without having to walk back to the prototype dir.
+    synthesis_src = research_dir.parent / "synthesis.md" if research_dir else None
+    if synthesis_src and synthesis_src.exists():
+        shutil.copy2(synthesis_src, refs_dir / "synthesis.md")
 
     # Empty placeholder dirs
     (skill_dir / "sub-skills").mkdir(parents=True, exist_ok=True)

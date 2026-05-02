@@ -1,12 +1,12 @@
 {
   "skill_dir": "/Users/sway003/master-skill/skill/prototypes/llm-agent-infra-master/output",
-  "verdict": "PARTIAL",
+  "verdict": "PASS",
   "counts": {
-    "pass": 3,
-    "partial": 0,
-    "fail": 2,
-    "needs_subagent": 1,
-    "skipped": 6
+    "pass": 9,
+    "partial": 1,
+    "fail": 0,
+    "needs_subagent": 2,
+    "skipped": 0
   },
   "results": [
     {
@@ -18,8 +18,8 @@
     {
       "id": "2",
       "label": "心智模型局限 100% 填",
-      "status": "skipped",
-      "detail": "no mental model sections found (### 1.N pattern)"
+      "status": "pass",
+      "detail": "all 5 models have 局限 field"
     },
     {
       "id": "3",
@@ -30,20 +30,20 @@
     {
       "id": "4",
       "label": "Playbook 案例 ≥ 1",
-      "status": "skipped",
-      "detail": "no Playbook section"
+      "status": "pass",
+      "detail": "all 7 rules have 案例"
     },
     {
       "id": "5",
       "label": "工具三层覆盖",
-      "status": "skipped",
-      "detail": "no 工具栈 section found"
+      "status": "partial",
+      "detail": "thresholds not met: 场景化 3 < 5 — may be cold protocol"
     },
     {
       "id": "6",
       "label": "工作流入门-资深差异 ≥ 80%",
-      "status": "skipped",
-      "detail": "no 工作流 section"
+      "status": "needs_subagent",
+      "detail": "section is a reference; load 03-workflows.md to validate"
     },
     {
       "id": "7",
@@ -54,14 +54,14 @@
     {
       "id": "8",
       "label": "诚实边界 ≥ 3 条",
-      "status": "skipped",
-      "detail": "no 诚实边界 section"
+      "status": "pass",
+      "detail": "5 boundary items"
     },
     {
       "id": "9",
       "label": "一手来源 ≥ 50%",
-      "status": "fail",
-      "detail": "primary ratio = 0% (< 50%, mostly secondary)"
+      "status": "pass",
+      "detail": "primary ratio = 59% (≥ 50%)"
     },
     {
       "id": "10",
@@ -72,14 +72,14 @@
     {
       "id": "11",
       "label": "时效性标注完整",
-      "status": "fail",
-      "detail": "no time-decay marks (last_updated / decay risk) found"
+      "status": "pass",
+      "detail": "12 markers across 3 key sections"
     },
     {
       "id": "12",
       "label": "多 figure 共识门槛",
-      "status": "skipped",
-      "detail": "no synthesis.md to analyze figure attribution"
+      "status": "pass",
+      "detail": "all 5 models cite ≥ 2 figures"
     }
   ]
 }
