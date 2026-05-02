@@ -441,12 +441,34 @@ Agentic Protocol：N 个研究维度
 
 #### Step 4: 写入
 
-用 `Write` 工具：
-- `{skill_dir}/SKILL.md`
-- `{skill_dir}/meta.json`
-- 6 个 `references/research/0X-*.md` 已经在 Phase 1 写好
+调 `tools/skill_writer.py create`（v0.3+），它会：
+- 写 `{skill_dir}/SKILL.md`（自动注入 synthesis body）
+- 写 `{skill_dir}/meta.json`（自动算 source ratio + decay registry）
+- 复制 6 个 `references/research/0X-*.md` 到 skill 内部
+- 复制 `references/synthesis.md`（自包含）
 
-不要手工拼接文件树——v0.3 之后会有 `tools/skill_writer.py` 统一处理。当前阶段直接用 `Write`。
+```bash
+python3 tools/skill_writer.py create \
+  --skill-dir <output> \
+  --intake <intake.json> \
+  --synthesis <synthesis.md> \
+  --template references/skill-template.md \
+  --research-dir <research/>
+```
+
+#### Step 5: CLI 工具流子树 (v0.6+)
+
+`skill_writer.py` 在写完 SKILL.md / meta.json 后，**自动调** `tools/cli_writer.py emit` 生成 `cli/` 子树：
+
+| 脚本类别 | 来源 | 输出 |
+|---------|------|------|
+| `cli/protocol/agentic.sh` | synthesis Section 9 (Agentic Protocol) | 拿到新问题时按 N 维度做功课的交互脚本 |
+| `cli/decision/{cluster}.sh` | synthesis Section 2 (Playbook 规则聚类) | 决策树（每个聚类 ≥ 1 条规则） |
+| `cli/workflow/{wf-slug}.sh` | research/03-workflows.md | SOP 走查 + 失败模式自检 |
+
+每个生成脚本支持 `--help` / `--explain` / `--dry-run` / `--json` 标准接口。完整 spec: [references/cli-spec.md](references/cli-spec.md)。
+
+如果用户不要 CLI（例如纯演示）：`skill_writer.py create --no-cli`.
 
 ---
 

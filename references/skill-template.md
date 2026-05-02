@@ -22,11 +22,19 @@ A populated example lives at `references/skill-template.example.md` (LLM agent i
 │   │   └── 06-glossary.md
 │   ├── synthesis.md              # Phase 2 output
 │   └── sources/                  # Optional: cached transcripts / articles
+├── cli/                          # v0.6 — bash 工具流子树 (cli_writer.py 自动生成)
+│   ├── README.md                 # 脚本清单 + 用法
+│   ├── lib/common.sh             # 公共 helper (彩色输出 / multiline read / JSON / md buffer)
+│   ├── protocol/agentic.sh       # Agentic Protocol N 维度落地 (来自 synthesis 9)
+│   ├── decision/{cluster}.sh     # 决策树 (聚类 playbook 规则, 来自 synthesis 2)
+│   └── workflow/{wf-slug}.sh     # SOP 走查 + 失败模式自检 (来自 03-workflows.md)
 └── sub-skills/                   # Optional: nuwa-generated person skills (top 3 figures)
     ├── {figure-1-slug}/
     ├── {figure-2-slug}/
     └── {figure-3-slug}/
 ```
+
+**思维顾问 + 实操 CLI 套件 (v0.6+)**: 每个生成的 master skill 不只是 markdown — `cli/` 子树把认知 OS 物化成 bash 工具，每个脚本支持 `--help` / `--explain` / `--dry-run` / `--json` 标准接口。详见 master-skill 仓库 `references/cli-spec.md`。
 
 ---
 

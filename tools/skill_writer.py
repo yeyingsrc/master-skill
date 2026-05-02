@@ -22,6 +22,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -304,6 +305,7 @@ def action_create(
     synthesis_sections: dict[str, str],
     template: str,
     research_dir: Path | None,
+    emit_cli: bool = True,
 ) -> dict[str, Any]:
     """Generate a fresh skill directory."""
     skill_dir.mkdir(parents=True, exist_ok=True)
@@ -441,6 +443,31 @@ def action_create(
     (skill_dir / "sub-skills").mkdir(parents=True, exist_ok=True)
     (skill_dir / "scripts").mkdir(parents=True, exist_ok=True)
 
+    # v0.6: emit cli/ subtree (思维顾问 + 实操 CLI 套件).
+    # Reads synthesis.md (Section 2 + Section 9) and research/03-workflows.md
+    # to generate bash scripts under cli/.
+    cli_emit_result: dict[str, Any] = {"emitted": False}
+    if emit_cli:
+        cli_writer_path = Path(__file__).resolve().parent / "cli_writer.py"
+        synthesis_in_skill = refs_dir / "synthesis.md"
+        workflows_in_skill = refs_dir / "research" / "03-workflows.md"
+        if cli_writer_path.exists() and synthesis_in_skill.exists() and workflows_in_skill.exists():
+            try:
+                proc = subprocess.run(
+                    [
+                        sys.executable, str(cli_writer_path), "emit",
+                        "--skill-dir", str(skill_dir),
+                        "--synthesis", str(synthesis_in_skill),
+                        "--workflows", str(workflows_in_skill),
+                        "--industry-cn", industry_cn,
+                    ],
+                    check=True, capture_output=True, text=True,
+                )
+                cli_emit_result = {"emitted": True, "stdout": proc.stdout.strip().splitlines()[-1] if proc.stdout else ""}
+            except subprocess.CalledProcessError as e:
+                print(f"⚠ cli_writer failed (non-fatal): {e.stderr}", file=sys.stderr)
+                cli_emit_result = {"emitted": False, "error": e.stderr.strip()}
+
     return {
         "skill_md": str(skill_md_path),
         "meta_json": str(meta_path),
@@ -449,6 +476,7 @@ def action_create(
             "playbook_rules": pb_count,
             "agentic_protocol_dims": dim_count,
         },
+        "cli": cli_emit_result,
     }
 
 
@@ -543,6 +571,8 @@ def build_parser() -> argparse.ArgumentParser:
                           help="Path to references/skill-template.md")
     p_create.add_argument("--research-dir", type=Path, default=None,
                           help="Path to references/research/ — copied into the new skill")
+    p_create.add_argument("--no-cli", action="store_true",
+                          help="Skip cli/ subtree emission (默认开启 v0.6 CLI 工具流)")
 
     p_validate = sub.add_parser("validate", help="Structure-only validation of an existing skill")
     p_validate.add_argument("--skill-dir", required=True, type=Path)
@@ -563,7 +593,7 @@ def main(argv: list[str] | None = None) -> int:
             synthesis_sections = parse_synthesis(args.synthesis)
             template = parse_template(args.template)
             result = action_create(args.skill_dir, intake, synthesis_sections, template,
-                                   args.research_dir)
+                                   args.research_dir, emit_cli=not args.no_cli)
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0
 
