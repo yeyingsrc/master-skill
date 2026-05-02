@@ -2,46 +2,27 @@
 
 # 🎓 大师.skill
 
-### *把一整个行业的资深认知，蒸馏成一个 skill。*
+> *「下一步，不只蒸馏人，蒸馏一整个行业。」*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-v1.1-brightgreen)]()
-
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
-[![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/voidborne-d/master-skill)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-teal)](https://github.com/voidborne-d/master-skill)
-[![Codex](https://img.shields.io/badge/Codex-Skill-black)](https://github.com/voidborne-d/master-skill)
+[![skills.sh](https://img.shields.io/badge/skills.sh-Compatible-green)](https://skills.sh)
 
 <br>
 
-<table>
-<tr><td align="left">
-
-🎯 &nbsp;**进入一个新行业**，不知道从哪学起？资深人脑子里的隐性知识，没写在任何一本书里。<br>
-📰 &nbsp;**信息散在十几个邮件订阅、几十个播客、一堆群里**，永远在追？<br>
-🤖 &nbsp;**把一个行业的全部资料喂给 AI**，它依然像个外行 — 因为「百科 ≠ 这一行的人怎么想」？
-
-</td></tr>
-</table>
-
-### ✨ 大师.skill 一次解决这三件事
+**大师.skill 把一整个行业蒸馏成一个 skill —— 资深人的判断 + 当前的工作流 + 工具的选型，连同一套自动生成的 bash 命令套件，一起打包。**
 
 <br>
 
-**蒸馏的不只是人物，是一整个行业。**
+[同事.skill](https://github.com/titanwings/colleague-skill) 证明了蒸馏一个人是可行的。
+[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把蒸馏从一个人扩展到任何人。
+**大师.skill 把蒸馏推到一整个行业 —— 不只是认知，还有工作流和会跑的工具。**
 
-一个 skill，装下四件事：
-
-- 🧠 &nbsp;**资深人怎么想** — 心智模型 + 决策规则
-- ⚙️ &nbsp;**工作流怎么走** — 当前最先进的 SOP，每一步标注衰减时点
-- 🛠️ &nbsp;**工具怎么选** — 选型决策树 + 避坑清单 + 自动生成 bash 命令套件
-- 💬 &nbsp;**黑话怎么讲** — 行业表达方式 + 外行破绽
-
-告诉它你做哪个细分行业，30-60 分钟后，得到一个可装载的 skill。装到任何 AI agent — **立刻进入这一行的资深人模式**。
+告诉它你做哪个细分行业，30-60 分钟自动跑完调研、蒸馏、生成 skill 加上 bash 工具套件的全流程。装到任何 AI agent，立刻进入这一行的资深人模式。
 
 <br>
 
-[🚀 安装](#-安装) · [✨ 效果示例](#-效果示例) · [🛠️ 不只对话还有工具](#️-不只是对话还有工具流-v06) · [🧬 三代谱系](#-三代谱系) · [⭐ 已蒸馏行业](#-已蒸馏的行业)
+[🚀 安装](#-安装) · [✨ 效果示例](#-效果示例) · [🛠️ 自动蒸馏 bash 工具](#️-自动蒸馏出-bash-命令套件) · [🧬 三代谱系](#-三代谱系) · [⭐ 已蒸馏的行业](#-已蒸馏的行业)
 
 [**English README →**](README_en.md)
 
@@ -49,9 +30,9 @@
 
 ---
 
-> 📢 &nbsp;**2026.05.02 · v1.1 发布** — 生成的 skill 不只能对话，还自带一套 bash 命令工具帮你执行。[Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
+> 📢 &nbsp;**2026.05.02 发布** — 生成的 skill 不只能对话，还自带一套 bash 命令工具帮你执行。[Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
 >
-> 🔥 &nbsp;**2026.05.02 · v1.0 公开** — 第一个完整行业（LLM agent 基础设施）端到端跑通验证。
+> 🔥 &nbsp;**2026.05.02 公开** — 第一个完整行业（LLM agent 基础设施）端到端跑通验证。
 
 ---
 
@@ -136,11 +117,11 @@
 
 ---
 
-## 🛠️ 不只是对话，还有工具流 (v0.6+)
+## 🛠️ 自动蒸馏出 bash 命令套件
 
-> 大师不只告诉你怎么干，它还附一套 bash 工具帮你干。
+> 这是大师.skill 跟同事 / 女娲最大的区别 — 蒸馏出来的不只是「会说」，还是「会做」。
 
-每个生成的 skill 自带一个 `cli/` 子目录 — 把认知操作系统物化成命令行工具：
+每个生成的 skill **都自动配一个 `cli/` 子目录** —— 把这个行业的认知操作系统直接物化成可执行的命令行工具：
 
 ```
 {industry}-master/
@@ -167,13 +148,15 @@ $ ./cli/workflow/build-rag-agent.sh
 $ ./cli/decision/framework-select.sh --explain
 ```
 
-**纯 bash + 系统命令，零外部依赖**（不需要 jq、不需要 Python）。由 [`tools/cli_writer.py`](tools/cli_writer.py) 自动从蒸馏结果生成。设计细节看 [`references/cli-spec.md`](references/cli-spec.md)。
+**纯 bash + 系统命令，零外部依赖**（不需要 jq、不需要 Python）。由 [`tools/cli_writer.py`](tools/cli_writer.py) 自动从蒸馏结果生成 —— 你不用写一行代码，工具是从行业的工作流和决策规则里**直接长出来的**。
+
+设计细节看 [`references/cli-spec.md`](references/cli-spec.md)。
 
 ---
 
-## 🌐 调用别的 skill (v1.1+)
+## 🌐 自动调女娲，蒸馏行业 top 人物
 
-> 大师不重新发明轮子。Phase 3 自动调女娲.skill 蒸馏行业里最重要的 3 个人，嵌进 `sub-skills/`。
+> 大师不重新发明轮子。蒸馏行业 top 人物的活儿，自动外包给女娲.skill 做，结果直接嵌进 `sub-skills/`。
 
 ```
 {industry}-master/
@@ -194,7 +177,14 @@ $ ./cli/decision/framework-select.sh --explain
 
 ## 📦 它蒸馏了什么
 
-行业的认知操作系统，不是行业的百科全书。大师.skill 从一个细分行业里提取 7 层：
+行业的认知操作系统，不是行业的百科全书。一个 skill 装下四件事：
+
+- 🧠 &nbsp;**资深人怎么想** — 心智模型 + 决策规则
+- ⚙️ &nbsp;**工作流怎么走** — 当前最先进的 SOP，每一步标注衰减时点
+- 🛠️ &nbsp;**工具怎么选** — 选型决策树 + 避坑清单 + **自动生成的 bash 命令套件**
+- 💬 &nbsp;**黑话怎么讲** — 行业表达方式 + 外行破绽
+
+具体提取的 7 层：
 
 | 层 | 说明 |
 |---|---|
