@@ -19,8 +19,8 @@
     "secondary": "电商 / 直播带货导向"
   },
   "last_research_date": "2026-05-02",
-  "source_count": 16,
-  "primary_source_ratio": 0.69,
+  "source_count": 107,
+  "primary_source_ratio": 0.81,
   "tracks_covered": [
     "figures",
     "tools",
@@ -29,10 +29,29 @@
     "sources",
     "glossary"
   ],
-  "mental_models_count": 3,
-  "playbook_rules_count": 5,
-  "research_dimensions_count": 3,
-  "sub_skills": [],
+  "mental_models_count": 5,
+  "playbook_rules_count": 9,
+  "research_dimensions_count": 5,
+  "sub_skills": [
+    {
+      "slug": "juliang-qianchuan-official",
+      "path": "sub-skills/juliang-qianchuan-official/SKILL.md",
+      "figure": "巨量千川官方方法论",
+      "perspective": "战略级官方 / OCPM + 5A + GTA + 千川·乘方"
+    },
+    {
+      "slug": "luo-yonghao-jiaopengyou",
+      "path": "sub-skills/luo-yonghao-jiaopengyou/SKILL.md",
+      "figure": "罗永浩 / 交个朋友",
+      "perspective": "店播头部 / 头部主播 IP + 跨平台复刻"
+    },
+    {
+      "slug": "dong-yuhui-dongfangzhenxuan",
+      "path": "sub-skills/dong-yuhui-dongfangzhenxuan/SKILL.md",
+      "figure": "董宇辉 / 东方甄选",
+      "perspective": "内容驱动直播 / 文化带货 / 知识型主播"
+    }
+  ],
   "generator": "master-skill v1.3",
   "version": "1.3",
   "changelog": [

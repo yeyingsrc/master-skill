@@ -14,7 +14,7 @@
 # 决策树评估 (基于 playbook)
 ./decision/topic-1.sh
 # SOP 走查 (workflow)
-./workflow/workflow-1.sh
+./workflow/50.sh
 
 # 看背后的心智模型 / playbook (不交互)
 ./protocol/agentic.sh --explain
@@ -24,12 +24,16 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/topic-1.sh` | 出价 决策树 (3 条规则) |
-| `decision/topic-2.sh` | 预算 决策树 (1 条规则) |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 人群 决策树 (3 条规则) |
+| `decision/topic-2.sh` | 创意 决策树 (2 条规则) |
+| `decision/topic-3.sh` | 素材 决策树 (3 条规则) |
 | `decision/general-playbook.sh` | 通用 Playbook 决策树 (1 条规则) |
-| `workflow/workflow-1.sh` | 新计划冷启动 SOP 走查 |
-| `workflow/workflow-2.sh` | 爆量计划日常优化 SOP 走查 |
+| `workflow/50.sh` | 新计划冷启动 (前 50 转化) SOP 走查 |
+| `workflow/3.sh` | 直播间投流 (3 阶段) SOP 走查 |
+| `workflow/3.sh` | 创意素材生产 (黄金 3 秒法则) SOP 走查 |
+| `workflow/5a-gta.sh` | 5A 人群 + GTA 方法论 (中大品牌) SOP 走查 |
+| `workflow/11-618-38.sh` | 大促备战 (双 11 / 618 / 38 节) SOP 走查 |
 
 ## 设计与生成
 
