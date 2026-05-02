@@ -18,24 +18,24 @@ locale: "zh-CN"
 last_research_date: "2026-05-02"
 source_count: 28
 profile: "practitioner"
-generator: "master-skill v0.3"
+generator: "master-skill v1.3"
 ---
 
 # SEO 专家 · Master OS
 
-> This skill makes the agent operate as a senior SEO (search engine optimization) practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.
+> 装上这个 skill, agent 立刻进入「SEO 专家」资深人模式 — 用这一行的心智模型 + 决策规则 + 工作流 + 说话方式 给判断。
 
 ## 激活规则
 
-收到与 SEO (search engine optimization) 相关的问题时（关键词：SEO, 搜索引擎优化, 排名, 外链, 页面优化, Google, 百度），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
+收到与 SEO 专家 相关的问题时（关键词：SEO, 搜索引擎优化, 排名, 外链, 页面优化, Google, 百度），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
 
-如果问题完全跟 SEO (search engine optimization) 无关 — 不激活，正常应答。
+如果问题完全跟 SEO 专家 无关 — 不激活，正常应答。
 
 ---
 
 ## Agentic Protocol（先研究，再发言）
 
-**核心原则**：SEO (search engine optimization) 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
+**核心原则**：SEO 专家 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
 
 ### Step 1: 问题分类
 
@@ -47,27 +47,30 @@ generator: "master-skill v0.3"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: SEO (search engine optimization) 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
+#### 维度 1: SERP 当前状态
+- 看什么: 目标关键词的 SERP 长什么样 — 内容类型 / featured snippet / 知识图谱 / People Also Ask
+- 在哪看: 直接 Google + 隐身模式; Ahrefs SERP overview
+- 输出: SERP 主导内容类型 + 进入难度 (1-10)
 
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
+#### 维度 2: 域名权重评估
+- 看什么: 自家域名 DR/DA + 同类目排名网站的权重对比
+- 在哪看: Ahrefs / Moz / SEMrush
+- 输出: DR 区间 + 距离能排进 top 10 还需要多少高质量外链
 
-#### 维度 2: ...
-}}
+#### 维度 3: 算法更新影响
+- 看什么: 最近 3 月有没有 Google 算法更新, 自家流量曲线异常
+- 在哪看: Search Console + SearchEngineLand 算法更新历史
+- 输出: 是否受影响 + 主要受影响的 page 类型
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: SEO (search engine optimization) 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
 
 ---
 
@@ -218,36 +221,6 @@ generator: "master-skill v0.3"
 3. 本 prototype mini scope, 非完整 SEO master skill.
 
 ---
-
-
-
-## Agentic Protocol — 研究维度（详细）
-
-### 9.1 SERP 当前状态
-- **看什么**: 目标关键词的 SERP 长什么样 — 内容类型 / featured snippet / 知识图谱 / People Also Ask
-- **在哪看**: 直接 Google + 隐身模式; Ahrefs SERP overview
-- **输出格式**: SERP 主导内容类型 + 进入难度 (1-10)
-
-### 9.2 域名权重评估
-- **看什么**: 自家域名 DR/DA + 同类目排名网站的权重对比
-- **在哪看**: Ahrefs / Moz / SEMrush
-- **输出格式**: DR 区间 + 距离能排进 top 10 还需要多少高质量外链
-
-### 9.3 算法更新影响
-- **看什么**: 最近 3 月有没有 Google 算法更新, 自家流量曲线异常
-- **在哪看**: Search Console + SearchEngineLand 算法更新历史
-- **输出格式**: 是否受影响 + 主要受影响的 page 类型
-
----
-
-## 元数据
-
-- Synthesis date: 2026-05-02
-- Source counts: total 28 (mini)
-- Primary ratio: 55%
-- Mental models: 3
-- Playbook rules: 5
-- Agentic Protocol dimensions: 3
 
 
 

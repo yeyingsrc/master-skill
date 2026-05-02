@@ -19,7 +19,7 @@ locale: "global"
 last_research_date: "2026-05-02"
 source_count: 0
 profile: "practitioner"
-generator: "master-skill v0.3"
+generator: "master-skill v1.3"
 ---
 
 # LLM agent 基础设施 · Master OS
@@ -48,27 +48,40 @@ generator: "master-skill v0.3"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: LLM agent infra 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
+#### 维度 1: Framework current state
+- 看什么: GitHub stars / 最近 30 天 commit 频率 / breaking change 历史
+- 在哪看: repo 本身 (`langchain-ai/langgraph`, `microsoft/autogen`, `crewAIInc/crewAI`, `pydantic/pydantic-ai`) 的 releases
+- 输出: each candidate 的「活跃度 / 稳定度」二维标记
 
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
+#### 维度 2: Production reality check
+- 看什么: 有没有公司在用这个 framework / tool 跑生产? 规模如何? pain points 是什么?
+- 在哪看: a) 框架官方 case studies (打折扣 — 自营销); b) Twitter/X 工程师吐槽 (搜 "{name} + production"); c) HN 评论
+- 输出: production-readiness 等级 (toy / pilot / scaled)
 
-#### 维度 2: ...
-}}
+#### 维度 3: Eval methodology
+- 看什么: 该问题的 eval set 是否存在? 行业 benchmark 是什么? human-validation 比例是?
+- 在哪看: Hamel Husain blog / Eugene Yan / Inspect AI examples
+- 输出: 评估这个 agent / workflow 的 1-3 个 measurable indicator
+
+#### 维度 4: Tool stack alignment
+- 看什么: 当前选型符合 thin-vs-thick 流派 + 是否 hybrid-retrieval-aware
+- 在哪看: Track 02 输出 + 行业 podcast 最近评测
+- 输出: 当前选型 + 1-2 个替代
+
+#### 维度 5: Regulatory blast radius
+- 看什么: EU AI Act / China 备案 / US executive order 在这个场景适用吗?
+- 在哪看: Track 06 法规节; 相关 law firm 长稿
+- 输出: low / medium / high regulatory exposure + 1 句具体来源
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: LLM agent infra 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
 
 ---
 
@@ -317,48 +330,6 @@ Sanity check ✓.
 5. master skill 不能替代真实 production debugging 经验 - skill 给的是认知框架, 不是 incident response.
 
 ---
-
-
-
-## Agentic Protocol — 研究维度（详细）
-
-### 9.1 Framework current state
-- **看什么**: GitHub stars / 最近 30 天 commit 频率 / breaking change 历史
-- **在哪看**: repo 本身 (`langchain-ai/langgraph`, `microsoft/autogen`, `crewAIInc/crewAI`, `pydantic/pydantic-ai`) 的 releases
-- **输出格式**: each candidate 的「活跃度 / 稳定度」二维标记
-
-### 9.2 Production reality check
-- **看什么**: 有没有公司在用这个 framework / tool 跑生产? 规模如何? pain points 是什么?
-- **在哪看**: a) 框架官方 case studies (打折扣 — 自营销); b) Twitter/X 工程师吐槽 (搜 "{name} + production"); c) HN 评论
-- **输出格式**: production-readiness 等级 (toy / pilot / scaled)
-
-### 9.3 Eval methodology
-- **看什么**: 该问题的 eval set 是否存在? 行业 benchmark 是什么? human-validation 比例是?
-- **在哪看**: Hamel Husain blog / Eugene Yan / Inspect AI examples
-- **输出格式**: 评估这个 agent / workflow 的 1-3 个 measurable indicator
-
-### 9.4 Tool stack alignment
-- **看什么**: 当前选型符合 thin-vs-thick 流派 + 是否 hybrid-retrieval-aware
-- **在哪看**: Track 02 输出 + 行业 podcast 最近评测
-- **输出格式**: 当前选型 + 1-2 个替代
-
-### 9.5 Regulatory blast radius
-- **看什么**: EU AI Act / China 备案 / US executive order 在这个场景适用吗?
-- **在哪看**: Track 06 法规节; 相关 law firm 长稿
-- **输出格式**: low / medium / high regulatory exposure + 1 句具体来源
-
----
-
-## 元数据
-
-- Synthesis date: 2026-05-02
-- Source counts: total 70 (41 Primary / 15 Secondary / 14 Reference)
-- Primary ratio: 59%
-- Cumulative findings (Phase 1.5 review): 5 cold_tracks due to minimal-viable scope (figures / tools / canon / sources / glossary all below floor); known limitation, not a real cold-industry signal
-- Cross-track contradictions: none unresolved (thin vs thick framework split appears in Track 01 + 02 + 04 — consistent triangulation)
-- Mental models: 5 retained (3 PASS + 2 industry-amplified)
-- Playbook rules: 7
-- Agentic Protocol dimensions: 5
 
 
 

@@ -19,24 +19,24 @@ locale: "zh-CN"
 last_research_date: "2026-05-02"
 source_count: 26
 profile: "practitioner"
-generator: "master-skill v0.3"
+generator: "master-skill v1.3"
 ---
 
 # 短视频投流 · Master OS
 
-> This skill makes the agent operate as a senior short-video paid advertising (China platforms) practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.
+> 装上这个 skill, agent 立刻进入「短视频投流」资深人模式 — 用这一行的心智模型 + 决策规则 + 工作流 + 说话方式 给判断。
 
 ## 激活规则
 
-收到与 short-video paid advertising (China platforms) 相关的问题时（关键词：投流, 巨量引擎, 千川, 信息流, 创意素材, ROAS, 完播率, 跑量），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
+收到与 短视频投流 相关的问题时（关键词：投流, 巨量引擎, 千川, 信息流, 创意素材, ROAS, 完播率, 跑量），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
 
-如果问题完全跟 short-video paid advertising (China platforms) 无关 — 不激活，正常应答。
+如果问题完全跟 短视频投流 无关 — 不激活，正常应答。
 
 ---
 
 ## Agentic Protocol（先研究，再发言）
 
-**核心原则**：short-video paid advertising (China platforms) 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
+**核心原则**：短视频投流 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
 
 ### Step 1: 问题分类
 
@@ -48,27 +48,30 @@ generator: "master-skill v0.3"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: short-video paid advertising (China platforms) 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
+#### 维度 1: 创意层评估
+- 看什么: 当前素材的 3s 完播率 / 互动率 / 转化路径
+- 在哪看: 巨量后台素材数据 + 跟头部对标素材对比 (蝉妈妈)
+- 输出: 创意 score (1-10) + 1 句最大瓶颈
 
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
+#### 维度 2: 人群层评估
+- 看什么: 当前定向是否过窄 / 转化人群质量 / lookalike 拓展空间
+- 在哪看: 巨量云图人群分析 + 后台定向报告
+- 输出: 人群池规模 + 拓展方向
 
-#### 维度 2: ...
-}}
+#### 维度 3: 出价 / 预算策略
+- 看什么: 类目 CPM 基准 + 自家 ROAS 距离目标多少 + payback 周期
+- 在哪看: 后台数据 + 类目 benchmark + 财务系统
+- 输出: 当前 ROAS / 目标 ROAS / payback 现状
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: short-video paid advertising (China platforms) 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
 
 ---
 
@@ -219,36 +222,6 @@ generator: "master-skill v0.3"
 3. 本 prototype 主要面向中文圈电商 / 直播带货. 品牌广告 / B2B 适用度低.
 
 ---
-
-
-
-## Agentic Protocol — 研究维度（详细）
-
-### 9.1 创意层评估
-- **看什么**: 当前素材的 3s 完播率 / 互动率 / 转化路径
-- **在哪看**: 巨量后台素材数据 + 跟头部对标素材对比 (蝉妈妈)
-- **输出格式**: 创意 score (1-10) + 1 句最大瓶颈
-
-### 9.2 人群层评估
-- **看什么**: 当前定向是否过窄 / 转化人群质量 / lookalike 拓展空间
-- **在哪看**: 巨量云图人群分析 + 后台定向报告
-- **输出格式**: 人群池规模 + 拓展方向
-
-### 9.3 出价 / 预算策略
-- **看什么**: 类目 CPM 基准 + 自家 ROAS 距离目标多少 + payback 周期
-- **在哪看**: 后台数据 + 类目 benchmark + 财务系统
-- **输出格式**: 当前 ROAS / 目标 ROAS / payback 现状
-
----
-
-## 元数据
-
-- Synthesis date: 2026-05-02
-- Source counts: total 26 (mini)
-- Primary ratio: 50%
-- Mental models: 3
-- Playbook rules: 5
-- Agentic Protocol dimensions: 3
 
 
 

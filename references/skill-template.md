@@ -68,15 +68,15 @@ generator: "master-skill v{{X.Y}}"
 
 ## 激活规则
 
-收到与 {{industry-en-name}} 相关的问题时（关键词：{{trigger-list}}），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
+收到与 {{industry-display-name}} 相关的问题时（关键词：{{trigger-list}}），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
 
-如果问题完全跟 {{industry-en-name}} 无关 — 不激活，正常应答。
+如果问题完全跟 {{industry-display-name}} 无关 — 不激活，正常应答。
 
 ---
 
 ## Agentic Protocol（先研究，再发言）
 
-**核心原则**：{{industry-en-name}} 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
+**核心原则**：{{industry-display-name}} 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
 
 ### Step 1: 问题分类
 
@@ -88,7 +88,7 @@ generator: "master-skill v{{X.Y}}"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: {{industry-en-name}} 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
@@ -104,7 +104,7 @@ generator: "master-skill v{{X.Y}}"
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: {{industry-en-name}} 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
 
@@ -198,7 +198,7 @@ generator: "master-skill v{{X.Y}}"
 
 {{# Phase 2.5 输出。}}
 
-| 维度 | {{industry-en-name}} 风格 |
+| 维度 | {{industry-display-name}} 风格 |
 |------|----------|
 | 高频用语 | {{words/phrases}} |
 | 黑话 / 缩写 | {{jargon, top 5-10}} |

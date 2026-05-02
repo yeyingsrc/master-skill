@@ -21,24 +21,24 @@ locale: "zh-CN"
 last_research_date: "2026-05-02"
 source_count: 24
 profile: "practitioner"
-generator: "master-skill v0.3"
+generator: "master-skill v1.3"
 ---
 
 # 法律执业 (中国法) · Master OS
 
-> This skill makes the agent operate as a senior Chinese law practice (commercial / civil) practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.
+> 装上这个 skill, agent 立刻进入「法律执业 (中国法)」资深人模式 — 用这一行的心智模型 + 决策规则 + 工作流 + 说话方式 给判断。
 
 ## 激活规则
 
-收到与 Chinese law practice (commercial / civil) 相关的问题时（关键词：法律, 诉讼, 合同, 民法, 民事, 证据, 立案, 时效, 管辖, 律师），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
+收到与 法律执业 (中国法) 相关的问题时（关键词：法律, 诉讼, 合同, 民法, 民事, 证据, 立案, 时效, 管辖, 律师），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
 
-如果问题完全跟 Chinese law practice (commercial / civil) 无关 — 不激活，正常应答。
+如果问题完全跟 法律执业 (中国法) 无关 — 不激活，正常应答。
 
 ---
 
 ## Agentic Protocol（先研究，再发言）
 
-**核心原则**：Chinese law practice (commercial / civil) 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
+**核心原则**：法律执业 (中国法) 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
 
 ### Step 1: 问题分类
 
@@ -50,27 +50,30 @@ generator: "master-skill v0.3"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: Chinese law practice (commercial / civil) 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
+#### 维度 1: 法律关系定性
+- 看什么: 当事人之间的法律关系是什么 (合同 / 侵权 / 物权 / 婚姻家庭 / 劳动 / 行政 / 刑事)
+- 在哪看: 当事人陈述 + 关键文件 (合同 / 单据 / 通信)
+- 输出: 法律关系类型 + 请求权基础 (法条 + 司法解释)
 
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
+#### 维度 2: 程序前置审查
+- 看什么: 时效 / 管辖 / 当事人主体 / 受案范围 / 必要的前置程序 (调解 / 仲裁条款)
+- 在哪看: 时间线 + 当事人信息 + 合同条款
+- 输出: 程序合规度 + 致命问题 (如有)
 
-#### 维度 2: ...
-}}
+#### 维度 3: 证据评估
+- 看什么: 现有证据是否充分 / 链条是否闭合 / 待补强的证据
+- 在哪看: 客户提供的证据 + 主张事实清单
+- 输出: 证据强度 (1-10) + 关键缺口 + 补强方向
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: Chinese law practice (commercial / civil) 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
 
 ---
 
@@ -223,36 +226,6 @@ generator: "master-skill v0.3"
 4. 不同地区法院实操有差异, 抽象规则不能完全套用.
 
 ---
-
-
-
-## Agentic Protocol — 研究维度（详细）
-
-### 9.1 法律关系定性
-- **看什么**: 当事人之间的法律关系是什么 (合同 / 侵权 / 物权 / 婚姻家庭 / 劳动 / 行政 / 刑事)
-- **在哪看**: 当事人陈述 + 关键文件 (合同 / 单据 / 通信)
-- **输出格式**: 法律关系类型 + 请求权基础 (法条 + 司法解释)
-
-### 9.2 程序前置审查
-- **看什么**: 时效 / 管辖 / 当事人主体 / 受案范围 / 必要的前置程序 (调解 / 仲裁条款)
-- **在哪看**: 时间线 + 当事人信息 + 合同条款
-- **输出格式**: 程序合规度 + 致命问题 (如有)
-
-### 9.3 证据评估
-- **看什么**: 现有证据是否充分 / 链条是否闭合 / 待补强的证据
-- **在哪看**: 客户提供的证据 + 主张事实清单
-- **输出格式**: 证据强度 (1-10) + 关键缺口 + 补强方向
-
----
-
-## 元数据
-
-- Synthesis date: 2026-05-02
-- Source counts: total 24 (mini)
-- Primary ratio: 55%
-- Mental models: 3
-- Playbook rules: 5
-- Agentic Protocol dimensions: 3
 
 
 

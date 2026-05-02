@@ -53,7 +53,7 @@ META_FIELDS = [
     "changelog",
 ]
 
-GENERATOR_VERSION = "master-skill v0.3"
+GENERATOR_VERSION = "master-skill v1.3"
 
 
 # ---------------------------------------------------------------------------
@@ -215,30 +215,72 @@ last_updated values reflect the synthesis date. Individual research notes in
 """
 
 
+def format_protocol_dims_for_step2(agentic_protocol_section: str) -> str:
+    """从 synthesis Section 9 抽出每个 9.X 维度, 渲染成 Agentic Protocol Step 2 的 markdown.
+
+    输出格式:
+        #### 维度 1: {title}
+        - 看什么: {what}
+        - 在哪看: {where}
+        - 输出: {output_format}
+    """
+    dims_md: list[str] = []
+    pat = re.compile(
+        r"^###\s+9\.(\d+)\s+(.+?)$(?P<body>.*?)(?=^###\s+9\.|\Z)",
+        re.MULTILINE | re.DOTALL,
+    )
+    for m in pat.finditer(agentic_protocol_section):
+        dim_num = m.group(1)
+        title = m.group(2).strip()
+        body = m.group("body")
+        what_m = re.search(r"-\s*\*\*看什么\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
+        where_m = re.search(r"-\s*\*\*在哪看\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
+        out_m = re.search(r"-\s*\*\*输出格式\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
+        block = (
+            f"#### 维度 {dim_num}: {title}\n"
+            f"- 看什么: {what_m.group(1).strip() if what_m else ''}\n"
+            f"- 在哪看: {where_m.group(1).strip() if where_m else ''}\n"
+            f"- 输出: {out_m.group(1).strip() if out_m else ''}"
+        )
+        dims_md.append(block)
+    return "\n\n".join(dims_md)
+
+
 def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
                           research_date: str) -> str:
-    """Iter 22 fix #1: replace the SKILL.md body (from `## 心智模型` to end-of-template)
-    with synthesis-derived content, instead of the previous shell+stub approach.
+    """注入 synthesis 产物到 SKILL.md 模板.
 
-    Strategy:
-    - Find the start of the body in the rendered template (`^## 心智模型` or its
-      template-localized variant)
-    - Slice off everything from there onwards
-    - Append synthesis sections 1-9 as the new body, lightly reformatted so the
-      heading anchors used by Agentic Protocol Step 3 (`#心智模型`, `#标准-playbook`,
-      `#表达-dna`) still resolve.
+    两步注入:
+    1. 把 template 里 Agentic Protocol Step 2 的 `{{# Phase 2.9 ... }}` placeholder
+       替换为 Section 9 抽出的真实维度 (维度 1, 2, ...) — 这样 Step 2 不再是空的.
+    2. 砍掉 template 中 `## 心智模型` 之后的 stub, 用 synthesis 1-8 重写
+       (Section 9 已经在 Step 2 里, 这里不重复.)
+
+    section_order 不再含 agentic_protocol — Step 2 已经填充, 避免重复.
     """
+    # ---- Step 1: 用 Section 9 的真实维度替换 Step 2 的 placeholder ----
+    protocol_md = format_protocol_dims_for_step2(synthesis_sections.get("agentic_protocol", ""))
+    if protocol_md:
+        # 匹配模板里 `{{# Phase 2.9 ... \n}}` 多行块. 内嵌的 {{name}} 不能用懒惰
+        # 匹配 (会提前停止), 必须用「独占一行的 }}」作为终止锚点.
+        skill_md = re.sub(
+            r"\{\{#\s*Phase\s*2\.9.*?\n\}\}",
+            protocol_md,
+            skill_md,
+            count=1,
+            flags=re.DOTALL,
+        )
+    # ---- Step 2: 砍 body 后用 synthesis 重写 (不含 agentic_protocol) ----
     body_marker = re.search(r"^##\s+心智模型", skill_md, re.MULTILINE)
     if body_marker is None:
-        # Template structure shifted — just append the synthesis content
         synth_body = "\n\n---\n\n# Synthesized Body\n\n"
     else:
-        # Cut everything from the body marker onwards
-        skill_md = skill_md[: body_marker.start()].rstrip() + "\n\n---\n\n"
+        # template 末尾通常已经有 `---` 分隔线 (Step 3 之后), 不再额外加避免重复
+        trimmed = skill_md[: body_marker.start()].rstrip()
+        skill_md = trimmed + "\n\n"
         synth_body = ""
 
-    # Build body from synthesis sections in order. Strip the leading "## N. " numbering
-    # so headings become anchor-friendly (## 心智模型 not ## 1. 心智模型).
+    # Section 9 (agentic_protocol) 已在 Step 2 里, 不再重复
     section_order = [
         ("mental_models", "心智模型"),
         ("playbook", "标准 Playbook"),
@@ -248,13 +290,11 @@ def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
         ("quality_bars", "质量基准 + 反模式"),
         ("intellectual_genealogy", "智识谱系"),
         ("honest_boundaries", "诚实边界"),
-        ("agentic_protocol", "Agentic Protocol — 研究维度（详细）"),
     ]
 
     parts: list[str] = [synth_body] if synth_body else []
     for key, friendly_heading in section_order:
         section = synthesis_sections.get(key, "")
-        # Drop the original "## N. ..." heading line and replace with friendly heading
         section_body = re.sub(
             r"^##\s+\d+\.\s+[^\n]+\n", f"## {friendly_heading}\n", section,
             count=1, flags=re.MULTILINE,
@@ -262,7 +302,6 @@ def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
         parts.append(section_body.strip())
         parts.append("")
 
-    # Append the time-decay registry (fix #3)
     parts.append(build_time_decay_registry(synthesis_sections, research_date))
 
     return skill_md + "\n\n".join(parts)
@@ -349,11 +388,16 @@ def action_create(
         flags=re.MULTILINE,
     )
 
+    # display_name: 中文 locale 时用 industry_cn, 其他用 industry. 让 body 文案
+    # 在中文 skill 里读起来不生硬 (避免 "收到与 foot and ankle surgery 相关的问题时").
+    display_name = industry_cn if locale.startswith("zh") else industry
+
     # Replacements for the template's {{...}} placeholders
     replacements = {
         "industry-slug": slug,
         "industry-cn-name": industry_cn,
         "industry-en-name": industry,
+        "industry-display-name": display_name,
         "one-sentence value prop, e.g. \"automated mastery of LLM agent infrastructure: top builders' mental models, tool stack, current workflows, jargon, and where to keep up\".":
             f"automated mastery of {industry}: top builders' mental models, tool stack, current workflows, jargon, and where to keep up.",
         "trigger-cn-1": triggers[0] if len(triggers) > 0 else "造大师",
@@ -367,7 +411,9 @@ def action_create(
         "practitioner | learner | investor | consultant": profile,
         "X.Y": GENERATOR_VERSION.split(" ")[-1].lstrip("v"),
         "punchy one-liner — what this skill changes for the agent. Quote a top figure if natural.":
-            f"This skill makes the agent operate as a senior {industry} practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.",
+            (f"装上这个 skill, agent 立刻进入「{display_name}」资深人模式 — 用这一行的心智模型 + 决策规则 + 工作流 + 说话方式 给判断。"
+             if locale.startswith("zh")
+             else f"This skill makes the agent operate as a senior {industry} practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon."),
         "trigger-list": ", ".join(triggers) or "industry-specific keywords",
     }
 

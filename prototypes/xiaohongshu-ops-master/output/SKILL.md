@@ -17,24 +17,24 @@ locale: "zh-CN"
 last_research_date: "2026-05-02"
 source_count: 25
 profile: "practitioner"
-generator: "master-skill v0.3"
+generator: "master-skill v1.3"
 ---
 
 # 小红书运营 · Master OS
 
-> This skill makes the agent operate as a senior xiaohongshu operations practitioner — applying the field's mental models, picking the right tools, knowing the current workflows, speaking the jargon.
+> 装上这个 skill, agent 立刻进入「小红书运营」资深人模式 — 用这一行的心智模型 + 决策规则 + 工作流 + 说话方式 给判断。
 
 ## 激活规则
 
-收到与 xiaohongshu operations 相关的问题时（关键词：小红书, 种草, 薯条, 信息流, 笔记, 笔记测评），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
+收到与 小红书运营 相关的问题时（关键词：小红书, 种草, 薯条, 信息流, 笔记, 笔记测评），先按下方 **Agentic Protocol** 做功课，再用本 skill 的心智模型 + playbook 给出答复。
 
-如果问题完全跟 xiaohongshu operations 无关 — 不激活，正常应答。
+如果问题完全跟 小红书运营 无关 — 不激活，正常应答。
 
 ---
 
 ## Agentic Protocol（先研究，再发言）
 
-**核心原则**：xiaohongshu operations 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
+**核心原则**：小红书运营 不靠训练语料硬答。遇到需要事实支撑的问题，先按本节列出的研究维度做功课。
 
 ### Step 1: 问题分类
 
@@ -46,27 +46,30 @@ generator: "master-skill v0.3"
 
 判断原则：如果回答质量会因为缺少最新信息显著下降，必须先研究。
 
-### Step 2: xiaohongshu operations 式研究维度
+### Step 2: 按这一行的方式做功课
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-{{# Phase 2.9 推导出来的 5-8 个研究维度，每个含具体搜索动作。例如：
+#### 维度 1: 内容差距评估
+- 看什么: 当前账号 / 笔记跟头部对标差距在哪 — 选题 / 封面 / 文案 / 视频质感
+- 在哪看: 千瓜 / 蝉小红 / 灰豚的对标账号分析
+- 输出: 差距 score (1-10) + 1 句最大瓶颈
 
-#### 维度 1: {{name}}
-- 看什么：{{what to inspect}}
-- 在哪看：{{specific sources, not generic "search the web"}}
-- 输出：{{1-2 line factual summary}}
+#### 维度 2: 流量池判断
+- 看什么: 笔记当前在哪个流量层 — 初始流量池 / 中等流量池 / 大流量池
+- 在哪看: 笔记后台数据 + 实时刷新次数
+- 输出: 当前层级 + 突破到下一层的关键动作
 
-#### 维度 2: ...
-}}
+#### 维度 3: 投流性价比
+- 看什么: 类目当前 CPC / CPM, 自家笔记达标率
+- 在哪看: 信息流后台 + 行业 benchmark (蝉小红等)
+- 输出: ROI 区间 + 是否值得投
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
-### Step 3: xiaohongshu operations 式回答
+### Step 3: 用心智模型 + 决策规则输出回答
 
 基于 Step 2 的事实 + 本 skill 的 [心智模型](#心智模型) / [playbook](#标准-playbook) / [表达-dna](#表达-dna) 输出回答。
-
----
 
 ---
 
@@ -215,36 +218,6 @@ generator: "master-skill v0.3"
 3. 本 prototype 是 mini scope, 仅验证 zh-CN 内容运营行业的 CLI 生成.
 
 ---
-
-
-
-## Agentic Protocol — 研究维度（详细）
-
-### 9.1 内容差距评估
-- **看什么**: 当前账号 / 笔记跟头部对标差距在哪 — 选题 / 封面 / 文案 / 视频质感
-- **在哪看**: 千瓜 / 蝉小红 / 灰豚的对标账号分析
-- **输出格式**: 差距 score (1-10) + 1 句最大瓶颈
-
-### 9.2 流量池判断
-- **看什么**: 笔记当前在哪个流量层 — 初始流量池 / 中等流量池 / 大流量池
-- **在哪看**: 笔记后台数据 + 实时刷新次数
-- **输出格式**: 当前层级 + 突破到下一层的关键动作
-
-### 9.3 投流性价比
-- **看什么**: 类目当前 CPC / CPM, 自家笔记达标率
-- **在哪看**: 信息流后台 + 行业 benchmark (蝉小红等)
-- **输出格式**: ROI 区间 + 是否值得投
-
----
-
-## 元数据
-
-- Synthesis date: 2026-05-02
-- Source counts: total 25 (mini)
-- Primary ratio: 50%
-- Mental models: 3
-- Playbook rules: 5
-- Agentic Protocol dimensions: 3
 
 
 
