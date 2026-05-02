@@ -78,13 +78,19 @@
 - [x] SEO 专家 prototype (半技术行业)
 - [x] 恋爱高手 prototype (软技能 / 非工作类行业)
 
+## v1.3 — 8 个行业样本横切覆盖 ✅
+
+- [x] 短视频投流 master skill (商业 + 算法投放)
+- [x] 足踝外科 master skill (医疗强监管)
+- [x] 法律 master skill / 中国法 (法律强监管)
+
+8 个 prototype 横切覆盖技术 / 商业 / 内容运营 / 软技能 / 医疗 / 法律。
+
 ## v1.x — 计划中
 
 - [ ] Phase 1 子 agent 主动用 brave-search / agent-reach
 - [ ] 调 web-article-reader 精读关键文章
-- [ ] 短视频投流 master skill (完整 prototype)
-- [ ] 足踝外科 master skill (强监管行业)
-- [ ] 法律 master skill (强监管行业)
+- [ ] cli_writer 生成的 cluster 中文 anchor 加 transliteration (eg 「合规」→ "compliance")
 
 ## v2.x — Distribution
 

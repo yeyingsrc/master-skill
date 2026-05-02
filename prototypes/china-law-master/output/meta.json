@@ -1,0 +1,47 @@
+{
+  "name": "china-law-master",
+  "industry": "Chinese law practice (commercial / civil)",
+  "industry_cn": "法律执业 (中国法)",
+  "triggers": [
+    "法律",
+    "诉讼",
+    "合同",
+    "民法",
+    "民事",
+    "证据",
+    "立案",
+    "时效",
+    "管辖",
+    "律师"
+  ],
+  "locale": "zh-CN",
+  "profile": "practitioner",
+  "focus": {
+    "primary": "民商事诉讼 + 合同审核",
+    "secondary": "中国大陆法语境"
+  },
+  "last_research_date": "2026-05-02",
+  "source_count": 24,
+  "primary_source_ratio": 0.55,
+  "tracks_covered": [
+    "figures",
+    "tools",
+    "workflows",
+    "canon",
+    "sources",
+    "glossary"
+  ],
+  "mental_models_count": 3,
+  "playbook_rules_count": 5,
+  "research_dimensions_count": 3,
+  "sub_skills": [],
+  "generator": "master-skill v0.3",
+  "version": "0.3",
+  "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-05-02",
+      "what": "Initial generation"
+    }
+  ]
+}

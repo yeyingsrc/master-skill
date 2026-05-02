@@ -1,0 +1,12 @@
+{
+  "industry": "Chinese law practice (commercial / civil)",
+  "industry_cn": "法律执业 (中国法)",
+  "slug": "china-law",
+  "locale": "zh-CN",
+  "profile": "practitioner",
+  "focus": {"primary": "民商事诉讼 + 合同审核", "secondary": "中国大陆法语境"},
+  "triggers": ["法律", "诉讼", "合同", "民法", "民事", "证据", "立案", "时效", "管辖", "律师"],
+  "source_count": 24,
+  "primary_source_ratio": 0.55,
+  "tracks_covered": ["figures", "tools", "workflows", "canon", "sources", "glossary"]
+}

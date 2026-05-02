@@ -1,0 +1,45 @@
+{
+  "name": "foot-ankle-surgery-master",
+  "industry": "foot and ankle surgery",
+  "industry_cn": "足踝外科",
+  "triggers": [
+    "足踝",
+    "扭伤",
+    "足底筋膜炎",
+    "拇外翻",
+    "踝关节",
+    "韧带",
+    "跟腱",
+    "足踝外科"
+  ],
+  "locale": "zh-CN",
+  "profile": "practitioner",
+  "focus": {
+    "primary": "成人足踝慢性病变 + 运动损伤",
+    "secondary": "保守 vs 手术决策"
+  },
+  "last_research_date": "2026-05-02",
+  "source_count": 24,
+  "primary_source_ratio": 0.55,
+  "tracks_covered": [
+    "figures",
+    "tools",
+    "workflows",
+    "canon",
+    "sources",
+    "glossary"
+  ],
+  "mental_models_count": 3,
+  "playbook_rules_count": 5,
+  "research_dimensions_count": 3,
+  "sub_skills": [],
+  "generator": "master-skill v0.3",
+  "version": "0.3",
+  "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-05-02",
+      "what": "Initial generation"
+    }
+  ]
+}

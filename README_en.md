@@ -259,18 +259,18 @@ python3 tools/update_skill.py finalize --skill-dir <skill>
 
 Each is end-to-end runnable, with full research data + generated SKILL.md + executable bash tool suite:
 
-| Industry | Language | Path |
-|------|------|------|
-| 🔥 **LLM agent infrastructure** | English | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
-| ✅ **Cross-border e-commerce** | Chinese | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
-| ✅ **Xiaohongshu operations** | Chinese | [xiaohongshu-ops-master/](prototypes/xiaohongshu-ops-master/) |
-| ✅ **SEO expert** | Chinese | [seo-master/](prototypes/seo-master/) |
-| ✅ **Love coach** | Chinese | [love-coach-master/](prototypes/love-coach-master/) |
-| 🔲 Short-video paid ads | Chinese | planned |
-| 🔲 Foot-and-ankle surgery | Chinese | planned |
-| 🔲 Legal practice | Chinese | planned |
+| Industry | Category | Language | Path |
+|------|------|------|------|
+| 🔥 **LLM agent infrastructure** | Technical | English | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
+| ✅ **Cross-border e-commerce** | Commercial | Chinese | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
+| ✅ **Xiaohongshu operations** | Content ops | Chinese | [xiaohongshu-ops-master/](prototypes/xiaohongshu-ops-master/) |
+| ✅ **Short-video paid ads** | Commercial + algo | Chinese | [short-video-ads-master/](prototypes/short-video-ads-master/) |
+| ✅ **SEO expert** | Semi-technical | Chinese | [seo-master/](prototypes/seo-master/) |
+| ✅ **Love coach** | Soft skills | Chinese | [love-coach-master/](prototypes/love-coach-master/) |
+| ✅ **Foot-and-ankle surgery** | Medical (regulated) | Chinese | [foot-ankle-surgery-master/](prototypes/foot-ankle-surgery-master/) |
+| ✅ **Chinese law practice** | Legal (regulated) | Chinese | [china-law-master/](prototypes/china-law-master/) |
 
-Five industries spanning technical / commercial / content operations / soft skills — master-skill works across all of them.
+Eight industries cross-cutting technical, commercial, content operations, soft skills, medical, and legal — master-skill works across all of them.
 
 Research process is **fully transparent** — every prototype includes complete six-track research notes + the synthesis document, every mental model and decision rule traceable to its sources.
 
