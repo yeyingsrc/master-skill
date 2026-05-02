@@ -246,6 +246,51 @@ def format_protocol_dims_for_step2(agentic_protocol_section: str) -> str:
     return "\n\n".join(dims_md)
 
 
+def sanity_check_rendered_skill(skill_md: str) -> list:
+    """渲染完成的 SKILL.md 自检. 防止之前那种 "Step 2 占位符没填 / Section 9 重复" 再溜出去.
+
+    检查项:
+    - 没有残留的 `{{...}}` placeholder
+    - Agentic Protocol Step 2 有内容 (至少含一个 "维度" 或 "dimension" 字样)
+    - 心智模型 / 标准 Playbook / 诚实边界 三个核心 section 必须存在
+    - "Agentic Protocol" 字样只出现 1 次 (避免 Section 9 重复)
+
+    返回问题列表. 空列表 = pass.
+    """
+    issues: list = []
+
+    # 1. leftover placeholder
+    leftover = re.findall(r"\{\{[^}\n]{1,80}?\}\}", skill_md)
+    if leftover:
+        # 去重 + 列出最多 5 个
+        unique = list(dict.fromkeys(leftover))[:5]
+        issues.append(f"leftover {{...}} 占位符: {unique}")
+
+    # 2. Step 2 是否填充 (至少有 "维度" 字样)
+    step2_match = re.search(
+        r"### Step 2[^\n]*\n(?P<body>.*?)(?=\n### Step 3|\n##\s)",
+        skill_md, re.DOTALL,
+    )
+    if step2_match:
+        step2_body = step2_match.group("body")
+        if "维度" not in step2_body and "dimension" not in step2_body.lower():
+            issues.append("Agentic Protocol Step 2 没有「维度」字样, 可能未被填充")
+    else:
+        issues.append("找不到 Agentic Protocol Step 2 段")
+
+    # 3. 必须存在的核心 section
+    for required_heading in ["## 心智模型", "## 标准 Playbook", "## 诚实边界"]:
+        if required_heading not in skill_md:
+            issues.append(f"缺少必备 section: {required_heading}")
+
+    # 4. Agentic Protocol 字样只能在「## Agentic Protocol（先研究，再发言）」一处
+    ap_section_count = len(re.findall(r"^##\s+Agentic Protocol", skill_md, re.MULTILINE))
+    if ap_section_count > 1:
+        issues.append(f"Agentic Protocol 顶级 section 出现 {ap_section_count} 次 (应 = 1)")
+
+    return issues
+
+
 def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
                           research_date: str) -> str:
     """注入 synthesis 产物到 SKILL.md 模板.
@@ -435,6 +480,12 @@ def action_create(
         "total": intake.get("source_count", 0),
         "primary_ratio": intake.get("primary_source_ratio", 0.0),
     }
+
+    # 自检 1: 渲染后 SKILL.md 不应该有 leftover 占位符 / 未注入的 stub
+    self_check_issues = sanity_check_rendered_skill(skill_md)
+    if self_check_issues:
+        msg = "渲染后 SKILL.md 有问题, 不写出. 请检查 template / synthesis / inject 逻辑:\n  - " + "\n  - ".join(self_check_issues)
+        raise SkillWriterError(msg)
 
     # Write SKILL.md
     skill_md_path = skill_dir / "SKILL.md"
