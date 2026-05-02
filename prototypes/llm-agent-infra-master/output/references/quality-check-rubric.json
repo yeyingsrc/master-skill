@@ -1,0 +1,85 @@
+{
+  "skill_dir": "/Users/sway003/master-skill/skill/prototypes/llm-agent-infra-master/output",
+  "verdict": "PARTIAL",
+  "counts": {
+    "pass": 3,
+    "partial": 0,
+    "fail": 2,
+    "needs_subagent": 1,
+    "skipped": 6
+  },
+  "results": [
+    {
+      "id": "1",
+      "label": "心智模型数 (3-7)",
+      "status": "pass",
+      "detail": "5 models (in [3, 7])"
+    },
+    {
+      "id": "2",
+      "label": "心智模型局限 100% 填",
+      "status": "skipped",
+      "detail": "no mental model sections found (### 1.N pattern)"
+    },
+    {
+      "id": "3",
+      "label": "Playbook 数 (5-10)",
+      "status": "pass",
+      "detail": "7 rules (in [5, 10])"
+    },
+    {
+      "id": "4",
+      "label": "Playbook 案例 ≥ 1",
+      "status": "skipped",
+      "detail": "no Playbook section"
+    },
+    {
+      "id": "5",
+      "label": "工具三层覆盖",
+      "status": "skipped",
+      "detail": "no 工具栈 section found"
+    },
+    {
+      "id": "6",
+      "label": "工作流入门-资深差异 ≥ 80%",
+      "status": "skipped",
+      "detail": "no 工作流 section"
+    },
+    {
+      "id": "7",
+      "label": "表达 DNA 辨识度",
+      "status": "needs_subagent",
+      "detail": "Voice check (4.3) requires blind comparison with real practitioner samples — run prompts/quality_check.md Phase 4.3"
+    },
+    {
+      "id": "8",
+      "label": "诚实边界 ≥ 3 条",
+      "status": "skipped",
+      "detail": "no 诚实边界 section"
+    },
+    {
+      "id": "9",
+      "label": "一手来源 ≥ 50%",
+      "status": "fail",
+      "detail": "primary ratio = 0% (< 50%, mostly secondary)"
+    },
+    {
+      "id": "10",
+      "label": "Agentic Protocol 维度 (3-10)",
+      "status": "pass",
+      "detail": "5 dimensions (in [3, 10])"
+    },
+    {
+      "id": "11",
+      "label": "时效性标注完整",
+      "status": "fail",
+      "detail": "no time-decay marks (last_updated / decay risk) found"
+    },
+    {
+      "id": "12",
+      "label": "多 figure 共识门槛",
+      "status": "skipped",
+      "detail": "no synthesis.md to analyze figure attribution"
+    }
+  ]
+}
