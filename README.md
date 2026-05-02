@@ -2,12 +2,10 @@
 
 # 🎓 大师.skill
 
-### *你不再需要学习和寻找任何 skill。*
-### *只需要大师.skill — 任何行业，它都为你蒸馏出一套最先进、最适合你的 skill。*
+### *把一整个行业的资深认知，蒸馏成一个 skill。*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-v1.1-brightgreen)]()
-[![Stars](https://img.shields.io/github/stars/voidborne-d/master-skill?style=social)](https://github.com/voidborne-d/master-skill/stargazers)
 
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/voidborne-d/master-skill)
@@ -19,51 +17,55 @@
 <table>
 <tr><td align="left">
 
-🎯 &nbsp;**换了个行业**，不知道从哪学起？资深人脑子里的隐性知识根本没写在 README 里。<br>
-📰 &nbsp;**信息散落在 12 个 newsletter / 30 个 podcast / 5 个 Discord**，想跟上但永远在追？<br>
-🤖 &nbsp;**给 AI agent 喂一个行业的全部 PDF**，它依然像个外行 — 因为「百科 ≠ 这行的人怎么想」？
+🎯 &nbsp;**进入一个新行业**，不知道从哪学起？资深人脑子里的隐性知识，没写在任何一本书里。<br>
+📰 &nbsp;**信息散在十几个邮件订阅、几十个播客、一堆群里**，永远在追？<br>
+🤖 &nbsp;**把一个行业的全部资料喂给 AI**，它依然像个外行 — 因为「百科 ≠ 这一行的人怎么想」？
 
 </td></tr>
 </table>
 
-### ✨ 大师.skill 一次解决三件事
+### ✨ 大师.skill 一次解决这三件事
 
 <br>
 
-不是把行业百科塞进 prompt。是**蒸馏「这一行的资深人此刻在你旁边」的认知操作系统** — 心智模型、决策启发式、工具选型树、当前工作流、行业表达 DNA、反模式、诚实边界。
+**蒸馏的不只是人物，是一整个行业。**
 
-**告诉它你做哪个细分行业，30-60 分钟后，得到一个可装载的 `{industry}-master.skill`。**
+一个 skill，装下四件事：
+
+- 🧠 &nbsp;**资深人怎么想** — 心智模型 + 决策规则
+- ⚙️ &nbsp;**工作流怎么走** — 当前最先进的 SOP，每一步标注衰减时点
+- 🛠️ &nbsp;**工具怎么选** — 选型决策树 + 避坑清单 + 自动生成 bash 命令套件
+- 💬 &nbsp;**黑话怎么讲** — 行业表达方式 + 外行破绽
+
+告诉它你做哪个细分行业，30-60 分钟后，得到一个可装载的 skill。装到任何 AI agent — **立刻进入这一行的资深人模式**。
 
 <br>
 
-[🚀 安装](#-安装) · [✨ 效果示例](#-效果示例) · [🛠️ 不只是对话](#️-不只是对话还有工具流-v06) · [🧬 三代谱系](#-三代谱系) · [⭐ 已蒸馏行业](#-已蒸馏的行业-prototypes)
+[🚀 安装](#-安装) · [✨ 效果示例](#-效果示例) · [🛠️ 不只对话还有工具](#️-不只是对话还有工具流-v06) · [🧬 三代谱系](#-三代谱系) · [⭐ 已蒸馏行业](#-已蒸馏的行业)
 
 [**English README →**](README_en.md)
-
-[![Star History Chart](https://api.star-history.com/svg?repos=voidborne-d/master-skill&type=Date)](https://star-history.com/#voidborne-d/master-skill&Date)
 
 </div>
 
 ---
 
-> 📢 **2026.05.02 — v1.1 ship** · CLI 工具流 + cross-skill composition + 增量刷新.
-> 生成 skill 不只是对话顾问, 还自带 bash 命令套件. [Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
-
-> 🔥 **2026.05.02 — v1.0 public** · LLM agent infra prototype 端到端跑通 (Phase 4 PASS — 10 mech / 1 partial / 0 fail), repo 公开.
+> 📢 &nbsp;**2026.05.02 · v1.1 发布** — 生成的 skill 不只能对话，还自带一套 bash 命令工具帮你执行。[Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
+>
+> 🔥 &nbsp;**2026.05.02 · v1.0 公开** — 第一个完整行业（LLM agent 基础设施）端到端跑通验证。
 
 ---
 
 ## 🎯 它做什么
 
-[同事.skill](https://github.com/titanwings/colleague-skill) 把**一个人**蒸馏成 skill (一个具体的同事 / 朋友 / 偶像).
-[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把**任何人**的思维方式蒸馏成 skill (乔布斯 / 芒格 / 马斯克 / 张雪峰...).
-**大师.skill** 把**一整个行业的认知操作系统**蒸馏成 skill.
+[同事.skill](https://github.com/titanwings/colleague-skill) 把**一个人**蒸馏成 skill — 一个具体的同事、朋友、偶像。
+[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把**任何人**的思维方式蒸馏成 skill — 乔布斯、芒格、马斯克、张雪峰。
+**大师.skill** 把**一整个行业的认知操作系统**蒸馏成 skill。
 
-每一层都是 **10× 跃迁**:
+每一层都是十倍跃迁：
 
-| | 范围 | 输出 |
+| | 蒸馏的范围 | 给你什么 |
 |---|---|---|
-| 🧬 同事.skill | **一个**具体的人 | 一个能模仿这个人 work / persona 的 skill |
+| 🧬 同事.skill | **一个**具体的人 | 一个能模仿这个人工作方式 + 性格的 skill |
 | 🌟 女娲.skill | **任何**活着或死去的人 | 一个能用此人认知框架做判断的 skill |
 | 🎓 **大师.skill** | **一整个**细分行业 | 一个让 AI 进入「这行的资深人」模式的 skill |
 
@@ -128,89 +130,89 @@
        后两个调出花。你近 7 天创意素材曲线给我看一眼。
 ```
 
-**这不是把行业百科塞进 prompt** — 是用**这一行的 mental model + playbook**给你判断。
+**不是把行业百科塞进 prompt**，是用**这一行的心智模型 + 决策规则**给你判断。
 
-每个 skill 还自带 **Agentic Protocol** — 拿到行业新问题时，先按这一行人的研究维度去搜事实，再用上面这套 OS 输出判断。**不是说得像，是做得像。**
+每个 skill 都自带一套「研究协议」(Agentic Protocol) — 拿到一个行业新问题，它先按这行资深人的研究维度去搜事实，再用心智模型输出判断。**不是说得像，是做得像。**
 
 ---
 
 ## 🛠️ 不只是对话，还有工具流 (v0.6+)
 
-> 「大师不只是说怎么干，它还附一套 bash 工具帮你干。」
+> 大师不只告诉你怎么干，它还附一套 bash 工具帮你干。
 
-每个生成的 `{industry}-master.skill` 自带 `cli/` 子树 — 把认知 OS 物化成命令行工具：
+每个生成的 skill 自带一个 `cli/` 子目录 — 把认知操作系统物化成命令行工具：
 
 ```
 {industry}-master/
 └── cli/
-    ├── protocol/agentic.sh        # 拿到新问题 → 按 N 维度做功课 → 出 markdown 报告
-    ├── decision/{cluster}.sh      # playbook 规则聚类成的交互决策树
-    └── workflow/{slug}.sh         # SOP 走查 + 失败模式自检
+    ├── protocol/agentic.sh         # 拿到新问题 → 按几个研究维度做功课 → 出报告
+    ├── decision/{主题}.sh           # 决策树（按主题聚类的几条决策规则）
+    └── workflow/{流程}.sh           # 走查工作流 + 失败模式自检
 ```
 
-每个脚本支持 `--help` / `--explain` / `--dry-run` / `--json` 标准接口。一行命令出结构化报告：
+每个脚本都支持四个标准开关：`--help`（帮助）/ `--explain`（解释背后的心智模型）/ `--dry-run`（试跑）/ `--json`（机器可读输出）。
 
 ```bash
 # 拿到新问题：「该不该把 RAG 系统迁到 Vespa」
 $ ./cli/protocol/agentic.sh
-# → 引导你按 5 个研究维度收集信息 → 生成 agentic-protocol-{date}.md
+# → 引导你按 5 个研究维度收集信息 → 生成报告
 
-# Framework 选型决策
+# 选型决策
 $ ./cli/decision/framework-select.sh
 
-# 走完一个完整工作流，自动失败模式自检
+# 走完一个完整工作流 + 失败模式自检
 $ ./cli/workflow/build-rag-agent.sh
 
-# 看背后的心智模型 / playbook (不交互, 直接打印)
+# 解释背后的心智模型（不交互，直接打印）
 $ ./cli/decision/framework-select.sh --explain
 ```
 
-纯 bash 4 + POSIX coreutils，**零外部依赖**（没 jq / 没 Python）。由 [`tools/cli_writer.py`](tools/cli_writer.py) 自动从 synthesis 生成。完整 spec 在 [`references/cli-spec.md`](references/cli-spec.md)。
+**纯 bash + 系统命令，零外部依赖**（不需要 jq、不需要 Python）。由 [`tools/cli_writer.py`](tools/cli_writer.py) 自动从蒸馏结果生成。设计细节看 [`references/cli-spec.md`](references/cli-spec.md)。
 
 ---
 
-## 🌐 跨 skill 组合 (v1.1+)
+## 🌐 调用别的 skill (v1.1+)
 
-> 「大师.skill 不重新发明轮子。Phase 3 自动调女娲.skill 蒸馏 top 3 figures，嵌入 sub-skills/。」
+> 大师不重新发明轮子。Phase 3 自动调女娲.skill 蒸馏行业里最重要的 3 个人，嵌进 `sub-skills/`。
 
 ```
 {industry}-master/
 ├── SKILL.md
-└── sub-skills/                       ← 女娲蒸馏的 person sub-skill
-    ├── {figure-1}/SKILL.md           ← 比如 Karpathy
-    ├── {figure-2}/SKILL.md           ← 比如 Hamel Husain
-    └── {figure-3}/SKILL.md           ← 比如 Eugene Yan
+└── sub-skills/                       ← 女娲蒸馏的人物 sub-skill
+    ├── {人物-1}/SKILL.md             ← 比如 Karpathy
+    ├── {人物-2}/SKILL.md             ← 比如 Hamel Husain
+    └── {人物-3}/SKILL.md             ← 比如 Eugene Yan
 ```
 
-主大师 agent spawn 3 个**并行 subagent**，每个走完女娲.skill 完整 5 步流程，蒸馏出 person sub-skill 嵌入。
+大师同时启动 3 个子 agent，每个走完女娲.skill 完整流程，蒸馏出一个人物 sub-skill。
 
-需要某位 figure 的视角时，agent 自动加载对应 sub-skill — 不用整体重新触发。
+之后用户问到某位人物的视角时，agent 自动加载对应 sub-skill — 不用重跑大师。
 
-详见 [SKILL.md Phase 3.3-3.5](SKILL.md) + [`prompts/sub-skill-figures.md`](prompts/sub-skill-figures.md).
+详见 [SKILL.md Phase 3.3-3.5](SKILL.md) + [`prompts/sub-skill-figures.md`](prompts/sub-skill-figures.md)。
 
 ---
 
 ## 📦 它蒸馏了什么
 
-行业 OS 不是行业百科。这是大师.skill 提取的 7 层：
+行业的认知操作系统，不是行业的百科全书。大师.skill 从一个细分行业里提取 7 层：
 
 | 层 | 说明 |
 |---|---|
-| **怎么判断** | 心智模型 — 这一行的资深人看问题的镜片 |
-| **怎么决策** | 标准 playbook — 「如果 X，则 Y」的快速规则 |
-| **用什么工具** | 工具栈 + 选型决策树 |
-| **怎么干活** | 工作流 / SOP, 标注「2026-04 起这一步换成 Y」的时效 |
-| **怎么沟通** | 行业表达 DNA — 黑话 / register / 外行破绽 |
+| **怎么判断** | 心智模型 — 这行的资深人看问题用的镜片 |
+| **怎么决策** | 标准决策规则 — 「如果 X，则 Y」的快速判断 |
+| **用什么工具** | 工具栈 + 选型决策树 + 避坑清单 |
+| **怎么干活** | 工作流，每一步标注「2026-04 起这一步换成 Y」的时效 |
+| **怎么沟通** | 行业表达方式 — 黑话、说话节奏、外行破绽 |
 | **不做什么** | 反模式 — 外行才会犯的错 |
-| **知道局限** | 诚实边界 — 信息截止时间, 衰减最快的模块 |
+| **知道局限** | 诚实边界 — 信息截止时间，哪些模块衰减最快 |
 
 ### 诚实边界
 
-每个 skill 都明确标注做不到什么：
+每个 skill 都明确标注它做不到什么：
 
-- **工具 / 工作流模块**衰减最快 (建议每 3-6 月 update)
-- **法规 / 标准节**衰减极高 (12 月内必更新)
-- master skill **不能替代真实 production debugging 经验** — 给的是认知框架, 不是 incident response
+- 工具和工作流的模块**衰减最快**，建议每 3-6 个月刷新一次
+- 法规和标准的模块**衰减更快**，12 个月内一定要更新
+- 大师不能替代真实的实战经验 — 给的是认知框架，不是事故处理手册
 
 **一个不告诉你局限在哪的 skill，不值得信任。**
 
@@ -247,82 +249,81 @@ git clone https://github.com/voidborne-d/master-skill.git <TARGET>
 
 ## 🚀 用法
 
-启动大师.skill 的 host 中：
+在装好大师.skill 的 agent 里，直接说：
 
 ```
-> 造大师 LLM agent infra
-> 做个跨境电商运营的 master skill
-> 我做的是足踝外科, 给我蒸一个
+> 造大师 LLM agent 基础设施
+> 做个跨境电商运营的大师 skill
+> 我做的是足踝外科，给我蒸一个
 
 > update 大师 LLM-agent-infra      # 6 个月后增量刷新
 ```
 
-大师.skill 跟你确认 6 件事 (行业 / 子方向 / 地域 / 你的角色 / 有没有一手素材 / 是新建还是更新), 然后启动 **6 路并行调研**: 行业大佬 / 工具地图 / 工作流 / 知识正典 / 信息源 / 术语标准.
+大师跟你确认 6 件事（行业、子方向、地域、你的角色、有没有一手素材、是新建还是更新），然后启动**六路并行调研**：行业大佬 / 工具地图 / 工作流 / 知识正典 / 信息源 / 术语标准。
 
-30-60 分钟后你拿到一个 `{industry}-master.skill` 目录, 装到任意 Claude Code / OpenClaw / Codex / Hermes agent, 立即让它进入「这一行的资深人」模式.
+30-60 分钟后你拿到一个 `{行业}-master` 目录。装到任意 agent，立刻进入「这一行的资深人」模式。
 
-### 🎛️ 调用生成的 master skill
+### 🎛️ 调用生成出来的 skill
 
 ```
-> 用 LLM-agent-infra-master 帮我评估这个 framework 选型
+> 用 llm-agent-infra-master 帮我评估这个框架选型
 > 用 跨境电商-master 看一下我这个亚马逊 listing
-> @LLM-agent-infra-master --explain framework-select   # 用 CLI 形式调用
+> 让 llm-agent-infra-master 跑 framework-select 决策树
 ```
 
 ### 💻 命令行直接跑
 
 ```bash
-# 5 命令端到端 pipeline
-python3 tools/research/merge_research.py merge --skill-dir ./prototype/      # Phase 1.5
-python3 tools/skill_writer.py create --skill-dir ./output ...                # Phase 3
-python3 tools/research/quality_check.py check --skill-dir ./output           # Phase 4.4
-python3 tools/install.py install --host claude --source ./output             # Deploy
+# 5 步端到端流程
+python3 tools/research/merge_research.py merge --skill-dir ./prototype/   # 调研评审
+python3 tools/skill_writer.py create --skill-dir ./output ...             # 生成 skill
+python3 tools/research/quality_check.py check --skill-dir ./output        # 质量检查
+python3 tools/install.py install --host claude --source ./output          # 安装到宿主
 
-# 增量刷新 (v1.1)
-python3 tools/update_skill.py plan --skill-dir <existing-skill>
-python3 tools/update_skill.py archive --skill-dir <skill> && \
-  python3 tools/update_skill.py mark-in-progress --tracks tools,workflows
-# (agent 重跑选定 tracks)
-python3 tools/update_skill.py finalize --skill-dir <skill>
+# 增量刷新（v1.1）
+python3 tools/update_skill.py plan --skill-dir <已有的 skill>           # 1. 看哪些模块该刷
+python3 tools/update_skill.py archive --skill-dir <skill>               # 2. 归档旧调研
+python3 tools/update_skill.py mark-in-progress --tracks tools,workflows # 3. 标记开始更新
+# (agent 重跑选定的几路调研)
+python3 tools/update_skill.py finalize --skill-dir <skill>              # 4. 完成 + 写 changelog
 ```
 
 ---
 
-## ⭐ 已蒸馏的行业 (Prototypes)
+## ⭐ 已蒸馏的行业
 
-每个 prototype 是端到端跑过一遍的 sample skill, 包含完整调研数据 + 生成的 SKILL.md + 可执行的 cli/ 工具流：
+每个都是端到端跑过的样本，包含完整调研数据 + 生成出的 SKILL.md + 一套可跑的 bash 工具：
 
-| 行业 | Locale | Phase 4 | CLI scripts | 路径 |
-|------|--------|---------|-------------|------|
-| 🔥 **LLM agent infra** | en (global) | ✅ PASS (10/12 mech) | 11 (1+6+3+lib+README) | [prototypes/llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
-| ✅ **跨境电商运营** | zh-CN | mini scope | 5 (1+1+2+lib+README) | [prototypes/cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
-| 🔲 短视频投流 | zh-CN | planned | — | (v1.x) |
-| 🔲 足踝外科 | zh-CN | planned | — | (v1.x) |
+| 行业 | 语言 | 验证情况 | bash 工具 | 路径 |
+|------|------|---------|----------|------|
+| 🔥 **LLM agent 基础设施** | 英文 | 全部 12 项检查通过 10 项 | 11 个脚本 | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
+| ✅ **跨境电商运营** | 中文 | 精简版（验证用） | 5 个脚本 | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
+| 🔲 短视频投流 | 中文 | 计划中 | — | （v1.x 路线） |
+| 🔲 足踝外科 | 中文 | 计划中 | — | （v1.x 路线） |
 
-调研过程**全透明**. 每个 prototype 都包含完整 6 路调研数据 + synthesis.md, 可以追溯每个心智模型 / playbook 规则的来源.
+调研过程**完全透明**。每个样本都附完整的六路调研笔记 + 蒸馏文档，可以追溯每条心智模型、每条决策规则是从哪几个来源出来的。
 
-想蒸馏不在列表里的行业? 装大师.skill, 说「造大师 XXX」即可.
+想蒸馏不在列表里的行业？装大师.skill，说「造大师 XXX」就行。
 
 ---
 
 ## 🔬 工作原理
 
-输入一个细分行业之后, 大师.skill 做 **5 件事**:
+输入一个细分行业，大师.skill 做这几件事：
 
 ```
-Phase 0    行业澄清          ← 用户给坏粒度时主动收窄 (拒绝「AI」, 引导到「LLM agent infra」)
-Phase 0.5  创建目录          ← 自包含, 所有产物都在 skill 内部
-Phase 1    六轨并行调研      ← 6 个 subagent: figures / tools / workflows / canon / sources / glossary
-Phase 1.5  调研 review 关卡  ← 用户确认调研质量再继续 (不让垃圾输入污染下游)
-Phase 2    框架提炼          ← 三重验证 (跨场景复现 / 生成力 / 排他性) 挡住行业八股
-Phase 2.5  提炼 review 关卡  ← 用户确认 OS 框架再生成
-Phase 3    skill 写出        ← skill_writer 生成完整目录 (含自动调女娲蒸 sub-skill + 自动生成 cli/)
-Phase 4    三测验证          ← 已知 / 边界 / 风格盲测
-Phase 5    双 agent 精炼     ← 优化 skill 的「激活即执行」程度
+1. 行业澄清          ← 粒度太粗主动收窄（拒绝「AI」，引导到「LLM agent 基础设施」）
+2. 创建目录          ← 所有产物都在 skill 自己的目录内，自包含
+3. 六路并行调研      ← 6 个子 agent：行业大佬 / 工具 / 工作流 / 知识正典 / 信息源 / 术语
+   ─ 调研评审关卡    ← 你确认调研质量再继续，不让垃圾输入污染下游
+4. 框架蒸馏          ← 三重验证（跨场景 / 生成力 / 排他性）挡住行业八股
+   ─ 蒸馏评审关卡    ← 你确认认知框架再生成
+5. 写出 skill        ← 自动生成完整目录、调女娲蒸人物 sub-skill、emit bash 工具
+6. 三测验证          ← 已知问题 / 边界问题 / 风格盲测
+7. 双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 ```
 
-详见 [SKILL.md](SKILL.md) — 524 行 agent 可加载的工作流规约.
-方法论看 [references/extraction-framework.md](references/extraction-framework.md) — 三重验证、工具栈三层提炼、流派分歧处理、衰减速度表.
+详见 [SKILL.md](SKILL.md) — 524 行的 agent 可加载工作流。方法论看 [references/extraction-framework.md](references/extraction-framework.md) — 三重验证、工具栈三层提炼、流派分歧处理、衰减速度表。
 
 ---
 
@@ -331,15 +332,15 @@ Phase 5    双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 大师.skill 站在两个前作的肩膀上：
 
 ```
-🧬 同事.skill     蒸馏一个具体的人          范围: 1 人
-🌟 女娲.skill     蒸馏一种思维方式          范围: 任何活人 / 历史人物
-🎓 大师.skill     蒸馏一个细分行业的 OS     范围: 一整个领域
+🧬 同事.skill     蒸馏一个具体的人          范围：1 人
+🌟 女娲.skill     蒸馏一种思维方式          范围：任何活人或历史人物
+🎓 大师.skill     蒸馏一个细分行业的认知    范围：一整个领域
 ```
 
-- **[同事.skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — 证明「蒸馏一个人」是可行的. 提供了 intake → multi-source collect → analyze → write 的元 skill 模式.
-- **[女娲.skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — 证明「蒸馏思维方式」比「蒸馏话语」更有价值. 提供了 6-agent 并行 swarm + 三重质量关卡 + Agentic Protocol. **大师.skill 在 Phase 3 调用女娲.skill 蒸馏 top 3 figures, 作为生成 skill 的 sub-skill**.
+- **[同事.skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — 证明「蒸馏一个人」是可行的，提供了「了解 → 多源采集 → 分析 → 写出」这套元 skill 模式。
+- **[女娲.skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — 证明「蒸馏思维方式」比「蒸馏话语」更有价值，提供了 6 个 agent 并行调研 + 三重质量关卡 + 研究协议这套架构。**大师.skill 在 Phase 3 直接调女娲，蒸出行业最重要的 3 个人作为 sub-skill。**
 
-三者同源, 逐层放大 — 蒸馏一个你认识的人 → 任何活着或死去的人 → 一整个领域的人类知识。
+三者同源，逐层放大 — 一个你认识的人 → 任何活着或死去的人 → 一整个领域的人类知识。
 
 ---
 
@@ -347,47 +348,47 @@ Phase 5    双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 
 ```
 master-skill/
-├── SKILL.md                          # 大师本体 (524 行 agent 可加载)
-├── prompts/                          # 5 phase prompt 系统
-│   ├── intake.md                     #   Phase 0 行业澄清
-│   ├── research/01-06.md             #   Phase 1 六路调研模板
-│   ├── synthesis.md                  #   Phase 2 提炼指引
-│   ├── quality_check.md              #   Phase 4 验证 rubric
-│   └── sub-skill-figures.md          #   Phase 3 调女娲的 subagent prompt
+├── SKILL.md                          # 大师本体（核心工作流规约）
+├── prompts/                          # 提示词系统
+│   ├── intake.md                     #   行业澄清
+│   ├── research/01-06.md             #   六路调研提示词
+│   ├── synthesis.md                  #   蒸馏指引
+│   ├── quality_check.md              #   质量检查标准
+│   └── sub-skill-figures.md          #   调女娲的子 agent 模板
 ├── tools/                            # 7 个 Python 工具
-│   ├── skill_writer.py               #   Phase 3 写 skill 目录
-│   ├── cli_writer.py                 #   v0.6 emit cli/ 子树
-│   ├── update_skill.py               #   v1.1 增量刷新
-│   ├── install.py                    #   4 host 安装器
-│   ├── research/merge_research.py    #   Phase 1.5 review 聚合
-│   ├── research/quality_check.py     #   Phase 4.4 机械 rubric
-│   └── transcribe/                   #   yt-dlp + SRT/VTT 字幕处理
+│   ├── skill_writer.py               #   生成 skill 目录
+│   ├── cli_writer.py                 #   生成 bash 工具子目录（v0.6）
+│   ├── update_skill.py               #   增量刷新（v1.1）
+│   ├── install.py                    #   四宿主安装器
+│   ├── research/merge_research.py    #   调研评审聚合
+│   ├── research/quality_check.py     #   自动质量检查
+│   └── transcribe/                   #   字幕下载 + 文本处理
 ├── references/
 │   ├── skill-template.md             #   生成产物的标准结构
-│   ├── extraction-framework.md       #   提炼方法论 (深入看这个)
-│   └── cli-spec.md                   #   CLI 工具流设计 spec
+│   ├── extraction-framework.md       #   蒸馏方法论（想深入看这个）
+│   └── cli-spec.md                   #   bash 工具的设计文档
 └── prototypes/
-    ├── llm-agent-infra-master/       #   v1.0 完整 prototype
-    └── cross-border-ecommerce-master/  #   v1.1 zh-CN mini prototype
+    ├── llm-agent-infra-master/       #   完整样本（v1.0）
+    └── cross-border-ecommerce-master/  #   中文精简样本（v1.1）
 ```
 
 ---
 
 ## ⚠️ 注意
 
-**调研材料质量 = skill 质量**. 不同维度的来源优先级不同：
+**调研材料的质量 = skill 的质量**。不同维度的来源优先级不同：
 
-| 维度 | 来源优先级 (高 → 低) |
-|------|---------------------|
-| 🌟 行业大佬 (Track 01) | 本人 long-form (书 / 长访谈 / blog 系列) **›** 决策记录 (公开发声 / 提交记录) **›** 二手转述 |
-| 🛠️ 工具地图 (Track 02) | 工具官方 docs **›** 工程师生产案例 **›** 教程 / SEO 软文 |
-| 📋 工作流 (Track 03) | 公司技术博客的真实 SOP **›** 资深人长访谈 **›** 培训机构 outline |
-| 📚 知识正典 (Track 04) | 行业人推荐书单 (≥3 个独立来源都点过) **›** 学术综述 **›** 二手书评 |
-| 📰 信息源 (Track 05) | 行业人订阅清单 **›** 主流媒体长稿 **›** 内容农场 |
+| 维度 | 来源优先级（高到低） |
+|------|------|
+| 🌟 行业大佬 | 本人长篇（书 / 长访谈 / 博客系列）**›** 决策记录（公开发声 / 提交记录）**›** 二手转述 |
+| 🛠️ 工具地图 | 官方文档 **›** 工程师生产案例 **›** 培训教程 / SEO 软文 |
+| 📋 工作流 | 公司技术博客的真实流程 **›** 资深人长访谈 **›** 培训机构大纲 |
+| 📚 知识正典 | 行业人推荐书单（至少 3 个独立来源都点过）**›** 学术综述 **›** 二手书评 |
+| 📰 信息源 | 行业人订阅清单 **›** 主流媒体长稿 **›** 内容农场 |
 
-- 中文 locale 自动排除知乎 / 微信公众号 / 百度百科 / CSDN (除原文)
-- 信息越早 cutoff, 工具 / 工作流模块越快衰减 — 用 `update 大师 X` 增量刷新
-- 这是 v1.1, 还在快速迭代. 发现 bug 请 file issue!
+- 中文环境下自动排除知乎、微信公众号、百度百科、CSDN（除非作者原文）
+- 信息截止得越早，工具和工作流的模块衰减越快 — 用 `update 大师 X` 增量刷新
+- 这是 v1.1，还在快速迭代。发现 bug 请提 issue。
 
 ---
 
@@ -395,15 +396,39 @@ master-skill/
 
 | 版本 | 内容 | 状态 |
 |------|------|------|
-| v0.1-0.4 | SKILL spec + prompts + tools + polish | ✅ |
-| v1.0 | LLM agent infra prototype 端到端验证, repo 公开 | ✅ |
-| v0.6 | CLI 工具流 — 生成 skill 自带 bash 套件 | ✅ |
-| v1.1 | Cross-skill composition + 增量刷新 + zh-CN prototype | ✅ |
-| v1.x | cluster 关键词从 synthesis 自学 / cron refresh hook | 🔲 |
-| v1.x | 更多行业 prototype (短视频 / 足踝外科 / 法律) | 🔲 |
-| v2.x | PyPI 打包 / GitHub Action 自动 update / 多语言 | 🔲 |
+| v0.1-0.4 | 工作流规约 + 提示词 + 工具 + 打磨 | ✅ |
+| v1.0 | 完成第一个完整样本（LLM agent 基础设施），仓库公开 | ✅ |
+| v0.6 | bash 工具流 — 生成的 skill 自带命令套件 | ✅ |
+| v1.1 | 调用别的 skill + 增量刷新 + 中文样本 | ✅ |
+| v1.x | 决策树主题从蒸馏结果自动学 / 定时自动刷新 hook | 🔲 |
+| v1.x | 更多行业样本：短视频投流 / 足踝外科 / 法律 | 🔲 |
+| v2.x | PyPI 打包 / GitHub Action 自动更新 / 多语言文档 | 🔲 |
 
-详见 [ROADMAP.md](ROADMAP.md).
+详见 [ROADMAP.md](ROADMAP.md)。
+
+---
+
+## 📜 许可证
+
+MIT — 随便用，随便改，随便造。
+
+<div align="center">
+
+<br>
+
+**🧬 同事.skill** 蒸馏一个**具体的人**做什么。<br>
+**🌟 女娲.skill** 蒸馏**任何人**怎么想。<br>
+**🎓 大师.skill** 蒸馏**一整个行业**的认知 + 工作流 + 工具。<br>
+
+<br>
+
+*把一整个行业的资深认知，蒸馏成一个 skill。*
+
+<br>
+
+MIT License © [voidborne-d](https://github.com/voidborne-d) · 中文 README · [English](README_en.md)
+
+</div>
 
 ---
 
@@ -416,28 +441,3 @@ master-skill/
    <img alt="Star History Chart" src="https://api.star-history.com/image?repos=voidborne-d/master-skill&type=date" />
  </picture>
 </a>
-
----
-
-## 📜 许可证
-
-MIT — 随便用，随便改，随便造。
-
-<div align="center">
-
-<br>
-
-**🧬 同事.skill** 蒸馏了**一个人**做什么.<br>
-**🌟 女娲.skill** 蒸馏了**任何人**怎么想.<br>
-**🎓 大师.skill** 蒸馏了**一整个行业**的认知操作系统.<br>
-
-<br>
-
-*你不再需要去 awesome-skills 列表里挑.*<br>
-*告诉大师.skill 你做哪一行, 它把这一行的人, 蒸馏成你能装载的 skill.*
-
-<br>
-
-MIT License © [voidborne-d](https://github.com/voidborne-d) · 中文 README · [English](README_en.md)
-
-</div>
