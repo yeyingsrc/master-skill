@@ -10,7 +10,7 @@
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-teal)](https://github.com/voidborne-d/master-skill)
 [![Codex](https://img.shields.io/badge/Codex-Skill-black)](https://github.com/voidborne-d/master-skill)
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/voidborne-d/master-skill)
-[![Status](https://img.shields.io/badge/status-v0.1--draft-orange)]()
+[![Status](https://img.shields.io/badge/status-v1.0-brightgreen)]()
 
 [**English**](#english) · 中文
 
@@ -133,6 +133,35 @@ git clone https://github.com/voidborne-d/master-skill.git ~/.claude/skills/maste
 
 ---
 
+## Quickstart — 5 命令端到端
+
+整个 pipeline 命令行可调:
+
+```bash
+# 1. Phase 1.5 — 6 个 research 文件齐全后, 跑一次质量评审
+python3 tools/research/merge_research.py merge --skill-dir ./prototype/
+
+# 2. Phase 2 — Agent 按 prompts/synthesis.md 提炼成 references/synthesis.md (人工或子 agent)
+
+# 3. Phase 3 — 生成 skill 目录
+python3 tools/skill_writer.py create \
+  --skill-dir ./output \
+  --intake ./prototype/intake.json \
+  --synthesis ./prototype/references/synthesis.md \
+  --template references/skill-template.md \
+  --research-dir ./prototype/references/research
+
+# 4. Phase 4.4 — 机械 rubric 验证
+python3 tools/research/quality_check.py check --skill-dir ./output
+
+# 5. 安装到任意宿主 (claude / openclaw / codex / hermes / all)
+python3 tools/install.py install --host claude --source ./output
+```
+
+完整的 prototype run 看 [prototypes/llm-agent-infra-master/](prototypes/llm-agent-infra-master/) — LLM agent infra 行业的实跑结果，过 Phase 4 验证（10 pass / 1 partial / 0 fail）。
+
+---
+
 ## 工作原理
 
 5 phase + 3 质量关卡，全程可被拦截：
@@ -159,11 +188,13 @@ Phase 5   双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 | 版本 | 内容 | 状态 |
 |------|------|------|
 | v0.1 | SKILL.md + README + ROADMAP | ✅ |
-| v0.2 | 模板 + prompts (intake / research × 6 / synthesis / quality-check) | 🔨 进行中 |
-| v0.3 | 工具：merge_research / quality_check / yt-dlp 字幕管线 / skill_writer / 各宿主 installers | 🔲 |
-| v0.4 | 跨 skill 调用：调用女娲.skill 蒸 top 3 figures 当 sub-skill | 🔲 |
-| v0.5 | 增量刷新：`update 大师 X` 按衰减表只刷工具/工作流 | 🔲 |
-| v1.0 | repo 公开 + ≥ 3 个真实行业 sample skill 开源 | 🔲 |
+| v0.2 | 模板 + prompts (intake / research × 6 / synthesis / quality-check) | ✅ |
+| v0.3 | 工具：skill_writer / merge_research / quality_check / yt-dlp 字幕管线 / 4 宿主 installers | ✅ |
+| v0.4 | polish + adaptive cold-floor + cross-track contradiction detection + voice surrogate + multi-host install | ✅ |
+| v1.0 | LLM agent infra prototype 跑通 Phase 0→4, repo 公开 | ✅ |
+| v1.x | 跨 skill 调用：Phase 3 自动调女娲.skill 蒸 top 3 figures 当 sub-skill | 🔲 |
+| v1.x | 增量刷新：`update 大师 X` 按衰减表只刷工具/工作流 | 🔲 |
+| v0.6 | CLI output：生成的 industry skill 包含 bash-callable scripts | 🔲 |
 
 详细看 [ROADMAP.md](ROADMAP.md)。
 
