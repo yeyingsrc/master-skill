@@ -163,8 +163,15 @@ def _section(text: str, header_re: str) -> str:
 
 
 def cluster_rules(rules: list) -> dict:
-    """Group playbook rules by topic. Returns dict[cluster_slug] -> list of rules."""
+    """Group playbook rules by topic. Returns dict[cluster_slug] -> list of rules.
+
+    Rules that don't match any predefined LLM-agent-infra cluster fall into
+    "general-playbook" so they always get emitted. This makes the clustering
+    work cross-industry (e.g. cross-border ecommerce won't share keywords with
+    LLM agent infra but its rules still need a CLI script).
+    """
     clusters: dict[str, list] = {k: [] for k in CLUSTER_KEYWORDS}
+    clusters["general-playbook"] = []
 
     for rule in rules:
         blob = (rule["condition"] + " " + rule["action"]).lower()
@@ -175,6 +182,8 @@ def cluster_rules(rules: list) -> dict:
         scores.sort(reverse=True)
         if scores[0][0] > 0:
             clusters[scores[0][1]].append(rule)
+        else:
+            clusters["general-playbook"].append(rule)
 
     return {k: v for k, v in clusters.items() if v}
 

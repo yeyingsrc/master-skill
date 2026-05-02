@@ -1,0 +1,43 @@
+{
+  "name": "cross-border-ecommerce-master",
+  "industry": "cross-border e-commerce operations",
+  "industry_cn": "跨境电商运营",
+  "triggers": [
+    "跨境电商",
+    "亚马逊运营",
+    "Amazon EU",
+    "VAT",
+    "包装法",
+    "选品"
+  ],
+  "locale": "zh-CN",
+  "profile": "practitioner",
+  "focus": {
+    "primary": "Amazon EU operations",
+    "secondary": "compliance + ad strategy"
+  },
+  "last_research_date": "2026-05-02",
+  "source_count": 30,
+  "primary_source_ratio": 0.55,
+  "tracks_covered": [
+    "figures",
+    "tools",
+    "workflows",
+    "canon",
+    "sources",
+    "glossary"
+  ],
+  "mental_models_count": 3,
+  "playbook_rules_count": 5,
+  "research_dimensions_count": 3,
+  "sub_skills": [],
+  "generator": "master-skill v0.3",
+  "version": "0.3",
+  "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-05-02",
+      "what": "Initial generation"
+    }
+  ]
+}

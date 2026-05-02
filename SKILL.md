@@ -430,14 +430,83 @@ Agentic Protocol：N 个研究维度
 | Figures / Tools / Workflows / Canon / Sources / Glossary | Track 01-06 整理后摘要 + 链接到 `references/research/` |
 | 调研来源 | 6 轨引用汇总 |
 
-#### Step 3: Top Figures Sub-skill（可选但推荐）
+#### Step 3: Top Figures Sub-skill — cross-skill composition (v1.x)
 
-如果用户在 Phase 0A 选了「全景画像」或明确要求：
-- 调用 [女娲.skill](https://github.com/alchaincyf/nuwa-skill) 蒸馏 Track 01 中的 top 3 figures
-- 生成的 person sub-skill 放在 `{slug}-master/sub-skills/` 下
-- 在主 SKILL.md 中以「调用以下 sub-skill 获取 X 的视角」的方式引用
+> 大师.skill 调女娲.skill 蒸馏 top figures, 生成的 person sub-skill 嵌入 `sub-skills/`. 这是 cross-skill composition 的核心 — 大师不重新发明 person 蒸馏, 它委托给女娲.
 
-如果用户选了「聚焦」或时间紧 → 跳过，只在主 skill 中保留 figures 摘要。
+#### 3.0 先决条件
+
+- 用户在 Phase 0A 选了「全景画像」或明确要求 sub-skill
+- Track 01 (figures) 至少有 3 个 figures 已被多源认可（≥ 2 endorsement-evidence per figure）
+- nuwa-skill 已安装 (`~/.claude/skills/nuwa-skill/` 或 `~/.openclaw/skills/nuwa-skill/`); 没有则告知用户「装一下女娲.skill 才能展开 sub-skill 步骤」
+
+如果用户选了「聚焦」或时间紧 → 跳过本步, 只在主 skill 中保留 figures 摘要 (Track 01 输出已足够).
+
+#### 3.1 选 Top 3 figures
+
+读 `references/research/01-figures.md`, 按以下排序选 top 3:
+
+| 优先级 | 标准 |
+|------|------|
+| 1 | endorsement count (≥ 3 个独立来源点过为优先) |
+| 2 | long-form material 量 (有 ≥ 2 hour podcast / multiple book chapters / ≥ 5 long-form blog) |
+| 3 | 思维方式独特度 (figures 之间观点重叠度低, 同一行业 3 个一样的 figure 没意义) |
+| 4 | 当前活跃度 (最近 12 月有公开发声) |
+
+**反模式**: 选「业内最有名」(可能只是 PR 强), 而忽略「思维最锐利」.
+
+#### 3.2 准备每个 figure 的素材包
+
+为每个 top figure 准备:
+- **基础事实**: 姓名 / 公司 / 角色 / 主要观点 (从 01-figures.md 的「核心一句话」字段)
+- **长素材**: ≥ 2 个 long-form material 的 transcript / 长文 (优先用 `tools/transcribe/youtube.sh` 处理 podcast / talk)
+- **代表作品**: 文章 / 演讲题目 / 书 (URL 可)
+- **争议立场**: figure 的非 mainstream 观点 (这部分通常最能体现思维方式)
+
+把这些写到一个临时 prompt blob, 用 [`prompts/sub-skill-figures.md`](prompts/sub-skill-figures.md) 模板填充.
+
+#### 3.3 spawn subagent 调用 nuwa-skill
+
+```
+spawn subagent (general-purpose):
+prompt: 「{prompts/sub-skill-figures.md 填充后的内容}」
+working_directory: {slug}-master/sub-skills/{figure-slug}/
+```
+
+subagent 拿到任务后:
+1. 读 `~/.claude/skills/nuwa-skill/SKILL.md` (或者其他 host 的 nuwa 安装路径)
+2. 走 nuwa-skill 的 5 步流程 (intake → 思维素材采集 → 三轨提炼 → 生成 → 验证)
+3. 把生成的 person sub-skill 写到 `{slug}-master/sub-skills/{figure-slug}/`
+4. subagent 完成后回主 agent, 报告写入文件清单
+
+主 agent 跑 3 个 subagent **并行** (3 个 figures 互不依赖, 可并发).
+
+#### 3.4 在主 SKILL.md 中绑定 sub-skill
+
+主 SKILL.md 「智识谱系」节末尾自动插入:
+
+```markdown
+### Sub-skills (女娲蒸馏的 top figures)
+
+需要某位 figure 的视角时, 加载对应 sub-skill:
+
+| Figure | Sub-skill 路径 | 何时调用 |
+|--------|--------------|---------|
+| {figure-1} | `sub-skills/{slug-1}/SKILL.md` | 当问题涉及 {topic-1} 时 |
+| {figure-2} | `sub-skills/{slug-2}/SKILL.md` | 当问题涉及 {topic-2} 时 |
+| {figure-3} | `sub-skills/{slug-3}/SKILL.md` | 当问题涉及 {topic-3} 时 |
+```
+
+`skill_writer.py` 的 `meta.json` 同步更新 `sub_skills` 字段 (slug + path 列表).
+
+#### 3.5 失败模式
+
+| 失败场景 | 应对 |
+|---------|------|
+| nuwa-skill 没装 | 告知用户安装 + 暂时跳过 sub-skill 步骤, 完整大师 skill 仍能交付 |
+| figure 的 long-form material 不够 | 跳过这个 figure, 选第 4 名顶上, 或降级为只在 01-figures.md 中保留摘要 |
+| nuwa-skill subagent 超时 | 30 min 没完成单个 figure → 标记 timeout, 主 agent 决定是否等; 不阻塞 Step 4 写入主 skill |
+| 三个 figures 思维高度重叠 | 选 2 个差异大的, 第 3 个换成持反对立场的 figure (即使排名靠后) |
 
 #### Step 4: 写入
 

@@ -44,34 +44,37 @@
 - [x] Repo 公开
 - [x] 至少 1 个真实行业的 sample skill 进入 prototypes/
 
-## v1.x — Cross-skill composition (next)
+## v0.6 — CLI tool stream (用户方向 2026-05-02) ✅
 
-- [ ] Phase 3 自动调 [女娲.skill](https://github.com/alchaincyf/nuwa-skill) 蒸馏 top 3 figures → 嵌入 sub-skills/
+生成的 `{industry}-master.skill` 不只是 markdown，还包含可被 bash 调用的 CLI scripts：
+
+- [x] `references/cli-spec.md`：完整 spec (目录布局 + 三类脚本 + 标准接口)
+- [x] `tools/cli_writer.py`：从 synthesis 解析 + emit cli/ subtree
+- [x] Section 9 Agentic Protocol → `cli/protocol/agentic.sh`
+- [x] Section 2 Playbook 聚类 → `cli/decision/{cluster}.sh` (含 general-playbook 兜底)
+- [x] research/03-workflows.md SOP → `cli/workflow/{slug}.sh`
+- [x] 标准接口 `--help` / `--explain` / `--dry-run` / `--json` 全部实现
+- [x] skill_writer create 默认调 cli_writer (新增 `--no-cli` 旁路)
+- [x] 模板 + prompts 同步, 引导 synthesis 输出 CLI-friendly 格式
+- [x] 验证 prototype 1 (LLM agent infra): 11 scripts emitted, all bash -n pass
+- [x] 验证 prototype 2 (跨境电商, zh-CN): 5 scripts emitted, general-playbook 兜底成功
+
+## v1.1 — Cross-skill composition + Increment ✅
+
+- [x] Phase 3 Step 3 详 spec：调 [女娲.skill](https://github.com/alchaincyf/nuwa-skill) 蒸馏 top 3 figures → 嵌入 sub-skills/
+- [x] `prompts/sub-skill-figures.md`：subagent 调女娲的 prompt template
+- [x] `tools/update_skill.py`：plan / archive / mark-in-progress / finalize 四 action
+- [x] 衰减速度按 track 自动检测 (per-track refresh_at_months 表)
+- [x] update 流程支持 changelog 追加
+
+## v1.x — Future enhancements
+
+- [ ] cli_writer cluster keywords 自动从 synthesis 学习 (当前是 LLM agent infra 专属)
 - [ ] Phase 1 子 agent 主动用 brave-search / agent-reach
 - [ ] 调 web-article-reader 精读关键文章
-
-## v1.x — Increment & decay
-
-- [ ] `update 大师 X` 增量刷新工作流
-- [ ] 衰减速度自动检测（last_updated 跨阈值时主动建议 update）
 - [ ] 定期 cron refresh hook
-
-## v0.6 — CLI output (用户方向 2026-05-02)
-
-生成的 `{industry}-master.skill` 不只是 markdown，还要包含可被 bash 调用的 CLI scripts：
-
-- [ ] `cli/` 目录结构 spec：每个核心 workflow / tool 一个 bash script
-- [ ] Track 02 tools 的「典型使用场景」字段 → CLI script 模板
-- [ ] Track 03 workflows 的入门 SOP 步骤 → 多步 CLI 编排
-- [ ] skill_writer.py 增加 emit-cli 模式
-- [ ] 生成的 CLI 配标准 `--help` / `--dry-run` / `--explain`
-- [ ] 让 master skill 不只是「思维顾问」，是「思维顾问 + 实操 CLI 套件」
-
-## v1.x — More prototypes
-
-- [ ] 跨境电商运营 master skill (zh-CN locale)
-- [ ] 短视频投流 master skill (zh-CN locale)
-- [ ] 至少 1 个非技术行业 (考验框架对 vertical/regulated 的适配)
+- [ ] 短视频投流 master skill (zh-CN, 完整 prototype)
+- [ ] 至少 1 个非技术行业 (足踝外科 / 法律 / 医美)
 
 ## v2.x — Distribution
 

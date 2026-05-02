@@ -10,7 +10,7 @@
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-teal)](https://github.com/voidborne-d/master-skill)
 [![Codex](https://img.shields.io/badge/Codex-Skill-black)](https://github.com/voidborne-d/master-skill)
 [![Hermes](https://img.shields.io/badge/Hermes-Skill-orange)](https://github.com/voidborne-d/master-skill)
-[![Status](https://img.shields.io/badge/status-v1.0-brightgreen)]()
+[![Status](https://img.shields.io/badge/status-v1.1-brightgreen)]()
 
 </div>
 
@@ -160,6 +160,80 @@ python3 tools/install.py install --host claude --source ./output
 
 ---
 
+## 不只是对话，还有工具流 (v0.6+)
+
+每个生成的 `{industry}-master.skill` 自带一套 bash CLI 工具流。**「思维顾问」+「实操工具」一起交付**。
+
+```
+{industry}-master/
+└── cli/
+    ├── protocol/agentic.sh        # 拿到新问题 → 按 N 维度做功课 → 出报告
+    ├── decision/{cluster}.sh      # playbook 规则聚类成的交互决策树
+    └── workflow/{slug}.sh         # SOP 走查 + 失败模式自检
+```
+
+每个脚本支持 `--help` / `--explain` / `--dry-run` / `--json` 标准接口，一行命令拿到结构化 markdown 报告：
+
+```bash
+# 拿到新问题：「该不该把 RAG 系统迁到 Vespa」
+./cli/protocol/agentic.sh
+# → 按 5 个研究维度引导你收集信息 → 写出 agentic-protocol-{date}.md
+
+# framework 选型决策
+./cli/decision/framework-select.sh
+
+# 走完一个完整工作流, 失败模式自检
+./cli/workflow/build-rag-agent.sh
+```
+
+工具流由 [`tools/cli_writer.py`](tools/cli_writer.py) 自动从 synthesis 生成，详细 spec 看 [references/cli-spec.md](references/cli-spec.md)。
+
+---
+
+## Cross-skill composition (v1.1)
+
+大师.skill 不重新发明轮子。**Phase 3 自动 spawn subagent 调用 [女娲.skill](https://github.com/alchaincyf/nuwa-skill)**，蒸馏 Track 01 的 top 3 figures 为 person sub-skills，嵌入 `sub-skills/`。
+
+```
+{industry}-master/
+├── SKILL.md
+└── sub-skills/
+    ├── {figure-1-slug}/SKILL.md   # ← 女娲蒸馏
+    ├── {figure-2-slug}/SKILL.md
+    └── {figure-3-slug}/SKILL.md
+```
+
+需要某位 figure 的视角时，agent 加载对应 sub-skill。
+
+详 spec 在 [SKILL.md Phase 3.3-3.5](SKILL.md) + [prompts/sub-skill-figures.md](prompts/sub-skill-figures.md).
+
+---
+
+## 增量刷新 (v1.1)
+
+行业 OS 不是一次性产物。`tools/update_skill.py` 按 per-track 衰减表算什么时候该刷哪轨：
+
+| Track | 衰减速度 | 触发刷新 |
+|-------|---------|---------|
+| Tools (02) | high | ≥ 3 月 |
+| Workflows (03) | high | ≥ 3 月 |
+| Sources (05) | high | ≥ 3 月 |
+| Figures (01) | medium | ≥ 6 月 |
+| Glossary (06) | medium | ≥ 6 月 |
+| Canon (04) | low | ≥ 24 月 |
+
+```bash
+python3 tools/update_skill.py plan --skill-dir ~/.claude/skills/llm-agent-infra-master/
+# → 按距上次调研多久, 列出需要 refresh 的 tracks
+
+python3 tools/update_skill.py archive --skill-dir <path>      # 旧 research/ 归档
+python3 tools/update_skill.py mark-in-progress --tracks tools,workflows
+# (agent 重跑选定 tracks 的 Phase 1 调研)
+python3 tools/update_skill.py finalize --skill-dir <path>     # bump last_research_date + changelog
+```
+
+---
+
 ## 工作原理
 
 5 phase + 3 质量关卡，全程可被拦截：
@@ -190,9 +264,9 @@ Phase 5   双 agent 精炼     ← 优化 skill 的「激活即执行」程度
 | v0.3 | 工具：skill_writer / merge_research / quality_check / yt-dlp 字幕管线 / 4 宿主 installers | ✅ |
 | v0.4 | polish + adaptive cold-floor + cross-track contradiction detection + voice surrogate + multi-host install | ✅ |
 | v1.0 | LLM agent infra prototype 跑通 Phase 0→4, repo 公开 | ✅ |
-| v1.x | 跨 skill 调用：Phase 3 自动调女娲.skill 蒸 top 3 figures 当 sub-skill | 🔲 |
-| v1.x | 增量刷新：`update 大师 X` 按衰减表只刷工具/工作流 | 🔲 |
-| v0.6 | CLI output：生成的 industry skill 包含 bash-callable scripts | 🔲 |
+| v0.6 | CLI 工具流：生成 skill 自带 bash CLI 套件 (protocol / decision / workflow) | ✅ |
+| v1.1 | Cross-skill composition (Phase 3 调女娲.skill) + `update 大师 X` 增量刷新 | ✅ |
+| v1.x | cluster 关键词自动学习 / cron refresh hook / 更多行业 prototype | 🔲 |
 
 详细看 [ROADMAP.md](ROADMAP.md)。
 
