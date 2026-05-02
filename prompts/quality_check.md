@@ -31,7 +31,11 @@ Phase 3 写出的 `{skill_dir}/SKILL.md` 是否真的有用？通过 4 项独立
 **目的**: 验证 skill 在行业有共识答案的问题上输出方向是否正确。
 
 **测试设计**:
-1. 从 Track 04 canon (经典著作 / 论文) 中挑 3 个**业内已有共识答案**的问题
+1. **Ground truth 来源跨 Track 1+3+4** (iter 18 修正): 不只从 Track 04 canon。具体优先：
+   - Track 01 figures 在长访谈中给出**直接回答**的具体问题（最高权重）
+   - Track 03 workflows 中显式描述「这种情况下应该 X」的具体场景
+   - Track 04 canon 经典著作中给出**明确判断**的问题
+   挑 3 个**业内已有共识答案**的问题
 2. 每题应**用 Track 04 中的答案作为 ground truth** （不要凭你自己印象）
 3. 题目要求：
    - 不能太简单（"什么是 RAG?" — 太定义题）
@@ -88,7 +92,11 @@ spawn 子 agent 任务:
 
 **测试设计**:
 1. 让 skill 用 100 字写一段「这一行的最近趋势」
-2. **盲测对照**: 找 3 段真实从业者写的短稿（从 Track 04 canon 节选 + Track 05 newsletter 摘录）作 reference
+2. **盲测对照**: 找 3 段真实从业者写的短稿作 reference (iter 18 修正 — 明确选样规则)：
+   - 1 段从 Track 01 figures 长访谈 transcript 中节选（80-150 字段落，最能体现 register）
+   - 1 段从 Track 05 sources 中 top podcast / newsletter 一篇近 3 个月的内容节选
+   - 1 段从 Track 04 canon 中现代 textbook 章节首段
+   都是**真实从业者** 的语言，避免选 SEO blog post 或营销内容
 
 **spawn 子 agent 跑测试** (同 4.1 模式)
 

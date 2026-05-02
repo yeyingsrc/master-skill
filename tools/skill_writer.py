@@ -227,6 +227,22 @@ def action_create(
     triggers = intake.get("triggers", [])
     triggers_yaml = "\n".join(f'  - "{t}"' for t in triggers) or '  - "{{TODO: fill triggers}}"'
 
+    # Pre-replace the YAML triggers block (iter 18 fix). The template has a
+    # multi-line block like:
+    #   triggers:
+    #     - "{{keyword-1, e.g. 'agent framework'}}"
+    #     - "{{keyword-2}}"
+    #     - "{{keyword-N}}"
+    # which the simple {{x}} replacement won't catch. Use regex to match the
+    # whole block and substitute with the actual triggers list.
+    template = re.sub(
+        r"^triggers:\n(?:\s+-\s+\"\{\{keyword-[^\"\}]+\}\}\"\n){2,}",
+        f"triggers:\n{triggers_yaml}\n",
+        template,
+        count=1,
+        flags=re.MULTILINE,
+    )
+
     # Replacements for the template's {{...}} placeholders
     replacements = {
         "industry-slug": slug,

@@ -233,6 +233,19 @@ def render_table(summary: dict[str, Any]) -> str:
             f"一手来源比例 {int(totals['overall_primary_ratio'] * 100)}% < 50% — "
             f"研究主要靠二手转述，Phase 2 提炼会受影响"
         )
+    # Per-track primary ratio warning (iter 18 fix)
+    weak_tracks = [
+        (tk, summary["tracks"][tk]["primary_ratio"])
+        for tk, _ in TRACKS
+        if not summary["tracks"][tk].get("missing")
+        and summary["tracks"][tk]["primary_ratio"] < 0.4
+    ]
+    if weak_tracks:
+        names = ", ".join(f"{tk} ({int(r * 100)}%)" for tk, r in weak_tracks)
+        issues.append(
+            f"个别 track 一手比例 < 40%: {names} — "
+            f"该 track 的提炼质量明显弱于其他，建议针对性补 research"
+        )
     if summary["is_cold_industry"]:
         issues.append(
             f"冷僻 track ≥ 3 个 ({', '.join(summary['cold_tracks'])}) — "

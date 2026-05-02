@@ -61,7 +61,16 @@
 | 维度 | 推导自哪个 mental model |
 ```
 
-候选 < 15 → 信号薄弱，要么补 Phase 1 research，要么进入冷僻领域协议（Phase 2.8 诚实边界明确标注）。
+**候选数门槛与行业类型挂钩**（iter 18 修正）：
+
+| 行业类型 | 最小候选数 | 例 |
+|---------|----------|------|
+| Technical (LLM agent infra / cloud infra / RAG) | ≥ 15 | 公开内容多，门槛高 |
+| Academic (CV / 神经科学 / 生物信息) | ≥ 12 | paper-driven, 理论密度高 |
+| Vertical 实操 (跨境电商 / 短视频投流) | ≥ 8 | 操作多，公开理论少 |
+| Regulated specialized (足踝外科 / 量化金融) | ≥ 5 | 闭源主导，公开材料受限 |
+
+候选低于阈值 → 信号薄弱，要么补 Phase 1 research，要么进入冷僻领域协议（Phase 2.8 诚实边界明确标注）。
 候选 > 30 → 重复 / 雷同太多，先合并同类项再走三重验证。
 
 ### Step 1: 心智模型提炼 (对应 SKILL.md Phase 2.1)
@@ -107,7 +116,7 @@
 
 **目标产出**: 5-10 条。少于 5 提炼不够; 超过 10 没区分主次。
 
-### Step 3: 工具栈与选型决策树 (Phase 2.3)
+### Step 3: 工具栈集成 (Phase 2.3) — 注意：本步是「集成」非「提炼」
 
 直接消化 Track 02 的三层结构（必备 / 场景特化 / 新兴）+ 选型决策树。**主要工作是验证一致性**：
 
@@ -117,7 +126,7 @@
 
 **这一步主要是 sanity check，不是重新提炼**。Track 02 已经做了大部分工作。
 
-### Step 4: 工作流提炼 (Phase 2.4)
+### Step 4: 工作流集成 (Phase 2.4) — 注意：本步是「集成」非「提炼」
 
 直接消化 Track 03 的「入门 SOP / 资深路径 / 近期变化」分组。验证：
 
@@ -244,6 +253,12 @@
 | Agentic Protocol 维度推不出来 | 心智模型可能不够具体 — 退回 Step 1 重新精炼 |
 
 ---
+
+## 与 Phase 5 (Refinement) 的衔接
+
+Phase 2 → Phase 2.5 用户确认 → Phase 3 写出 SKILL.md → Phase 4 quality check (mechanical + subagent) → Phase 5 双 agent 精炼。
+
+Phase 5 入口条件 (iter 18 新增): Phase 4 verdict ≥ PARTIAL（不接受 FAIL）+ 用户在 Phase 4 报告中确认「值得精炼」。Phase 5 是 polish layer，不修复 substantive 问题。FAIL 必须先回 Phase 2 / Phase 3。
 
 ## 与 Phase 2.5 (User Checkpoint) 的衔接
 
