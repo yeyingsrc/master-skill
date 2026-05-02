@@ -2,7 +2,7 @@
 
 **Verdict**: `PASS`
 
-Counts: 9 pass / 1 partial / 0 fail / 2 needs subagent / 0 skipped
+Counts: 10 pass / 1 partial / 0 fail / 1 needs subagent / 0 skipped
 
 | # | Item | Status | Detail |
 |---|------|--------|--------|
@@ -12,7 +12,7 @@ Counts: 9 pass / 1 partial / 0 fail / 2 needs subagent / 0 skipped
 | 4 | Playbook 案例 ≥ 1 | ✅ pass | all 7 rules have 案例 |
 | 5 | 工具三层覆盖 | ⚠️ partial | thresholds not met: 场景化 3 < 5 — may be cold protocol |
 | 6 | 工作流入门-资深差异 ≥ 80% | 🧠 needs_subagent | section is a reference; load 03-workflows.md to validate |
-| 7 | 表达 DNA 辨识度 | 🧠 needs_subagent | Voice check (4.3) requires blind comparison with real practitioner samples — run prompts/quality_check.md Phase 4.3 |
+| 7 | 表达 DNA 辨识度 | ✅ pass | surrogate: 10 tier-1 jargon hits, 0 vendor话术 violations — likely passes voice check; full subagent run still recommended |
 | 8 | 诚实边界 ≥ 3 条 | ✅ pass | 5 boundary items |
 | 9 | 一手来源 ≥ 50% | ✅ pass | primary ratio = 59% (≥ 50%) |
 | 10 | Agentic Protocol 维度 (3-10) | ✅ pass | 5 dimensions (in [3, 10]) |

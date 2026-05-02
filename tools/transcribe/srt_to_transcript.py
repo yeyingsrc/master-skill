@@ -32,21 +32,34 @@ SENTENCE_END = re.compile(r"[。！？.!?]$")
 
 
 def clean_lines(content: str) -> list[str]:
+    """Iter 23 fix: properly handle VTT multi-line NOTE blocks. A NOTE block in
+    VTT spans from `NOTE` until the next blank line — all content within is a
+    comment and must be skipped, not just the keyword line.
+    """
     raw = []
+    in_note_block = False
     for line in content.splitlines():
-        line = line.strip()
-        if not line:
+        stripped = line.strip()
+        # Blank line ends any NOTE block
+        if not stripped:
+            in_note_block = False
             continue
-        if CUE_NUMBER.match(line):
+        # Start of NOTE block (VTT comment)
+        if NOTE_LINE.match(stripped):
+            in_note_block = True
             continue
-        if TIMECODE.match(line):
+        if in_note_block:
             continue
-        if WEBVTT_HEADER.match(line) or NOTE_LINE.match(line):
+        if CUE_NUMBER.match(stripped):
             continue
-        line = HTML_TAG.sub("", line)
-        line = VTT_DIRECTIVE.sub("", line).strip()
-        if line:
-            raw.append(line)
+        if TIMECODE.match(stripped):
+            continue
+        if WEBVTT_HEADER.match(stripped):
+            continue
+        cleaned = HTML_TAG.sub("", stripped)
+        cleaned = VTT_DIRECTIVE.sub("", cleaned).strip()
+        if cleaned:
+            raw.append(cleaned)
     return raw
 
 

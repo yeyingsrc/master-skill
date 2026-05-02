@@ -153,11 +153,10 @@ def check_playbook_cases(skill_text: str) -> tuple[str, str]:
     return "fail", f"{len(no_case)}/{len(rules)} rules missing 案例"
 
 
-def check_tool_tiers(skill_text: str) -> tuple[str, str]:
+def check_tool_tiers(skill_text: str, skill_dir: Path) -> tuple[str, str]:
     """Item 5: Tool tier coverage 必备 ≥ 3 / 场景化 ≥ 5 / 新兴 ≥ 2.
-    For SKILL.md the tools are referenced in synthesis but the actual counts
-    live in 02-tools.md or in the synthesis section. We approximate by counting
-    section markers.
+    First tries to count from skill body; iter 23 fallback parses
+    research/02-tools.md directly when body is just a reference.
     """
     # Count tier mentions in 工具栈 section
     section_match = re.search(
@@ -168,16 +167,36 @@ def check_tool_tiers(skill_text: str) -> tuple[str, str]:
     if not section_match:
         return "skipped", "no 工具栈 section found"
     body = section_match.group(1)
-    # Often the synthesis just says "see references/research/02-tools.md, N retained"
-    # so we look for explicit tier counts
     necessary_match = re.search(r"必备[^0-9]*(\d+)", body)
     scenario_match = re.search(r"场景特化?[^0-9]*(\d+)", body)
     emerging_match = re.search(r"新兴[^0-9]*(\d+)", body)
     if not (necessary_match or scenario_match or emerging_match):
-        return "needs_subagent", "tool tier counts not stated in 工具栈 section (likely a reference to research/02-tools.md)"
-    n_necessary = int(necessary_match.group(1)) if necessary_match else 0
-    n_scenario = int(scenario_match.group(1)) if scenario_match else 0
-    n_emerging = int(emerging_match.group(1)) if emerging_match else 0
+        # Iter 23: fall back to parsing research/02-tools.md directly
+        tools_path = skill_dir / "references" / "research" / "02-tools.md"
+        if not tools_path.exists():
+            return "needs_subagent", (
+                "tool tier counts not stated inline AND research/02-tools.md not found"
+            )
+        ttext = tools_path.read_text(encoding="utf-8")
+        # Look for "### 必备 / 场景特化 / 新兴" sub-sections in 02-tools.md and count items
+        n_necessary = len(re.findall(
+            r"^###?\s*必备.*?\n(.*?)(?=^###?\s|\Z)",
+            ttext, re.MULTILINE | re.DOTALL,
+        ))
+        # Better: count |—| table rows under each header
+        nec_section = re.search(r"必备[^\n]*\n(.*?)(?=场景|新兴|^##\s|\Z)", ttext, re.DOTALL)
+        sce_section = re.search(r"场景特化?[^\n]*\n(.*?)(?=新兴|^##\s|\Z)", ttext, re.DOTALL)
+        emg_section = re.search(r"新兴[^\n]*\n(.*?)(?=^##\s|\Z)", ttext, re.DOTALL)
+        n_necessary = len(re.findall(r"^\|", nec_section.group(1) if nec_section else "", re.MULTILINE)) - 2
+        n_scenario = len(re.findall(r"^\|", sce_section.group(1) if sce_section else "", re.MULTILINE)) - 2
+        n_emerging = len(re.findall(r"^\|", emg_section.group(1) if emg_section else "", re.MULTILINE)) - 2
+        n_necessary = max(0, n_necessary)
+        n_scenario = max(0, n_scenario)
+        n_emerging = max(0, n_emerging)
+    else:
+        n_necessary = int(necessary_match.group(1)) if necessary_match else 0
+        n_scenario = int(scenario_match.group(1)) if scenario_match else 0
+        n_emerging = int(emerging_match.group(1)) if emerging_match else 0
     issues = []
     if n_necessary < 3: issues.append(f"必备 {n_necessary} < 3")
     if n_scenario < 5: issues.append(f"场景化 {n_scenario} < 5")
@@ -217,9 +236,63 @@ def check_workflow_senior_differences(skill_text: str) -> tuple[str, str]:
     return "fail", f"{int(pct * 100)}% workflows have ≥ 2 diffs (target ≥ 80%)"
 
 
-def check_voice_dna(skill_text: str) -> tuple[str, str]:
-    """Item 7: voice DNA — needs subagent (4.3 voice check). Not mechanical."""
-    return "needs_subagent", "Voice check (4.3) requires blind comparison with real practitioner samples — run prompts/quality_check.md Phase 4.3"
+def check_voice_dna(skill_text: str, skill_dir: Path) -> tuple[str, str]:
+    """Item 7: voice DNA. Iter 23 — partial-mechanical surrogate via Tier-1
+    jargon counting + vendor-话术 rejection check. Full voice check still needs
+    subagent (Phase 4.3) but this catches obvious failures cheaply.
+    """
+    # Try to load Track 06 glossary to get Tier-1 jargon list
+    glossary_path = skill_dir / "references" / "research" / "06-glossary.md"
+    tier1_terms: set[str] = set()
+    rejected_marketing: set[str] = set()
+    if glossary_path.exists():
+        gtext = glossary_path.read_text(encoding="utf-8")
+        # Extract Tier 1 entries (term followed by `tier-1`)
+        for m in re.finditer(r"###\s+(?:[\d\.]+\s+)?(\S+)[\s\S]{0,300}?tier-1", gtext):
+            term = m.group(1).strip()
+            if 2 <= len(term) <= 25:
+                tier1_terms.add(term.lower())
+        # Extract vendor话术 rejection list — typical heading is "厂商话术拒绝" or "厂商错位"
+        for m in re.finditer(
+            r"(?:厂商话术拒绝|rejected|reject)[\s\S]{0,500}?(?=\n##|\Z)", gtext
+        ):
+            for line in m.group(0).splitlines():
+                if "-" in line or "•" in line:
+                    word_match = re.findall(r"[A-Za-z][A-Za-z\s-]{3,30}", line)
+                    for w in word_match:
+                        rejected_marketing.add(w.strip().lower())
+
+    if not tier1_terms:
+        return "needs_subagent", (
+            "Voice check (4.3) requires blind comparison with real practitioner samples "
+            "— run prompts/quality_check.md Phase 4.3. (Surrogate disabled: Track 06 glossary not found or empty.)"
+        )
+
+    # Count Tier-1 jargon hits in skill_text body
+    skill_lower = skill_text.lower()
+    jargon_hits = sum(1 for term in tier1_terms if term in skill_lower)
+    marketing_hits = sum(1 for w in rejected_marketing if w in skill_lower)
+
+    # Heuristic verdict
+    if jargon_hits >= 5 and marketing_hits == 0:
+        return "pass", (
+            f"surrogate: {jargon_hits} tier-1 jargon hits, 0 vendor话术 violations — "
+            f"likely passes voice check; full subagent run still recommended"
+        )
+    if jargon_hits < 3:
+        return "fail", (
+            f"surrogate: only {jargon_hits} tier-1 jargon hits — voice may be too generic; "
+            f"run subagent voice check (Phase 4.3) to confirm"
+        )
+    if marketing_hits > 0:
+        return "fail", (
+            f"surrogate: {marketing_hits} vendor话术 hits in body — voice DNA contaminated; "
+            f"strip vendor language before subagent voice check"
+        )
+    return "partial", (
+        f"surrogate: {jargon_hits} tier-1 jargon, {marketing_hits} marketing — borderline; "
+        f"run subagent voice check (Phase 4.3) to resolve"
+    )
 
 
 def check_honest_boundaries(skill_text: str) -> tuple[str, str]:
@@ -401,9 +474,9 @@ def run_rubric(skill_dir: Path) -> dict[str, Any]:
         "check_mental_model_limits": lambda: check_mental_model_limits(skill_text),
         "check_playbook_count": lambda: check_playbook_count(skill_text, meta),
         "check_playbook_cases": lambda: check_playbook_cases(skill_text),
-        "check_tool_tiers": lambda: check_tool_tiers(skill_text),
+        "check_tool_tiers": lambda: check_tool_tiers(skill_text, skill_dir),
         "check_workflow_senior_differences": lambda: check_workflow_senior_differences(skill_text),
-        "check_voice_dna": lambda: check_voice_dna(skill_text),
+        "check_voice_dna": lambda: check_voice_dna(skill_text, skill_dir),
         "check_honest_boundaries": lambda: check_honest_boundaries(skill_text),
         "check_primary_ratio": lambda: check_primary_ratio(skill_dir, meta),
         "check_agentic_protocol_dims": lambda: check_agentic_protocol_dims(skill_text, meta),

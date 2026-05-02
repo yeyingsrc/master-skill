@@ -127,13 +127,90 @@ def diff_summary(src: Path, dst: Path) -> list[str]:
 # ---------------------------------------------------------------------------
 # Actions
 
+def _check_version_drift(source_meta: dict, target_dir: Path) -> str | None:
+    """Iter 23 fix: warn on version downgrade or drift."""
+    target_meta_path = target_dir / "meta.json"
+    if not target_meta_path.exists():
+        return None
+    try:
+        target_meta = json.loads(target_meta_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    src_v = source_meta.get("version", "0.0")
+    tgt_v = target_meta.get("version", "0.0")
+    src_d = source_meta.get("last_research_date", "")
+    tgt_d = target_meta.get("last_research_date", "")
+    if src_v != tgt_v or src_d != tgt_d:
+        return (f"version drift: target {tgt_d} v{tgt_v} → source {src_d} v{src_v}; "
+                f"this is {'an upgrade' if src_d > tgt_d else 'a possible downgrade'}")
+    return None
+
+
+def _install_to_one_host(host: str, source: Path, meta: dict, args: argparse.Namespace) -> dict:
+    """Iter 23: factored out for --all-hosts support."""
+    target_root = resolve_target_root(host, args.target)
+    target_dir = target_root / meta["name"]
+    drift = _check_version_drift(meta, target_dir)
+    return {
+        "host": host,
+        "target": str(target_dir),
+        "drift_warning": drift,
+        "diffs": diff_summary(source, target_dir),
+    }
+
+
 def action_install(args: argparse.Namespace) -> int:
     source: Path = args.source
     meta = validate_source(source)
     skill_name = meta["name"]
 
+    # iter 23: --all-hosts shortcut. Iterate over installed hosts.
+    if args.host == "all":
+        results: list[dict] = []
+        for h in HOST_DEFAULTS:
+            target_root = HOST_DEFAULTS[h]
+            if not target_root.exists() and not args.target:
+                # Skip hosts where the default skills root doesn't exist
+                results.append({"host": h, "skipped": "host root doesn't exist; use --target to force"})
+                continue
+            try:
+                preview = _install_to_one_host(h, source, meta, args)
+                if args.dry_run:
+                    preview["mode"] = "dry-run"
+                    results.append(preview)
+                    continue
+                # Install for real
+                t_root = HOST_DEFAULTS[h]
+                t_dir = t_root / skill_name
+                if t_dir.exists() and not args.force:
+                    if diff_summary(source, t_dir) == ["IDENTICAL: nothing to do"]:
+                        preview["status"] = "idempotent-noop"
+                        results.append(preview)
+                        continue
+                    preview["status"] = "skipped: differs, --force needed"
+                    results.append(preview)
+                    continue
+                t_root.mkdir(parents=True, exist_ok=True)
+                if t_dir.exists() and args.force:
+                    if t_dir.is_symlink():
+                        t_dir.unlink()
+                    else:
+                        shutil.rmtree(t_dir)
+                if args.symlink:
+                    t_dir.symlink_to(source.resolve(), target_is_directory=True)
+                    preview["status"] = "symlinked"
+                else:
+                    shutil.copytree(source, t_dir)
+                    preview["status"] = "copied"
+                results.append(preview)
+            except InstallError as e:
+                results.append({"host": h, "error": str(e)})
+        print(json.dumps({"all_hosts": results}, indent=2, ensure_ascii=False))
+        return 0
+
     target_root = resolve_target_root(args.host, args.target)
     target_dir = target_root / skill_name
+    drift_warning = _check_version_drift(meta, target_dir)
 
     summary = {
         "host": args.host,
@@ -141,6 +218,7 @@ def action_install(args: argparse.Namespace) -> int:
         "target": str(target_dir),
         "mode": ("symlink" if args.symlink else "copy") + (" (force)" if args.force else ""),
         "dry_run": bool(args.dry_run),
+        "drift_warning": drift_warning,
     }
 
     # Show preview
@@ -257,7 +335,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="action", required=True)
 
     p_install = sub.add_parser("install", help="install a skill into a host")
-    p_install.add_argument("--host", required=True, choices=list(HOST_DEFAULTS.keys()))
+    p_install.add_argument("--host", required=True,
+                           choices=list(HOST_DEFAULTS.keys()) + ["all"],
+                           help="target host (or 'all' to install into every available host)")
     p_install.add_argument("--source", required=True, type=Path,
                            help="path to the generated skill directory")
     p_install.add_argument("--target", type=Path, default=None,

@@ -33,20 +33,89 @@ TRACKS = [
 ]
 
 # Cold-signal thresholds per track (from each track's own quality self-check).
-COLD_THRESHOLDS = {
-    "01-figures": 10,    # < 10 figures = cold protocol
-    "02-tools": 15,      # < 15 tools = cold
-    "03-workflows": 3,   # < 3 workflows = cold
-    "04-canon": 15,      # < 15 canon entries = cold
-    "05-sources": 10,    # < 10 sources = cold
-    "06-glossary": 25,   # < 25 terms = cold
+# Iter 23: these are baselines for technical industries. Real cold-industry
+# detection uses item count + adaptive expectation per industry type. See
+# adaptive_floor() below.
+COLD_THRESHOLDS_DEFAULT = {
+    "01-figures": 10,
+    "02-tools": 15,
+    "03-workflows": 3,
+    "04-canon": 15,
+    "05-sources": 10,
+    "06-glossary": 25,
 }
+
+# Industry-type multipliers applied to default floors. From extraction-framework
+# § 一's industry-type-aware candidate floors. Applied when intake.json's
+# `industry_type` field is set; otherwise default to "technical".
+INDUSTRY_TYPE_MULTIPLIERS = {
+    "technical": 1.0,
+    "academic": 0.8,
+    "vertical_operational": 0.5,
+    "regulated_specialized": 0.3,
+}
+
+
+def adaptive_floor(track_key: str, industry_type: str = "technical") -> int:
+    """Iter 23 fix: adapt cold floor to industry type."""
+    base = COLD_THRESHOLDS_DEFAULT.get(track_key, 5)
+    mult = INDUSTRY_TYPE_MULTIPLIERS.get(industry_type, 1.0)
+    return max(2, int(base * mult))
 
 
 # ---------------------------------------------------------------------------
 
 class MergeError(Exception):
     pass
+
+
+def detect_cross_track_contradictions(tracks: dict[str, Any]) -> list[str]:
+    """Iter 23 fix: scan tracks' Phase 2 interface blocks for likely
+    cross-track contradictions. Heuristic — looks for a term mentioned as
+    important in one track but explicitly contradicted/missing in another.
+    Returns a list of human-readable contradiction descriptions for Phase 1.5
+    user review. Empty list = no signals found (does not mean no contradictions
+    exist; this is a low-recall, high-signal heuristic).
+    """
+    contradictions: list[str] = []
+
+    # Aggregate keywords from each track's Phase 2 interface
+    track_keywords: dict[str, set[str]] = {}
+    for track_key, t in tracks.items():
+        if t.get("missing"):
+            continue
+        text = (t.get("phase2_interface") or "").lower()
+        # Extract bullets that look like keyword lists ("- {{name}}")
+        words = re.findall(r"[\w一-鿿-]{3,}", text)
+        track_keywords[track_key] = set(w for w in words if len(w) >= 4)
+
+    # Compare track 01 (figures) vs track 02 (tools): if a tool name is
+    # mentioned in tools as 必备 but absent from any figure's discussion, flag
+    if "01-figures" in track_keywords and "02-tools" in track_keywords:
+        only_in_tools = track_keywords["02-tools"] - track_keywords["01-figures"]
+        # Filter to items that look like tool names (not regular english words)
+        notable = [w for w in only_in_tools
+                   if any(c.isupper() for c in w) and len(w) > 5]
+        if len(notable) >= 5:
+            contradictions.append(
+                f"Track 02 (tools) mentions {len(notable)} items not surfaced in "
+                f"Track 01 (figures) discussion — heuristic suggests tool-figures "
+                f"signal asymmetry; verify the tool authors are in figures' candidate pool"
+            )
+
+    # Compare track 04 (canon) vs track 01 (figures): canon authors should
+    # appear as figures candidates
+    if "04-canon" in track_keywords and "01-figures" in track_keywords:
+        canon_only = track_keywords["04-canon"] - track_keywords["01-figures"]
+        notable = [w for w in canon_only
+                   if any(c.isupper() for c in w) and 5 <= len(w) <= 20]
+        if len(notable) >= 8:
+            contradictions.append(
+                f"Track 04 (canon) names {len(notable)} entities not in Track 01 — "
+                f"key authors / lecturers may be missing from figures retained"
+            )
+
+    return contradictions
 
 
 def parse_track(path: Path, track_key: str) -> dict[str, Any]:
@@ -93,7 +162,7 @@ def parse_track(path: Path, track_key: str) -> dict[str, Any]:
     total_sources = primary + secondary + reference
     primary_ratio = (primary / total_sources) if total_sources else 0.0
 
-    threshold = COLD_THRESHOLDS.get(track_key, 5)
+    threshold = COLD_THRESHOLDS_DEFAULT.get(track_key, 5)
     item_below_floor = item_count < threshold
 
     return {
@@ -166,6 +235,8 @@ def aggregate(skill_dir: Path) -> dict[str, Any]:
                    if not t.get("missing")
                    and (t.get("item_below_floor") or t.get("cold_signal_self_reported"))]
 
+    contradictions = detect_cross_track_contradictions(tracks)
+
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "skill_dir": str(skill_dir),
@@ -179,6 +250,7 @@ def aggregate(skill_dir: Path) -> dict[str, Any]:
         },
         "cold_tracks": cold_tracks,
         "is_cold_industry": len(cold_tracks) >= 3,
+        "cross_track_contradictions": contradictions,
     }
 
 
@@ -255,6 +327,11 @@ def render_table(summary: dict[str, Any]) -> str:
     if missing_tracks:
         issues.append(f"缺失 track: {', '.join(missing_tracks)} — 必须补完才能进 Phase 2")
 
+    contras = summary.get("cross_track_contradictions", [])
+    if contras:
+        for c in contras:
+            issues.append(f"跨 track 信号矛盾: {c}")
+
     if issues:
         for issue in issues:
             lines.append(f"- ❌ {issue}")
@@ -264,6 +341,7 @@ def render_table(summary: dict[str, Any]) -> str:
         lines.append("- ✅ 一手比例 ≥ 50%")
         lines.append("- ✅ 冷僻 track < 3")
         lines.append("- ✅ 6 个 track 都有内容")
+        lines.append("- ✅ 无跨 track 矛盾信号")
         lines.append("")
         lines.append("**关卡判定: ✅ PASS** — 可以进 Phase 2")
     lines.append("")

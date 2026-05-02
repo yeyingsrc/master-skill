@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-02T10:15:10.963626+00:00",
+  "generated_at": "2026-05-02T11:49:05.314487+00:00",
   "skill_dir": "/Users/sway003/master-skill/skill/prototypes/llm-agent-infra-master",
   "tracks": {
     "01-figures": {
@@ -137,5 +137,6 @@
     "05-sources",
     "06-glossary"
   ],
-  "is_cold_industry": true
+  "is_cold_industry": true,
+  "cross_track_contradictions": []
 }
