@@ -12,7 +12,7 @@
 ./protocol/agentic.sh
 
 # 决策树评估 (基于 playbook)
-./decision/framework-select.sh
+./decision/agent.sh
 # SOP 走查 (workflow)
 ./workflow/build-production-ready-rag-agent.sh
 
@@ -25,12 +25,9 @@
 | 脚本 | 作用 |
 |------|------|
 | `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/framework-select.sh` | Framework Select 决策树 (1 条规则) |
-| `decision/eval-strategy.sh` | Eval Strategy 决策树 (2 条规则) |
-| `decision/rag-design.sh` | Rag Design 决策树 (1 条规则) |
-| `decision/observability.sh` | Observability 决策树 (1 条规则) |
-| `decision/debug-iteration.sh` | Debug Iteration 决策树 (1 条规则) |
-| `decision/demo-prod.sh` | Demo Prod 决策树 (1 条规则) |
+| `decision/agent.sh` | Agent 决策树 (4 条规则) |
+| `decision/eval.sh` | Eval 决策树 (2 条规则) |
+| `decision/production.sh` | Production 决策树 (1 条规则) |
 | `workflow/build-production-ready-rag-agent.sh` | Build production-ready RAG agent SOP 走查 |
 | `workflow/add-observability-eval-to-existi.sh` | Add observability + eval to existing agent SOP 走查 |
 | `workflow/audit-fix-failing-agent-in-produ.sh` | Audit + fix failing agent in production SOP 走查 |

@@ -256,6 +256,89 @@ def cmd_finalize(args) -> int:
     return 0
 
 
+def cmd_schedule(args) -> int:
+    """生成定时检查的 launchd plist (macOS) 或 cron 行 (Linux).
+
+    检查频率按 skill 中最高 decay 模块决定:
+    - high decay (3 月) → 每周检查一次, 第 12 周时提醒该刷
+    - medium (6 月)     → 每月检查一次
+    - low (24 月)       → 每季度检查一次
+    """
+    skill_dir = Path(args.skill_dir).resolve()
+    meta = read_meta(skill_dir)
+    skill_name = meta.get("name", skill_dir.name)
+
+    # 找最高 decay (= refresh_at_months 最小)
+    min_refresh = min(c["refresh_at_months"] for c in TRACK_DECAY.values())
+    if min_refresh <= 3:
+        check_period = "weekly"
+        cron_expr = "0 9 * * 1"  # 每周一 9:00
+        plist_interval_seconds = 7 * 24 * 60 * 60
+    elif min_refresh <= 6:
+        check_period = "monthly"
+        cron_expr = "0 9 1 * *"  # 每月 1 号 9:00
+        plist_interval_seconds = 30 * 24 * 60 * 60
+    else:
+        check_period = "quarterly"
+        cron_expr = "0 9 1 */3 *"  # 每 3 月 1 号 9:00
+        plist_interval_seconds = 90 * 24 * 60 * 60
+
+    plan_cmd = (
+        f"python3 {Path(__file__).resolve()} plan --skill-dir {skill_dir} --json"
+    )
+
+    label = f"com.master-skill.{skill_dir.name}.refresh"
+    plist_path = Path.home() / "Library" / "LaunchAgents" / f"{label}.plist"
+
+    plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>{label}</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>{plan_cmd} | /usr/bin/osascript -e 'on run argv
+  display notification (item 1 of argv) with title "{skill_name} 刷新检查"
+end run' "$(cat)"</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>{plist_interval_seconds}</integer>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>StandardOutPath</key>
+  <string>{Path.home()}/.master-skill-refresh.log</string>
+  <key>StandardErrorPath</key>
+  <string>{Path.home()}/.master-skill-refresh.err</string>
+</dict>
+</plist>
+"""
+
+    if args.write:
+        atomic_write(plist_path, plist_content)
+        print(f"✓ launchd plist 写入: {plist_path}")
+        print()
+        print("启用 (一次性):")
+        print(f"  launchctl load {plist_path}")
+        print()
+        print("停用:")
+        print(f"  launchctl unload {plist_path}")
+        print(f"  rm {plist_path}")
+    else:
+        print("# === macOS launchd plist ===")
+        print(f"# 写入: ~/Library/LaunchAgents/{label}.plist")
+        print()
+        print(plist_content)
+        print(f"# === Linux cron 行 (装到 crontab -e) ===")
+        print(f"{cron_expr} {plan_cmd}")
+        print()
+        print(f"# 检查频率: {check_period} (基于最高 decay = {min_refresh} 月)")
+        print(f"# 用 --write 把 plist 直接写到磁盘.")
+    return 0
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="update / decay tool for master skills")
     sub = parser.add_subparsers(dest="action", required=True)
@@ -275,6 +358,11 @@ def main() -> None:
     p_finalize = sub.add_parser("finalize", help="Mark update done, bump last_research_date, append changelog")
     p_finalize.add_argument("--skill-dir", required=True)
 
+    p_schedule = sub.add_parser("schedule", help="生成定时刷新检查的 launchd plist + cron 命令")
+    p_schedule.add_argument("--skill-dir", required=True)
+    p_schedule.add_argument("--write", action="store_true",
+                             help="把 plist 直接写到 ~/Library/LaunchAgents/ (默认只打印)")
+
     args = parser.parse_args()
 
     if args.action == "plan":
@@ -285,6 +373,8 @@ def main() -> None:
         sys.exit(cmd_mark_in_progress(args))
     elif args.action == "finalize":
         sys.exit(cmd_finalize(args))
+    elif args.action == "schedule":
+        sys.exit(cmd_schedule(args))
 
 
 if __name__ == "__main__":

@@ -67,14 +67,24 @@
 - [x] 衰减速度按 track 自动检测 (per-track refresh_at_months 表)
 - [x] update 流程支持 changelog 追加
 
-## v1.x — Future enhancements
+## v1.2 — Cluster 自动学 + cron + 5 个行业样本 ✅
 
-- [ ] cli_writer cluster keywords 自动从 synthesis 学习 (当前是 LLM agent infra 专属)
+- [x] cli_writer cluster keywords 自动从 synthesis 学习 (mental models + playbook + protocol 加权抽词频)
+- [x] 中英 stopword 过滤, 中文 character n-gram, 英文 word-level
+- [x] cluster anchor 保留原文 (中文 anchor 显示中文 topic_title, 文件名走 topic-N 兜底)
+- [x] tools/update_skill.py schedule action — 生成 macOS launchd plist + Linux cron 一行
+- [x] 检查频率按 skill 最高 decay 模块自动决定 (high → 周, medium → 月, low → 季)
+- [x] 小红书运营 prototype (内容运营行业)
+- [x] SEO 专家 prototype (半技术行业)
+- [x] 恋爱高手 prototype (软技能 / 非工作类行业)
+
+## v1.x — 计划中
+
 - [ ] Phase 1 子 agent 主动用 brave-search / agent-reach
 - [ ] 调 web-article-reader 精读关键文章
-- [ ] 定期 cron refresh hook
-- [ ] 短视频投流 master skill (zh-CN, 完整 prototype)
-- [ ] 至少 1 个非技术行业 (足踝外科 / 法律 / 医美)
+- [ ] 短视频投流 master skill (完整 prototype)
+- [ ] 足踝外科 master skill (强监管行业)
+- [ ] 法律 master skill (强监管行业)
 
 ## v2.x — Distribution
 

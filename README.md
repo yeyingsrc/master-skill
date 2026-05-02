@@ -282,14 +282,20 @@ python3 tools/update_skill.py finalize --skill-dir <skill>              # 4. 完
 
 ## ⭐ 已蒸馏的行业
 
-每个都是端到端跑过的样本，包含完整调研数据 + 生成出的 SKILL.md + 一套可跑的 bash 工具：
+每个都是端到端跑过的样本，包含完整调研数据 + 生成的 SKILL.md + 一套可跑的 bash 工具：
 
-| 行业 | 语言 | 验证情况 | bash 工具 | 路径 |
-|------|------|---------|----------|------|
-| 🔥 **LLM agent 基础设施** | 英文 | 全部 12 项检查通过 10 项 | 11 个脚本 | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
-| ✅ **跨境电商运营** | 中文 | 精简版（验证用） | 5 个脚本 | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
-| 🔲 短视频投流 | 中文 | 计划中 | — | （v1.x 路线） |
-| 🔲 足踝外科 | 中文 | 计划中 | — | （v1.x 路线） |
+| 行业 | 语言 | 路径 |
+|------|------|------|
+| 🔥 **LLM agent 基础设施** | 英文 | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
+| ✅ **跨境电商运营** | 中文 | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
+| ✅ **小红书运营** | 中文 | [xiaohongshu-ops-master/](prototypes/xiaohongshu-ops-master/) |
+| ✅ **SEO 专家** | 中文 | [seo-master/](prototypes/seo-master/) |
+| ✅ **恋爱高手** | 中文 | [love-coach-master/](prototypes/love-coach-master/) |
+| 🔲 短视频投流 | 中文 | 计划中 |
+| 🔲 足踝外科 | 中文 | 计划中 |
+| 🔲 法律 | 中文 | 计划中 |
+
+5 个行业横跨技术 / 商业 / 内容运营 / 软技能 — 大师.skill 框架对各类行业都跑得通。
 
 调研过程**完全透明**。每个样本都附完整的六路调研笔记 + 蒸馏文档，可以追溯每条心智模型、每条决策规则是从哪几个来源出来的。
 
@@ -390,7 +396,7 @@ master-skill/
 | v1.0 | 完成第一个完整样本（LLM agent 基础设施），仓库公开 | ✅ |
 | v0.6 | bash 工具流 — 生成的 skill 自带命令套件 | ✅ |
 | v1.1 | 调用别的 skill + 增量刷新 + 中文样本 | ✅ |
-| v1.x | 决策树主题从蒸馏结果自动学 / 定时自动刷新 hook | 🔲 |
+| v1.2 | 决策树主题自动学 + 定时刷新 + 5 个行业样本 (含小红书/SEO/恋爱) | ✅ |
 | v1.x | 更多行业样本：短视频投流 / 足踝外科 / 法律 | 🔲 |
 | v2.x | PyPI 打包 / GitHub Action 自动更新 / 多语言文档 | 🔲 |
 

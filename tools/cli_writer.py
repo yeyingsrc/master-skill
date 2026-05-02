@@ -22,6 +22,8 @@ Usage:
 Pure stdlib. Atomic writes. Fail loud on missing inputs.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -30,10 +32,28 @@ import shutil
 import stat
 import sys
 import tempfile
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
-CLUSTER_KEYWORDS = {
+# 中英 stopword. 过滤聚类抽词时无意义的连接词 / 助词.
+STOPWORDS_ZH = {
+    "如果", "那么", "需要", "可以", "应该", "必须", "建议", "默认", "选择", "考虑", "看到", "面对",
+    "这个", "那个", "这种", "这样", "那样", "之后", "之前", "上线", "之间", "情况", "时候", "做完",
+    "什么", "怎么", "为什么", "如何", "或者", "比如", "例如", "包含", "包括", "会让", "可能",
+    "本人", "我们", "他们", "你们", "自己", "不能", "不要", "不是", "就是", "没有", "已经", "还是",
+}
+
+STOPWORDS_EN = {
+    "the", "and", "for", "with", "in", "on", "at", "of", "to", "is", "are", "was", "were",
+    "be", "been", "being", "a", "an", "or", "if", "then", "as", "by", "from", "this", "that",
+    "your", "you", "we", "us", "our", "their", "they", "it", "its", "i", "me", "my",
+    "have", "has", "had", "do", "does", "did", "will", "would", "should", "could", "may",
+    "can", "must", "not", "no", "yes",
+}
+
+# Hardcoded fallback (LLM agent infra 专属). 仅当从 synthesis 抽不出有意义的 anchor 时使用.
+BUILTIN_FALLBACK_KEYWORDS = {
     "framework-select": [
         "framework", "thin framework", "thick framework", "orchestration",
         "multi-agent", "agent project", "agent 协作", "thin", "thick",
@@ -42,20 +62,14 @@ CLUSTER_KEYWORDS = {
         "eval", "llm-as-judge", "human-validated", "benchmark",
         "regression", "eval set",
     ],
-    "rag-design": [
-        "rag", "vector", "hybrid", "retrieval", "embedding", "index",
-    ],
-    "observability": [
-        "trace", "ship", "production-grade", "instrument", "monitoring",
-        "post-launch", "trace pipeline",
-    ],
-    "debug-iteration": [
-        "react loop", "tool design", "tool calling", "fail", "debug",
-    ],
-    "demo-prod": [
-        "demo", "production", "1 day", "6 weeks",
-    ],
+    "rag-design": ["rag", "vector", "hybrid", "retrieval", "embedding", "index"],
+    "observability": ["trace", "ship", "production-grade", "instrument", "monitoring"],
+    "debug-iteration": ["react loop", "tool design", "tool calling", "fail", "debug"],
+    "demo-prod": ["demo", "production", "1 day", "6 weeks"],
 }
+
+# 兼容旧调用 (test 等). 实际 cluster_rules 改用动态学习.
+CLUSTER_KEYWORDS = BUILTIN_FALLBACK_KEYWORDS
 
 
 # ---------- Atomic write helpers ----------
@@ -162,30 +176,131 @@ def _section(text: str, header_re: str) -> str:
     return m.group(0) if m else ""
 
 
-def cluster_rules(rules: list) -> dict:
-    """Group playbook rules by topic. Returns dict[cluster_slug] -> list of rules.
+def _tokenize_text(text: str) -> list:
+    """Token 化中英混合文本. 英文按词, 中文按 2-3 字 n-gram."""
+    tokens = []
+    # 英文词 (≥3 字符)
+    for w in re.findall(r"[a-zA-Z][a-zA-Z\-]{2,}", text):
+        wl = w.lower()
+        if wl not in STOPWORDS_EN:
+            tokens.append(wl)
+    # 中文 character n-gram (2-3 字)
+    zh = re.sub(r"[a-zA-Z0-9\s\.\,\;\:\(\)（）。，、；：\-\[\]【】「」『』≥<>≤=!?！？\*\$\#\%\^&\+/]", "", text)
+    for n in (2, 3):
+        for i in range(len(zh) - n + 1):
+            t = zh[i:i+n]
+            if t not in STOPWORDS_ZH and not all(c in STOPWORDS_ZH for c in t):
+                tokens.append(t)
+    return tokens
 
-    Rules that don't match any predefined LLM-agent-infra cluster fall into
-    "general-playbook" so they always get emitted. This makes the clustering
-    work cross-industry (e.g. cross-border ecommerce won't share keywords with
-    LLM agent infra but its rules still need a CLI script).
+
+def learn_cluster_anchors(parsed: dict, max_anchors: int = 6, min_freq: int = 2) -> list:
+    """从 synthesis 抽 cluster anchor 关键词 (按主题归类规则用).
+
+    优先级:
+    1. 智识谱系 (section 7) 的流派名 — 天然的主题标签
+    2. mental model 名 + 一句话中的高频词
+    3. playbook 规则文本中的高频词
+
+    返回最多 max_anchors 个 anchor (按相关性排序).
     """
-    clusters: dict[str, list] = {k: [] for k in CLUSTER_KEYWORDS}
-    clusters["general-playbook"] = []
+    anchor_scores: Counter = Counter()
 
-    for rule in rules:
-        blob = (rule["condition"] + " " + rule["action"]).lower()
-        scores = []
-        for cslug, kws in CLUSTER_KEYWORDS.items():
-            score = sum(1 for kw in kws if kw.lower() in blob)
-            scores.append((score, cslug))
-        scores.sort(reverse=True)
-        if scores[0][0] > 0:
-            clusters[scores[0][1]].append(rule)
+    # 优先级 1: mental model 名 (每个权重 +3)
+    for mm in parsed.get("mental_models", []):
+        for tok in _tokenize_text(mm["name"]):
+            anchor_scores[tok] += 3
+        for tok in _tokenize_text(mm["oneliner"][:60]):
+            anchor_scores[tok] += 1
+
+    # 优先级 2: playbook 规则 (每个权重 +1)
+    for rule in parsed.get("playbook", []):
+        text = rule["condition"] + " " + rule["action"]
+        for tok in _tokenize_text(text):
+            anchor_scores[tok] += 1
+
+    # 优先级 3: protocol dim 名 (每个权重 +2)
+    for dim in parsed.get("protocol", []):
+        for tok in _tokenize_text(dim["title"]):
+            anchor_scores[tok] += 2
+
+    # 取频次 ≥ min_freq 的, 排序后取 top N
+    candidates = [(tok, score) for tok, score in anchor_scores.most_common() if score >= min_freq]
+
+    # 去重: 如果一个 anchor 是另一个的子串且分数低于父, 跳过子串
+    selected = []
+    for tok, _score in candidates:
+        if any(tok in other and tok != other for other, _ in selected):
+            continue
+        selected.append((tok, _score))
+        if len(selected) >= max_anchors:
+            break
+
+    return [tok for tok, _ in selected]
+
+
+def cluster_rules(rules: list, parsed: dict | None = None) -> dict:
+    """按动态学的 anchor 给 playbook 规则分组. 返回 dict[cluster_slug] -> list of rules.
+
+    parsed: 完整 parse_synthesis 输出, 用于提取 cluster anchor.
+            如果不传, 退到 builtin LLM agent infra keyword (向后兼容).
+    """
+    if parsed:
+        anchors = learn_cluster_anchors(parsed)
+    else:
+        anchors = []
+
+    if anchors:
+        clusters: dict[str, list] = {anchor: [] for anchor in anchors}
+        clusters["general-playbook"] = []
+
+        for rule in rules:
+            blob = (rule["condition"] + " " + rule["action"]).lower()
+            best_anchor = None
+            best_score = 0
+            for anchor in anchors:
+                # 中文 anchor 直接 substring; 英文 anchor 也直接 substring (lowercase 后)
+                if anchor.lower() in blob:
+                    score = blob.count(anchor.lower())
+                    if score > best_score:
+                        best_score = score
+                        best_anchor = anchor
+            if best_anchor:
+                clusters[best_anchor].append(rule)
+            else:
+                clusters["general-playbook"].append(rule)
+    else:
+        # Fallback: builtin LLM agent infra keywords
+        clusters = {k: [] for k in BUILTIN_FALLBACK_KEYWORDS}
+        clusters["general-playbook"] = []
+
+        for rule in rules:
+            blob = (rule["condition"] + " " + rule["action"]).lower()
+            scores = []
+            for cslug, kws in BUILTIN_FALLBACK_KEYWORDS.items():
+                score = sum(1 for kw in kws if kw.lower() in blob)
+                scores.append((score, cslug))
+            scores.sort(reverse=True)
+            if scores[0][0] > 0:
+                clusters[scores[0][1]].append(rule)
+            else:
+                clusters["general-playbook"].append(rule)
+
+    # 把 cluster slug 标准化 (去除非 ASCII 字符给 bash 文件名用), 保留原 anchor 作为 title
+    normalized: dict[str, dict] = {}
+    for anchor_text, rs in clusters.items():
+        if not rs:
+            continue
+        norm = slugify(anchor_text)
+        # slugify 默认 "untitled" 表示原文全是非 ASCII (中文 anchor); 用 topic-N 兜底
+        if not norm or norm == "untitled":
+            norm = f"topic-{len(normalized) + 1}"
+        if norm in normalized:
+            normalized[norm]["rules"].extend(rs)
         else:
-            clusters["general-playbook"].append(rule)
+            normalized[norm] = {"anchor": anchor_text, "rules": rs}
 
-    return {k: v for k, v in clusters.items() if v}
+    return normalized
 
 
 # ---------- Workflow parsing ----------
@@ -201,10 +316,15 @@ def parse_workflows(workflows_path: Path) -> list:
         re.MULTILINE | re.DOTALL,
     )
 
+    workflow_index = 0
     for m in wf_pattern.finditer(text):
         title = m.group(2).strip()
         body = m.group("body")
         slug = slugify(title)
+        # 中文 title 经 slugify 后会变 "untitled", 用 workflow-N 兜底
+        if slug == "untitled":
+            workflow_index += 1
+            slug = f"workflow-{workflow_index}"
 
         one_liner_m = re.search(r"\*\*One-liner\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
 
@@ -821,10 +941,18 @@ def cmd_emit(args) -> int:
             "purpose": f"Agentic Protocol ({len(parsed['protocol'])} 维度) — 拿到新问题时按这一行的研究维度做功课",
         })
 
-    clusters = cluster_rules(parsed["playbook"])
+    clusters = cluster_rules(parsed["playbook"], parsed=parsed)
     decision_count = 0
-    for cluster_slug, rules in clusters.items():
-        topic_title = cluster_slug.replace("-", " ").title()
+    for cluster_slug, info in clusters.items():
+        rules = info["rules"]
+        anchor = info["anchor"]
+        # topic_title 优先用原 anchor (含中文); 兜底 cluster_slug
+        if cluster_slug == "general-playbook":
+            topic_title = "通用 Playbook"
+        elif anchor and anchor != cluster_slug:
+            topic_title = anchor
+        else:
+            topic_title = cluster_slug.replace("-", " ").title()
         dec_path = cli_dir / "decision" / f"{cluster_slug}.sh"
         dec_content = DECISION_TEMPLATE.format(
             INDUSTRY_CN=industry_cn,

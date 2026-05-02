@@ -259,12 +259,18 @@ python3 tools/update_skill.py finalize --skill-dir <skill>
 
 Each is end-to-end runnable, with full research data + generated SKILL.md + executable bash tool suite:
 
-| Industry | Language | Validation | bash scripts | Path |
-|------|------|---------|-------------|------|
-| 🔥 **LLM agent infrastructure** | English | 10 of 12 checks passed | 11 scripts | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
-| ✅ **Cross-border e-commerce** | Chinese | mini scope (validation run) | 5 scripts | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
-| 🔲 Short-video paid ads | Chinese | planned | — | (v1.x) |
-| 🔲 Foot-and-ankle surgery | Chinese | planned | — | (v1.x) |
+| Industry | Language | Path |
+|------|------|------|
+| 🔥 **LLM agent infrastructure** | English | [llm-agent-infra-master/](prototypes/llm-agent-infra-master/) |
+| ✅ **Cross-border e-commerce** | Chinese | [cross-border-ecommerce-master/](prototypes/cross-border-ecommerce-master/) |
+| ✅ **Xiaohongshu operations** | Chinese | [xiaohongshu-ops-master/](prototypes/xiaohongshu-ops-master/) |
+| ✅ **SEO expert** | Chinese | [seo-master/](prototypes/seo-master/) |
+| ✅ **Love coach** | Chinese | [love-coach-master/](prototypes/love-coach-master/) |
+| 🔲 Short-video paid ads | Chinese | planned |
+| 🔲 Foot-and-ankle surgery | Chinese | planned |
+| 🔲 Legal practice | Chinese | planned |
+
+Five industries spanning technical / commercial / content operations / soft skills — master-skill works across all of them.
 
 Research process is **fully transparent** — every prototype includes complete six-track research notes + the synthesis document, every mental model and decision rule traceable to its sources.
 

@@ -1,0 +1,43 @@
+{
+  "name": "xiaohongshu-ops-master",
+  "industry": "xiaohongshu operations",
+  "industry_cn": "小红书运营",
+  "triggers": [
+    "小红书",
+    "种草",
+    "薯条",
+    "信息流",
+    "笔记",
+    "笔记测评"
+  ],
+  "locale": "zh-CN",
+  "profile": "practitioner",
+  "focus": {
+    "primary": "品牌账号运营",
+    "secondary": "内容种草 + 投流"
+  },
+  "last_research_date": "2026-05-02",
+  "source_count": 25,
+  "primary_source_ratio": 0.5,
+  "tracks_covered": [
+    "figures",
+    "tools",
+    "workflows",
+    "canon",
+    "sources",
+    "glossary"
+  ],
+  "mental_models_count": 3,
+  "playbook_rules_count": 5,
+  "research_dimensions_count": 3,
+  "sub_skills": [],
+  "generator": "master-skill v0.3",
+  "version": "0.3",
+  "changelog": [
+    {
+      "version": "0.3",
+      "date": "2026-05-02",
+      "what": "Initial generation"
+    }
+  ]
+}
