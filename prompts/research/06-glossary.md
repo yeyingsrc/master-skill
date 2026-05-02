@@ -89,16 +89,19 @@
 ```markdown
 ### {{N. 术语原文}} — {{中译 / 英译, 如适用}}
 
-- **Type**: term / acronym / standard / regulation / certification
+- **Type**: term / acronym / standard / regulation / certification (支持 multi-type, 例 `term + acronym` 用于 RAG, CoT 这种既是术语又是缩写的)
 - **Tier**: tier-1 (核心，所有从业者必懂，30-50 个) / tier-2 (周边，资深者熟知，30-70 个)
 - **Definition (insider)**: 1 句这一行内人对它的实际理解
 - **Definition (outsider-friendly)**: 1-2 句让外行也能 get gist 的版本
 - **Etymology / 来源**: 这个词从哪里来（如适用 — 缩写展开 / 标准发布机构 / 法规年份）
 - **常见误用 (outsider-tell)**: 外行 / 入门常见的错误用法 — 是行业表达 DNA 的金矿
-  - 误用类型 1: {{外行说 X 时通常意思是 Y, 但内行的 X 意思是 Z}}
-  - 误用类型 2: {{发音错 / 重音错}}（适用 acronyms 如 SQL "sequel" vs "S-Q-L"）
+  - **Tier 1 必填**, Tier 2 推荐填 (iter 13 修正)
+  - 误用类型 1 `semantic_tell`: {{外行说 X 时通常意思是 Y, 但内行的 X 意思是 Z}}
+  - 误用类型 2 `pronunciation_tell` (针对 acronyms): {{发音错 / 重音错}}，例 SQL "sequel" vs "S-Q-L"; RAG "rag" 一个音节 vs "R-A-G" 三个字母
+  - 误用类型 3 `usage_tell`: {{用错语境 / 与相邻概念混用}}
+  - 误用类型 4 `register_tell`: {{严肃 vs 轻松场合用错 register}}
 - **关联术语**: 1-3 个相邻 / 相对 / 相辅术语（hyperlinked）
-- **是否被错位包装**: 厂商有没有把这个标准 / 概念混淆 / 收编到自家产品命名中（重要 — 防止 master skill 被厂商话术污染）
+- **是否被错位包装** (iter 13 修正): 厂商有没有把这个标准 / 概念混淆 / 收编到自家产品命名中 — **每条 claim 必须 source link**, 不能凭印象（避免污染 master skill）。例: 「Pinecone 营销文章中把 RAG 等同于 vector DB」+ source URL
 - **变化历史** (regulation / certification 必填): 法规修订时间线 / 认证版本演变
 - **Source** ≥ 2:
   - [Primary] official spec / 标准发布机构 / 监管文件: URL + collected date
@@ -138,8 +141,9 @@
 ### Tier 2 — 周边熟知 ({{N}} 个，目标 30-70)
 | 术语 | Type | Insider def | Last_updated |
 
-### Standards / Regulations / Certifications 时间轴
+### Standards / Regulations / Certifications 时间轴 (iter 13 修正：仅近 5 年内有显著变化的进表)
 | 名称 | Issued | Last revised | Decay |
+| (长期稳定的 standard / regulation 不进时间轴, 只在主条目记 issued 年份) |
 
 ### 行业「外行破绽」高亮 ({{N}} 条最容易暴露的)
 | 误用 | 内行实际意思 | 出现频率 |
@@ -217,7 +221,7 @@ Glossary 的 decay 速度与 type 强相关：
 - [ ] 候选数 ≥ 40？（< 25 触发冷僻协议）
 - [ ] 5 个 type 按行业类型有合理分布？(空 type 标 N/A 而非缺漏)
 - [ ] Tier 1 ≥ 15? Tier 2 + Tier 1 总和 ≥ 40?
-- [ ] 至少 50% retained 术语有 outsider-tell 字段填了?
+- [ ] Tier 1 术语**全部**填了 outsider-tell? Tier 2 至少 50% 填了?
 - [ ] Standards / Regulations / Certifications 都有日期字段?
 - [ ] Disputed 术语正确标注（不强行统一）?
 - [ ] Phase 2 接口（行业表达 DNA / 智识谱系 / 时效信号 / workflow 触发种子 / 冷僻信号）填了？

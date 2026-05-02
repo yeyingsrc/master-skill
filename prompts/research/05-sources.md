@@ -65,6 +65,8 @@
 
 注意：zh-CN locale 公众号本身**不是** Track 04 / Track 06 中黑名单的 source — 公众号作为 newsletter 渠道是合法的（一些 figures 的主要发声渠道），只是**不能引用公众号文章作为知识真伪的来源**（Track 06 黑名单）。**Track 05 收 source 名单 ≠ Track 06 引用文章内容**，两件事不同。
 
+**Locale=global 的处理规则** (iter 13 新增): 当 industry 本身是 global / 跨语言时（如 LLM agent infra），**每个 type 至少 retain 1-2 个非英文 sources**（如果存在 high-quality non-en source），明确标 `geographic_focus: zh-CN | jp | ko 等`。这避免 global locale 退化为 en-only。但要警告用户：「非英文圈 sources 的 deep-fluency 期望，agent 可能不达标，需用户自己评估」。
+
 ### Step 2: 信源黑名单（针对 Track 05 特殊）
 
 | Locale | 永不收录 |
@@ -92,10 +94,15 @@
   - mixed = 故意覆盖多 tier
 - **One-liner**: {{value prop in 1 sentence — 这个 source 凭什么进 retain？例：「Latent Space podcast — 长访谈每集 1.5h+，嘉宾覆盖 LLM era 主流框架 founders + 工程师，AI engineering 视角的 anchor」}}
 - **典型每期内容**: 一段 80-150 字描述
-- **投入产出比**: high / medium / low
-  - **high** = 每期都有 actionable insight，从业者必跟
-  - **medium** = 80% 已知 / 20% new，但 new 的部分高质量
-  - **low** = 信号稀疏，可订阅但不必每期都看
+- **投入产出比**: high / medium / low + 概率锚 (iter 13 修正)
+  - **high** = ≥ 80% 期 / 集 / issue 给从业者带来 actionable insight，从业者必跟
+  - **medium** = 50-80% 期有信号
+  - **low** = < 50% 期有从业者级信号（仍可订阅但作 ambient awareness, 不必每期看）
+
+  概率不是精确预测，是评级锚 — 让评估者快速校准而非凭直觉判断
+- **Paywall** (iter 13 新增): `none` / `paywall: $X/month` / `paywall: $X one-time`
+  - 付费源仅 retain if 内容 unique 且没有免费替代
+  - 标 paywall 必须明确价格 + 是否 worth it 的简短判断 (1-2 句)
 - **签名内容**: 1-2 个最有代表性的 episodes / issues / talks（带 URL）
 - **Endorsement evidence**: ≥ 2 处独立背书（figure 推荐 / 跨 source 引用 / 行业 newsletter 互相推荐）
   - 标 type: `figure_long` / `figure_short` / `cross_source` / `community_consensus`
@@ -158,6 +165,7 @@
 - 最近 3 个月被 ≥3 sources 反复讨论的主题:
   - {{topic 1}} (sources A / B / C)
   - {{topic 2}} ...
+- **精度依赖**（iter 13 新增）: 该字段的精度依赖**source content 是否被深度爬取**。如果只列 source 不爬最新内容（默认行为），明确标 `topic-heat: incomplete, sources listed but content not crawled`。如果用 fetch / browser-skill 爬了具体 episode title / issue title，标 `topic-heat: high-confidence (N sources × M items inspected)`。
 
 **新 figures 发现**（喂给 wave 2 Track 01）:
 - 有些 newsletter 作者 / podcast 嘉宾**还没出现在 wave 1 其他 track**，但在多 source 中被多次提及 → 标记为 figure 候选
@@ -183,7 +191,8 @@ Sources 的衰减速度与 type 强相关：
 | Institutional newsletter | 24-36 月（机构会维持） | last_published_date |
 | Personal podcast | 12 月停更高发 | last_episode_date + episode count |
 | Institutional podcast | 24+ 月稳定 | last_episode_date |
-| Conference | 年度 / 双年度，时效低 | next_edition_date |
+| Conference | 年度 / 双年度，时效低 | last_edition_date + next_edition_date |
+|  | (iter 13 修正) next edition 间隔 > 18 月时降级 retain 优先级 — 用户难以等到 |
 | Community | 与 platform 命运绑定（X / Discord / WeChat 群） | active_member_estimate |
 | Dataset | release 一次后稳定，但 maintenance 可能停 | last_update_date |
 
