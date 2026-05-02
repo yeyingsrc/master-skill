@@ -37,6 +37,17 @@
 - [ ] 时效性标注：哪些信息会衰减、衰减速度
 - [ ] 定期自动 refresh hook
 
+## v0.6 — CLI output (新方向 2026-05-02)
+
+生成的 `{industry}-master.skill` 不只是 markdown，还要包含可被 bash 调用的 CLI scripts：
+
+- [ ] `cli/` 目录结构 spec：每个核心 workflow / tool 一个 bash script
+- [ ] Track 02 tools 的「典型使用场景」字段 → CLI script 模板
+- [ ] Track 03 workflows 的入门 SOP 步骤 → 多步 CLI 编排
+- [ ] skill_writer.py 增加 emit-cli 模式
+- [ ] 给生成的 CLI 配 `--help` / `--dry-run` / `--explain` 三个标准接口
+- [ ] 让 master skill 不只是「思维顾问」，是「思维顾问 + 实操 CLI 套件」
+
 ## v1.0 — Public release
 
 - [ ] Repo 转 public
