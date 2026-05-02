@@ -12,9 +12,9 @@
 ./protocol/agentic.sh
 
 # 决策树评估 (基于 playbook)
-./decision/listing.sh
+./decision/topic-1.sh
 # SOP 走查 (workflow)
-./workflow/amazon-eu.sh
+./workflow/us-eu.sh
 
 # 看背后的心智模型 / playbook (不交互)
 ./protocol/agentic.sh --explain
@@ -24,12 +24,16 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/listing.sh` | Listing 决策树 (2 条规则) |
-| `decision/topic-2.sh` | 选品 决策树 (1 条规则) |
-| `decision/general-playbook.sh` | 通用 Playbook 决策树 (2 条规则) |
-| `workflow/amazon-eu.sh` | 新品上架 (Amazon EU) SOP 走查 |
-| `workflow/listing-cycle.sh` | Listing 优化 cycle SOP 走查 |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 选品 决策树 (1 条规则) |
+| `decision/topic-2.sh` | 流量 决策树 (1 条规则) |
+| `decision/topic-3.sh` | 合规 决策树 (1 条规则) |
+| `decision/topic-4.sh` | 品牌 决策树 (2 条规则) |
+| `decision/general-playbook.sh` | 通用 Playbook 决策树 (4 条规则) |
+| `workflow/us-eu.sh` | 亚马逊新品上架 (US/EU 通用) SOP 走查 |
+| `workflow/workflow-1.sh` | 欧站合规切入 SOP 走查 |
+| `workflow/ppc-cycle.sh` | PPC 投放优化 cycle SOP 走查 |
+| `workflow/workflow-2.sh` | 跨平台分散 SOP 走查 |
 
 ## 设计与生成
 

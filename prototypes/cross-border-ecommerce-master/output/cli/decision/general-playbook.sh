@@ -12,7 +12,7 @@ usage() {
   cat <<EOF
 general-playbook.sh — ${TOPIC} 决策助手 for ${INDUSTRY}
 
-基于 2 条 playbook 规则的交互式决策评估。
+基于 4 条 playbook 规则的交互式决策评估。
 你描述情景, 工具帮你判断哪条规则适用, 并给推荐。
 
 USAGE:
@@ -28,12 +28,14 @@ explain() {
   cat <<'EOT'
 这个决策助手把 通用 Playbook 主题下的 playbook 规则组合成交互树。
 
-基于 2 条规则:
-  • 如果 上欧洲站新品类 → 则 VAT / 包装法 / GS-CE 必须在首发前完成注册, 不能边卖边补
-  • 如果 新品冷启动 → 则 前 7 天必投 brand search + auto campaign + 联盟客优惠码组合
+基于 4 条规则:
+  • 如果 新品冷启动期前 14 天 → 则 不要硬调出价 / 加预算 / 改 listing, 让系统跑探索期
+  • 如果 月广告费超过 5000 美金 → 则 上 Sellerise 或 Pacvue 自动化, 但仍人工把关大额计划
+  • 如果 AI 生成 listing 内容 → 则 必须人工编辑加真实使用场景, 否则 Helpful Content Update 后限流
+  • 如果 Cash Conversion Cycle 超过 60 天 → 则 砍 SKU / 砍站点 / 减库存直到现金流安全, 不要硬撑跑量
 
 相关心智模型:
-  • 合规优先于流量: 在欧美主流站点，新品类上线前先解决「能不能合规开卖」，再考虑「能不能跑出量」。
+  • 合规优先于流量: 在欧美主流站点, 新品类上线前先解决「能不能合规开卖」, 再考虑「能不能跑出量」。
   • 选品决定 90% 命运: 在亚马逊体系里, 一个品的最终成败 90% 在选品阶段已经决定, 后续运营只能放大这 10% 空间。
 
 来源: synthesis.md Section 2.
@@ -51,12 +53,16 @@ for arg in "$@"; do
 done
 
 declare -a RULE_CONDITIONS=(
-  "上欧洲站新品类"
-  "新品冷启动"
+  "新品冷启动期前 14 天"
+  "月广告费超过 5000 美金"
+  "AI 生成 listing 内容"
+  "Cash Conversion Cycle 超过 60 天"
 )
 declare -a RULE_ACTIONS=(
-  "VAT / 包装法 / GS-CE 必须在首发前完成注册, 不能边卖边补"
-  "前 7 天必投 brand search + auto campaign + 联盟客优惠码组合"
+  "不要硬调出价 / 加预算 / 改 listing, 让系统跑探索期"
+  "上 Sellerise 或 Pacvue 自动化, 但仍人工把关大额计划"
+  "必须人工编辑加真实使用场景, 否则 Helpful Content Update 后限流"
+  "砍 SKU / 砍站点 / 减库存直到现金流安全, 不要硬撑跑量"
 )
 declare -a APPLIED_RULES=()
 

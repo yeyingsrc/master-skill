@@ -17,8 +17,8 @@
     "secondary": "compliance + ad strategy"
   },
   "last_research_date": "2026-05-02",
-  "source_count": 19,
-  "primary_source_ratio": 0.68,
+  "source_count": 76,
+  "primary_source_ratio": 0.75,
   "tracks_covered": [
     "figures",
     "tools",
@@ -27,10 +27,29 @@
     "sources",
     "glossary"
   ],
-  "mental_models_count": 3,
-  "playbook_rules_count": 5,
-  "research_dimensions_count": 3,
-  "sub_skills": [],
+  "mental_models_count": 5,
+  "playbook_rules_count": 9,
+  "research_dimensions_count": 5,
+  "sub_skills": [
+    {
+      "slug": "yang-meng-anker",
+      "path": "sub-skills/yang-meng-anker/SKILL.md",
+      "figure": "阳萌 (Anker)",
+      "topic": "中国品牌出海 / 长期主义"
+    },
+    {
+      "slug": "steve-chou-mwqhj",
+      "path": "sub-skills/steve-chou-mwqhj/SKILL.md",
+      "figure": "Steve Chou (MWQHJ)",
+      "topic": "独立站 / DTC / 邮件营销"
+    },
+    {
+      "slug": "bradley-sutton-helium10",
+      "path": "sub-skills/bradley-sutton-helium10/SKILL.md",
+      "figure": "Bradley Sutton (Helium 10)",
+      "topic": "Amazon 数据驱动运营"
+    }
+  ],
   "generator": "master-skill v1.3",
   "version": "1.3",
   "changelog": [

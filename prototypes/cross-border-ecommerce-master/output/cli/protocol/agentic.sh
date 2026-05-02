@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/common.sh"
 
 INDUSTRY="跨境电商运营"
-DIM_COUNT=3
+DIM_COUNT=5
 
 usage() {
   cat <<EOF
@@ -29,15 +29,17 @@ explain() {
   cat <<'EOT'
 这个 Agentic Protocol 把这一行人面对新问题的研究维度结构化。
 
-研究维度 (3 个):
-  9.1 合规可行性
-  9.2 类目竞争结构
-  9.3 投流 ROI 评估
+研究维度 (5 个):
+  9.1 选品机会 + 类目竞争结构
+  9.2 合规可行性 (重点欧美)
+  9.3 关键词 / Listing 数据
+  9.4 投流 ROI 评估
+  9.5 财务可行性 (Cash Flow + Payback)
 
 背后的心智模型:
-  • 合规优先于流量: 在欧美主流站点，新品类上线前先解决「能不能合规开卖」，再考虑「能不能跑出量」。
+  • 合规优先于流量: 在欧美主流站点, 新品类上线前先解决「能不能合规开卖」, 再考虑「能不能跑出量」。
   • 选品决定 90% 命运: 在亚马逊体系里, 一个品的最终成败 90% 在选品阶段已经决定, 后续运营只能放大这 10% 空间。
-  • Listing 是文案 + 数据的混合艺术: Listing 不是文案写作, 是用关键词数据反推买家心智 + 用图反推转化率峰值。
+  • 品牌长期资产 vs 平台流量租赁 (industry-amplified): 在亚马逊只是租流量, 自有品牌 + 独立站 / 私域才是真资产. 不要在别人的平台上盖楼。
 
 来源: synthesis.md Section 9 + Section 1.
 EOT
@@ -54,24 +56,32 @@ for arg in "$@"; do
 done
 
 declare -a DIM_TITLES=(
-  "合规可行性"
-  "类目竞争结构"
+  "选品机会 + 类目竞争结构"
+  "合规可行性 (重点欧美)"
+  "关键词 / Listing 数据"
   "投流 ROI 评估"
+  "财务可行性 (Cash Flow + Payback)"
 )
 declare -a DIM_QUESTIONS=(
-  "目标站点 + 品类是否需要 VAT / WEEE / 包装法 / 检测报告 / 认证"
-  "类目天花板 (Top 100 月销总和) + 头部集中度 + 供应链门槛"
-  "类目平均 ACOS / TACOS / 头部卖家投流策略"
+  "类目天花板 (Top 100 月销总和) + 头部集中度 + 供应链门槛 + 季节性"
+  "目标站点 + 品类是否需要 VAT / OSS / VerpackG / WEEE / 电池法 / CE / GS / GPSR / EPR"
+  "目标关键词搜索量 + 转化率 + 头部对手 listing 关键词矩阵 + SQP 真实搜索词"
+  "类目平均 ACOS / TACOS / CTR / CVR + 自家 listing 成本结构"
+  "Cash Conversion Cycle + 库存周转 + payback period + LTV / CAC + 毛利率"
 )
 declare -a DIM_SOURCES=(
-  "各国站点法规页 + 第三方代理服务公司白皮书"
-  "Helium 10 / Jungle Scout / 卖家精灵"
-  "Brand Analytics + Pacvue 案例 + 行业 benchmark"
+  "Helium 10 Black Box / Jungle Scout Opportunity Finder / Brand Analytics SQP / Keepa 历史曲线"
+  "各国法规一手 (EUR-Lex / gov.uk / bundestag.de) + Avalara / Avask / hellotax 等服务商白皮书 + 跨境眼合规专题"
+  "Brand Analytics SQP (Brand Registry 后) + Helium 10 Cerebro 反查 + Jungle Scout Keyword Scout"
+  "Brand Analytics + Pacvue / Sellerise / Helium 10 Adtomic + 行业 benchmark (蝉妈妈 / Pacvue 报告)"
+  "SellerBoard / FeedbackWhiz / 自家 BI + ERP 报表"
 )
 declare -a DIM_OUTPUT_FORMATS=(
-  "low / medium / high 合规风险等级 + 1 句具体说明"
-  "类目机会 score (1-10) + 1 句关键瓶颈"
-  "预期 ACOS 区间 + 1 句获利节奏"
+  "类目机会 score (1-10) + 1 句关键瓶颈 + 推荐细分"
+  "low / medium / high 合规风险等级 + 必做清单 + 估算成本 / 时间"
+  "关键词金字塔 (高 / 中 / 长尾) + Listing 优化方向"
+  "预期 ACOS 区间 + 是否值得投 + 1 句获利节奏判断"
+  "财务健康度 (1-10) + payback 周期 + 资金周转风险点"
 )
 declare -a DIM_FINDINGS=()
 
