@@ -14,7 +14,7 @@
 # 决策树评估 (基于 playbook)
 ./decision/topic-1.sh
 # SOP 走查 (workflow)
-./workflow/seo.sh
+./workflow/seo-90.sh
 
 # 看背后的心智模型 / playbook (不交互)
 ./protocol/agentic.sh --explain
@@ -24,12 +24,17 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/topic-1.sh` | 内容 决策树 (2 条规则) |
-| `decision/seo.sh` | Seo 决策树 (1 条规则) |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 链接 决策树 (1 条规则) |
+| `decision/search.sh` | Search 决策树 (1 条规则) |
+| `decision/topic-3.sh` | 内容 决策树 (3 条规则) |
+| `decision/seo.sh` | Seo 决策树 (2 条规则) |
 | `decision/general-playbook.sh` | 通用 Playbook 决策树 (2 条规则) |
-| `workflow/seo.sh` | 新站 SEO 上线 SOP 走查 |
-| `workflow/seo.sh` | 内容 SEO 单篇产出 SOP 走查 |
+| `workflow/seo-90.sh` | 新站 SEO 上线 (90 天打基线) SOP 走查 |
+| `workflow/seo-pillar-cluster.sh` | 内容 SEO 生产 (Pillar + Cluster) SOP 走查 |
+| `workflow/seo-site-audit-crawlability.sh` | 技术 SEO 审计 (Site Audit + Crawlability) SOP 走查 |
+| `workflow/link-building.sh` | 链接建设 (Link Building) — 白帽路径 SOP 走查 |
+| `workflow/ai-search-geo-llmo-2024-2026.sh` | AI Search 优化 (GEO / LLMO) — 2024-2026 新流派 SOP 走查 |
 
 ## 设计与生成
 

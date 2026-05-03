@@ -12,7 +12,7 @@ usage() {
   cat <<EOF
 seo.sh — ${TOPIC} 决策助手 for ${INDUSTRY}
 
-基于 1 条 playbook 规则的交互式决策评估。
+基于 2 条 playbook 规则的交互式决策评估。
 你描述情景, 工具帮你判断哪条规则适用, 并给推荐。
 
 USAGE:
@@ -28,12 +28,13 @@ explain() {
   cat <<'EOT'
 这个决策助手把 Seo 主题下的 playbook 规则组合成交互树。
 
-基于 1 条规则:
-  • 如果 做技术 SEO 审计 → 则 先用爬虫工具 (Screaming Frog) 跑一遍, 不要手动一页一页查
+基于 2 条规则:
+  • 如果 做技术 SEO → 则 Core Web Vitals + Mobile + Schema + Crawlability 4 件套, 是 bas
+  • 如果 做国际化 SEO → 则 hreflang + 多语言版本 + 文化适配 + locale-specific URL
 
 相关心智模型:
-  • 用户意图先于关键词: SEO 不是堆关键词, 是回答用户搜索时真正想要的东西。Google 已经从词匹配升到语义匹配了。
-  • 内容质量 = E-E-A-T 四象: Google 排名核心信号已经从「内容长度 / 外链」转移到 E-E-A-T (经验 / 专长 / 权威 / 可信), 尤其是 YMYL 类目。
+  • People-first content > Search engine first content (核心 PASS): Google 长期主线是「为用户写, 不为搜索引擎写」. 套路 6 个月一过期, 真实价值是长期资产.
+  • Pillar + Cluster 内容架构 (核心 PASS): Pillar (主题枢纽) + Cluster (长尾分支) 是中型品牌内容 SEO 的标准架构.
 
 来源: synthesis.md Section 2.
 EOT
@@ -50,10 +51,12 @@ for arg in "$@"; do
 done
 
 declare -a RULE_CONDITIONS=(
-  "做技术 SEO 审计"
+  "做技术 SEO"
+  "做国际化 SEO"
 )
 declare -a RULE_ACTIONS=(
-  "先用爬虫工具 (Screaming Frog) 跑一遍, 不要手动一页一页查"
+  "Core Web Vitals + Mobile + Schema + Crawlability 4 件套, 是 baseline 不是优势"
+  "hreflang + 多语言版本 + 文化适配 + locale-specific URL"
 )
 declare -a APPLIED_RULES=()
 

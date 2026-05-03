@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/common.sh"
 
 INDUSTRY="SEO 专家"
-DIM_COUNT=3
+DIM_COUNT=5
 
 usage() {
   cat <<EOF
@@ -29,15 +29,17 @@ explain() {
   cat <<'EOT'
 这个 Agentic Protocol 把这一行人面对新问题的研究维度结构化。
 
-研究维度 (3 个):
-  9.1 SERP 当前状态
-  9.2 域名权重评估
-  9.3 算法更新影响
+研究维度 (5 个):
+  9.1 内容质量诊断 (E-E-A-T)
+  9.2 技术 SEO 健康度
+  9.3 链接质量评估
+  9.4 关键词机会评估
+  9.5 AI Search 可见度 (GEO, 2024-2026)
 
 背后的心智模型:
-  • 用户意图先于关键词: SEO 不是堆关键词, 是回答用户搜索时真正想要的东西。Google 已经从词匹配升到语义匹配了。
-  • 内容质量 = E-E-A-T 四象: Google 排名核心信号已经从「内容长度 / 外链」转移到 E-E-A-T (经验 / 专长 / 权威 / 可信), 尤其是 YMYL 类目。
-  • 技术 SEO 是地基, 内容是楼: 技术 SEO 不解决, 内容做得再好也起不来; 但技术 SEO 完美也救不了垃圾内容。
+  • People-first content > Search engine first content (核心 PASS): Google 长期主线是「为用户写, 不为搜索引擎写」. 套路 6 个月一过期, 真实价值是长期资产.
+  • Pillar + Cluster 内容架构 (核心 PASS): Pillar (主题枢纽) + Cluster (长尾分支) 是中型品牌内容 SEO 的标准架构.
+  • 链接质量 > 链接数量 (industry-amplified): 10 个 DA 50+ 链接 > 100 个 DA 10 链接. 白帽路径, 不要走 spam.
 
 来源: synthesis.md Section 9 + Section 1.
 EOT
@@ -54,24 +56,32 @@ for arg in "$@"; do
 done
 
 declare -a DIM_TITLES=(
-  "SERP 当前状态"
-  "域名权重评估"
-  "算法更新影响"
+  "内容质量诊断 (E-E-A-T)"
+  "技术 SEO 健康度"
+  "链接质量评估"
+  "关键词机会评估"
+  "AI Search 可见度 (GEO, 2024-2026)"
 )
 declare -a DIM_QUESTIONS=(
-  "目标关键词的 SERP 长什么样 — 内容类型 / featured snippet / 知识图谱 / People Also Ask"
-  "自家域名 DR/DA + 同类目排名网站的权重对比"
-  "最近 3 月有没有 Google 算法更新, 自家流量曲线异常"
+  "Experience / Expertise / Authoritativeness / Trustworthiness 4 维"
+  "Crawlability / Indexability / Core Web Vitals / Schema 4 件套"
+  "链接 DA / 主题相关性 / Anchor Text 多样性 / Toxic 比例"
+  "KD / Search Volume / 当前排名 / 竞品分析"
+  "AI Overviews / ChatGPT / Perplexity 引用频率 + 品牌 mention"
 )
 declare -a DIM_SOURCES=(
-  "直接 Google + 隐身模式; Ahrefs SERP overview"
-  "Ahrefs / Moz / SEMrush"
-  "Search Console + SearchEngineLand 算法更新历史"
+  "Google Quality Rater Guidelines + 自家内容 vs 竞品对比"
+  "GSC + Screaming Frog + PageSpeed Insights"
+  "Ahrefs / SEMrush / Moz 链接报告"
+  "Ahrefs / SEMrush + GSC"
+  "Otterly.ai / Profound / Peec AI"
 )
 declare -a DIM_OUTPUT_FORMATS=(
-  "SERP 主导内容类型 + 进入难度 (1-10)"
-  "DR 区间 + 距离能排进 top 10 还需要多少高质量外链"
-  "是否受影响 + 主要受影响的 page 类型"
+  "4 维各 score (1-10) + 1 句最大瓶颈"
+  "4 维各通过率 + 高 / 中 / 低 优先级修复清单"
+  "链接质量分 + Disavow 建议 + Outreach 优先级"
+  "高 ROI 关键词清单 + 内容方向建议"
+  "AI Search 可见度 baseline + 优化建议 (内容结构 / 数据密度 / Schema)"
 )
 declare -a DIM_FINDINGS=()
 
