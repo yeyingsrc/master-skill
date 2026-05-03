@@ -50,22 +50,6 @@
 
 ---
 
-## 🎯 它做什么
-
-[同事.skill](https://github.com/titanwings/colleague-skill) 把**一个人**蒸馏成 skill — 一个具体的同事、朋友、偶像。
-[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把**任何人**的思维方式蒸馏成 skill — 乔布斯、芒格、马斯克、张雪峰。
-**大师.skill** 把**一整个行业的认知操作系统**蒸馏成 skill。
-
-每一层都是十倍跃迁：
-
-| | 蒸馏的范围 | 给你什么 |
-|---|---|---|
-| 🧬 同事.skill | **一个**具体的人 | 一个能模仿这个人工作方式 + 性格的 skill |
-| 🌟 女娲.skill | **任何**活着或死去的人 | 一个能用此人认知框架做判断的 skill |
-| 🎓 **大师.skill** | **一整个**细分行业 | 一个让 AI 进入「这行的资深人」模式的 skill |
-
----
-
 ## ✨ 效果示例
 
 > 这不是搜索引擎。这是「这一行的资深人此刻在你旁边」。
@@ -341,16 +325,10 @@ python3 tools/update_skill.py finalize --skill-dir <skill>              # 4. 完
 
 大师.skill 站在两个前作的肩膀上：
 
-```
-🧬 同事.skill     蒸馏一个具体的人          范围：1 人
-🌟 女娲.skill     蒸馏一种思维方式          范围：任何活人或历史人物
-🎓 大师.skill     蒸馏一个细分行业的认知    范围：一整个领域
-```
+- **[同事.skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — 提供了「了解 → 多源采集 → 分析 → 写出」的元 skill 框架。
+- **[女娲.skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — 提供了 6 个 agent 并行调研 + 三重质量关卡。**大师.skill 在 Phase 3 直接调女娲，蒸出行业最重要的 3 个人作为 sub-skill。**
 
-- **[同事.skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — 证明「蒸馏一个人」是可行的，提供了「了解 → 多源采集 → 分析 → 写出」这套元 skill 模式。
-- **[女娲.skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — 证明「蒸馏思维方式」比「蒸馏话语」更有价值，提供了 6 个 agent 并行调研 + 三重质量关卡 + 研究协议这套架构。**大师.skill 在 Phase 3 直接调女娲，蒸出行业最重要的 3 个人作为 sub-skill。**
-
-三者同源，逐层放大 — 一个你认识的人 → 任何活着或死去的人 → 一整个领域的人类知识。
+三者同源，逐层放大。
 
 ---
 
