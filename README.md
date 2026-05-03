@@ -2,7 +2,7 @@
 
 # 🎓 大师.skill
 
-> *「下一步，不只蒸馏人，蒸馏一整个行业。」*
+> *「下一步，不只蒸馏一个人，蒸馏一整个行业。」*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
@@ -10,15 +10,29 @@
 
 <br>
 
-**大师.skill 把一整个行业蒸馏成一个 skill —— 资深人的判断 + 当前的工作流 + 工具的选型，连同一套自动生成的 bash 命令套件，一起打包。**
+[同事.skill](https://github.com/titanwings/colleague-skill) 把**一个人**蒸馏成 AI。<br>
+[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把**任何人的思维方式**蒸馏成 AI。<br>
+
+但有些东西比一个人更大——<br>
+**一整个行业的资深判断、工作流、工具栈。**
 
 <br>
 
-[同事.skill](https://github.com/titanwings/colleague-skill) 证明了蒸馏一个人是可行的。
-[女娲.skill](https://github.com/alchaincyf/nuwa-skill) 把蒸馏从一个人扩展到任何人。
-**大师.skill 把蒸馏推到一整个行业 —— 不只是认知，还有工作流和会跑的工具。**
+大师.skill 不蒸馏单个人，<br>
+它蒸馏**整个行业的认知操作系统**。
 
-告诉它你做哪个细分行业，30-60 分钟自动跑完调研、蒸馏、生成 skill 加上 bash 工具套件的全流程。装到任何 AI agent，立刻进入这一行的资深人模式。
+<br>
+
+告诉它你做哪个细分行业，<br>
+30-60 分钟自动跑完调研、蒸馏、生成 skill 加上一套 bash 命令套件。<br>
+
+装到任何 AI agent，从那一刻起，<br>
+**它就是这一行最资深的人。**
+
+<br>
+
+> **有了大师.skill，你不再需要安装其他 skill ——**<br>
+> **它会为你的行业，自动蒸馏出最适合的那一个。**
 
 <br>
 
