@@ -24,12 +24,16 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/topic-1.sh` | 手术 决策树 (3 条规则) |
-| `decision/topic-2.sh` | 影像 决策树 (1 条规则) |
-| `decision/general-playbook.sh` | 通用 Playbook 决策树 (1 条规则) |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 手术 决策树 (4 条规则) |
+| `decision/topic-2.sh` | 患者 决策树 (2 条规则) |
+| `decision/topic-3.sh` | 期望 决策树 (1 条规则) |
+| `decision/general-playbook.sh` | 通用 Playbook 决策树 (2 条规则) |
 | `workflow/workflow-1.sh` | 急性踝扭伤评估 + 保守治疗启动 SOP 走查 |
 | `workflow/workflow-2.sh` | 慢性足底筋膜炎管理 SOP 走查 |
+| `workflow/hallux-valgus.sh` | 拇外翻 (Hallux Valgus) 评估 + 决策 SOP 走查 |
+| `workflow/achilles-rupture.sh` | 跟腱断裂 (Achilles Rupture) 评估 + 治疗决策 SOP 走查 |
+| `workflow/vs.sh` | 终末期踝关节炎 — 关节置换 vs 关节融合 决策 SOP 走查 |
 
 ## 设计与生成
 
