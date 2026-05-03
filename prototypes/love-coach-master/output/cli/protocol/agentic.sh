@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/common.sh"
 
 INDUSTRY="恋爱高手"
-DIM_COUNT=3
+DIM_COUNT=5
 
 usage() {
   cat <<EOF
@@ -29,15 +29,17 @@ explain() {
   cat <<'EOT'
 这个 Agentic Protocol 把这一行人面对新问题的研究维度结构化。
 
-研究维度 (3 个):
-  9.1 自我状态评估
-  9.2 对方信号识别
-  9.3 互动模式诊断
+研究维度 (5 个):
+  9.1 依恋风格诊断
+  9.2 关系健康度评估 (Gottman)
+  9.3 流派分类 (问题对应方法)
+  9.4 危机识别
+  9.5 跨文化适配 (中文圈)
 
 背后的心智模型:
-  • 价值感不是装的, 是活出来的: 真正吸引人的不是话术 / 套路, 是你身上散发出的「我自己的生活已经很完整」的状态。
-  • 关系是双向选择的市场: 恋爱不是你要去「征服」谁, 是看你跟谁互相匹配 — 像招聘, 像找合伙人。
-  • 沟通中的「需求」要直接说: 中文圈大量恋爱问题来自「我以为对方应该懂」 — 没有读心术, 需求必须直接说。
+  • 健康关系不是没冲突, 是知道怎么修复 (核心 PASS): Gottman 30+ 年研究证明 — 婚姻稳定不取决于多吵架, 而取决于「修复尝试 (repair attempts)」是否被接受.
+  • 亲密关系本质是依恋 (核心 PASS): 成人亲密关系 = 婴儿对父母的依恋, 都是「我有人吗?」的根本焦虑. 修复关系就是修复安全依恋.
+  • 长期关系悖论: 安全 vs 激情 (industry-amplified): 长期关系最大挑战不是冲突, 是激情消退. Esther Perel: 你想跟最熟悉的人最神秘的关系 — 这是结构性悖论.
 
 来源: synthesis.md Section 9 + Section 1.
 EOT
@@ -54,24 +56,32 @@ for arg in "$@"; do
 done
 
 declare -a DIM_TITLES=(
-  "自我状态评估"
-  "对方信号识别"
-  "互动模式诊断"
+  "依恋风格诊断"
+  "关系健康度评估 (Gottman)"
+  "流派分类 (问题对应方法)"
+  "危机识别"
+  "跨文化适配 (中文圈)"
 )
 declare -a DIM_QUESTIONS=(
-  "你目前的内核稳定度 (有没有自己的生活 / 有没有反复在某种关系模式里循环)"
-  "对方的依恋类型信号 / 价值观核心 / 红旗绿旗"
-  "你跟这个人的互动是怎样的循环 — 谁主动 / 冲突怎么处理 / 修复模式"
+  "Anxious / Avoidant / Secure / Disorganized 哪种风格 + 触发点"
+  "Four Horsemen 自查 + 5:1 Magic Ratio + Repair Attempts 接受率 + Bid for Connection 回应率"
+  "当前问题是单身脱单 / 关系建立 / 冲突修复 / 长期维护 / 危机"
+  "暴力 / 自杀念头 / 严重抑郁 / 信任危机 / Love Bombing / Gaslighting"
+  "西方学术派方法论是否适合此人文化背景"
 )
 declare -a DIM_SOURCES=(
-  "自我观察 + 情感日记 + 朋友反馈"
-  "互动中的具体行为 (不是说的话)"
-  "最近 5-10 次具体互动的回顾"
+  "amirlevinemd.com/quiz + 自我反思 + 跟伴侣对照"
+  "Gottman Sound Relationship House 自测 + 一周关系日记"
+  "自我描述 + 关系阶段"
+  "直接询问 + PHQ-9 / GAD-7 自测"
+  "个人 + 家庭文化背景"
 )
 declare -a DIM_OUTPUT_FORMATS=(
-  "内核稳定度 (1-10) + 当前最大功课"
-  "依恋类型推断 + 红旗清单 (如有)"
-  "主导模式 + 不健康循环 (如有)"
+  "风格判断 + 跟伴侣的兼容性评估 + 关键触发点 (Raw Spots)"
+  "4 维各 score + 健康 / 张力 / 危机 三级判断"
+  "问题类型 + 推荐流派 (Gottman / EFT / Perel / Manson / Ury)"
+  "危机级别 (绿 / 黄 / 红) + 对应紧急资源"
+  "直接套用 / 需文化适配 / 不适用 三级 + 调整建议"
 )
 declare -a DIM_FINDINGS=()
 

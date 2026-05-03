@@ -12,7 +12,7 @@ usage() {
   cat <<EOF
 general-playbook.sh — ${TOPIC} 决策助手 for ${INDUSTRY}
 
-基于 1 条 playbook 规则的交互式决策评估。
+基于 4 条 playbook 规则的交互式决策评估。
 你描述情景, 工具帮你判断哪条规则适用, 并给推荐。
 
 USAGE:
@@ -28,12 +28,15 @@ explain() {
   cat <<'EOT'
 这个决策助手把 通用 Playbook 主题下的 playbook 规则组合成交互树。
 
-基于 1 条规则:
-  • 如果 发现自己一直在追同一类不合适的人 → 则 停下来看模式 — 大概率是童年依恋模式在重演
+基于 4 条规则:
+  • 如果 跟伴侣吵架 → 则 识别 Four Horsemen — 蔑视是离婚最强信号 (90%+ 预测准确率)
+  • 如果 做单身约会 → 则 Mark Manson Models 三件套 (Honest Living / Action / Communicati
+  • 如果 遇到 Anxious + Avoidant 配对 → 则 双方先了解触发点, 必要时找 EFT 治疗师
+  • 如果 遇到 Love Bombing / Gaslighting / Negging → 则 警示信号, 离开优先
 
 相关心智模型:
-  • 价值感不是装的, 是活出来的: 真正吸引人的不是话术 / 套路, 是你身上散发出的「我自己的生活已经很完整」的状态。
-  • 关系是双向选择的市场: 恋爱不是你要去「征服」谁, 是看你跟谁互相匹配 — 像招聘, 像找合伙人。
+  • 健康关系不是没冲突, 是知道怎么修复 (核心 PASS): Gottman 30+ 年研究证明 — 婚姻稳定不取决于多吵架, 而取决于「修复尝试 (repair attempts)」是否被接受.
+  • 亲密关系本质是依恋 (核心 PASS): 成人亲密关系 = 婴儿对父母的依恋, 都是「我有人吗?」的根本焦虑. 修复关系就是修复安全依恋.
 
 来源: synthesis.md Section 2.
 EOT
@@ -50,10 +53,16 @@ for arg in "$@"; do
 done
 
 declare -a RULE_CONDITIONS=(
-  "发现自己一直在追同一类不合适的人"
+  "跟伴侣吵架"
+  "做单身约会"
+  "遇到 Anxious + Avoidant 配对"
+  "遇到 Love Bombing / Gaslighting / Negging"
 )
 declare -a RULE_ACTIONS=(
-  "停下来看模式 — 大概率是童年依恋模式在重演"
+  "识别 Four Horsemen — 蔑视是离婚最强信号 (90%+ 预测准确率)"
+  "Mark Manson Models 三件套 (Honest Living / Action / Communication), 不学 PUA"
+  "双方先了解触发点, 必要时找 EFT 治疗师"
+  "警示信号, 离开优先"
 )
 declare -a APPLIED_RULES=()
 

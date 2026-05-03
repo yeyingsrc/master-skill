@@ -14,7 +14,7 @@
 # 决策树评估 (基于 playbook)
 ./decision/topic-1.sh
 # SOP 走查 (workflow)
-./workflow/workflow-1.sh
+./workflow/healthy-dating-mark-manson-logan.sh
 
 # 看背后的心智模型 / playbook (不交互)
 ./protocol/agentic.sh --explain
@@ -24,14 +24,16 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/topic-1.sh` | 价值 决策树 (1 条规则) |
-| `decision/topic-2.sh` | 关系 决策树 (1 条规则) |
-| `decision/topic-3.sh` | 对方 决策树 (1 条规则) |
-| `decision/topic-4.sh` | 状态 决策树 (1 条规则) |
-| `decision/general-playbook.sh` | 通用 Playbook 决策树 (1 条规则) |
-| `workflow/workflow-1.sh` | 单身期自我建设 SOP 走查 |
-| `workflow/workflow-2.sh` | 关系冲突修复 SOP 走查 |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 关系 决策树 (3 条规则) |
+| `decision/topic-2.sh` | 依恋 决策树 (1 条规则) |
+| `decision/topic-3.sh` | 危机 决策树 (1 条规则) |
+| `decision/general-playbook.sh` | 通用 Playbook 决策树 (4 条规则) |
+| `workflow/healthy-dating-mark-manson-logan.sh` | 单身脱单 (Healthy Dating, Mark Manson + Logan Ury 流派) SOP 走查 |
+| `workflow/workflow-1.sh` | 关系建立 (从约会到稳定伴侣) SOP 走查 |
+| `workflow/gottman-eft.sh` | 冲突修复 (Gottman / EFT 流派) SOP 走查 |
+| `workflow/esther-perel.sh` | 长期关系维护 (Esther Perel 长期主义) SOP 走查 |
+| `workflow/workflow-2.sh` | 危机处理 (信任危机 / 出轨 / 暴力) SOP 走查 |
 
 ## 设计与生成
 
