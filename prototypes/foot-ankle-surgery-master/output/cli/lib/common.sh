@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# common.sh — shared helpers for {industry-cn} master CLI scripts.
+# common.sh — shared helpers for 足踝外科 master CLI scripts.
 # Pure bash 4 + POSIX coreutils. No external deps.
 
 if [[ -t 1 ]]; then

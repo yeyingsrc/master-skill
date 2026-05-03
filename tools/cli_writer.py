@@ -916,7 +916,8 @@ def cmd_emit(args) -> int:
         shutil.rmtree(cli_dir)
 
     common_path = cli_dir / "lib" / "common.sh"
-    atomic_write(common_path, COMMON_SH, executable=False)
+    common_content = COMMON_SH.replace("{industry-cn}", industry_cn)
+    atomic_write(common_path, common_content, executable=False)
     print(f"  wrote {common_path.relative_to(skill_dir)}")
 
     scripts_index = []
