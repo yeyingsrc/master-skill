@@ -1,6 +1,6 @@
-# 法律执业 (中国法) CLI
+# 中国法律执业 CLI
 
-把 法律执业 (中国法) master skill 的认知 OS 物化成 bash 工具。
+把 中国法律执业 master skill 的认知 OS 物化成 bash 工具。
 不替代 SKILL.md（思维顾问），是它的「执行端」：交互问询 → 应用 playbook / protocol → 输出结构化报告。
 
 ## 用法
@@ -24,12 +24,16 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/topic-1.sh` | 证据 决策树 (2 条规则) |
-| `decision/topic-2.sh` | 救济 决策树 (1 条规则) |
-| `decision/general-playbook.sh` | 通用 Playbook 决策树 (2 条规则) |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/topic-1.sh` | 法律 决策树 (3 条规则) |
+| `decision/topic-2.sh` | 证据 决策树 (2 条规则) |
+| `decision/topic-3.sh` | 客户 决策树 (1 条规则) |
+| `decision/topic-4.sh` | 解释 决策树 (2 条规则) |
+| `decision/general-playbook.sh` | 通用 Playbook 决策树 (1 条规则) |
 | `workflow/workflow-1.sh` | 民商事案件立案前评估 SOP 走查 |
-| `workflow/workflow-2.sh` | 商事合同审核流程 SOP 走查 |
+| `workflow/contract-review.sh` | 合同审核 (Contract Review) SOP 走查 |
+| `workflow/workflow-2.sh` | 刑事辩护流程 (从侦查到审判) SOP 走查 |
+| `workflow/workflow-3.sh` | 涉外商事争议 (国际仲裁 / 跨境执行) SOP 走查 |
 
 ## 设计与生成
 
@@ -46,5 +50,5 @@ python3 <master-skill>/tools/cli_writer.py emit \
   --skill-dir <this-skill-dir> \
   --synthesis references/synthesis.md \
   --workflows references/research/03-workflows.md \
-  --industry-cn "法律执业 (中国法)"
+  --industry-cn "中国法律执业"
 ```

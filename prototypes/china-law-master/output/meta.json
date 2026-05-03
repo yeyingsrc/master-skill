@@ -1,7 +1,7 @@
 {
   "name": "china-law-master",
-  "industry": "Chinese law practice (commercial / civil)",
-  "industry_cn": "法律执业 (中国法)",
+  "industry": "Chinese law practice (commercial / civil / criminal)",
+  "industry_cn": "中国法律执业",
   "triggers": [
     "法律",
     "诉讼",
@@ -12,17 +12,22 @@
     "立案",
     "时效",
     "管辖",
-    "律师"
+    "律师",
+    "刑法",
+    "民法典",
+    "司法解释",
+    "仲裁",
+    "涉外"
   ],
   "locale": "zh-CN",
   "profile": "practitioner",
   "focus": {
-    "primary": "民商事诉讼 + 合同审核",
-    "secondary": "中国大陆法语境"
+    "primary": "民商事 + 刑事 + 涉外 综合",
+    "secondary": "中国大陆法语境 + 强监管法律领域"
   },
-  "last_research_date": "2026-05-02",
-  "source_count": 15,
-  "primary_source_ratio": 0.67,
+  "last_research_date": "2026-05-03",
+  "source_count": 156,
+  "primary_source_ratio": 0.89,
   "tracks_covered": [
     "figures",
     "tools",
@@ -31,16 +36,35 @@
     "sources",
     "glossary"
   ],
-  "mental_models_count": 3,
-  "playbook_rules_count": 5,
-  "research_dimensions_count": 3,
-  "sub_skills": [],
+  "mental_models_count": 5,
+  "playbook_rules_count": 9,
+  "research_dimensions_count": 5,
+  "sub_skills": [
+    {
+      "slug": "wang-liming-civil-code",
+      "path": "sub-skills/wang-liming-civil-code/SKILL.md",
+      "figure": "王利明 (人大法学院)",
+      "perspective": "民法典核心起草 / 民事法 / 人格权独立成编 / 民事解释论"
+    },
+    {
+      "slug": "luo-xiang-criminal-law",
+      "path": "sub-skills/luo-xiang-criminal-law/SKILL.md",
+      "figure": "罗翔 (中国政法大学)",
+      "perspective": "大众普法 / 刑法基础 / 法律哲学 / 圆圈正义 / 法考"
+    },
+    {
+      "slug": "zhang-mingkai-criminal-law-academic",
+      "path": "sub-skills/zhang-mingkai-criminal-law-academic/SKILL.md",
+      "figure": "张明楷 (清华法学院)",
+      "perspective": "刑法学术 / 教材标准 / 构成要件实质解释 / 结果无价值论"
+    }
+  ],
   "generator": "master-skill v1.3",
   "version": "1.3",
   "changelog": [
     {
       "version": "1.3",
-      "date": "2026-05-02",
+      "date": "2026-05-03",
       "what": "Initial generation"
     }
   ]
