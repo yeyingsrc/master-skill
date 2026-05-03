@@ -16,7 +16,7 @@ triggers:
 industry: "short-video paid advertising (China platforms)"
 industry-cn: "短视频投流"
 locale: "zh-CN"
-last_research_date: "2026-05-02"
+last_research_date: "2026-05-03"
 source_count: 26
 profile: "practitioner"
 generator: "master-skill v1.3"
@@ -91,6 +91,8 @@ generator: "master-skill v1.3"
 
 **一句话**: 没有好素材, 怎么投都跑不动. 投流的杠杆 90% 在创意, 10% 在出价 / 定向.
 
+(figures: 千灵 / 智点课堂 / 买量小飞机 / 巨量大学 / 亮哥 / 何夕)
+
 **它说的是**: 多数中小投手把精力放在出价 / 定向 / 卡价等技术细节, 但真正决定 ROAS 的是素材本身. 同样一个商品, 5 个不同钩子可能 ROAS 差 10 倍. 算法能做的是从你给的素材里挑最优, 不能凭空创造好素材.
 
 **证据来源**:
@@ -116,6 +118,8 @@ generator: "master-skill v1.3"
 
 **一句话**: 千川计划前 50 转化是算法学习期, 任何调整都重置学习. 学完才能优化.
 
+(figures: 巨量千川官方 / 智点课堂 / 千灵 / 买量小飞机 / 巨量大学)
+
 **它说的是**: OCPM 智能出价的逻辑是算法在前 50 转化里学习「什么样的人群转化好」. 你硬调出价 / 定向 / 素材 / 预算都会让算法重新学. 多数计划失败不是模型不行, 是「学习期被打断」.
 
 **证据来源**:
@@ -139,6 +143,8 @@ generator: "master-skill v1.3"
 ### 1.3 直播 3 阶段不同 KPI (industry-amplified)
 
 **一句话**: 直播间投流分冷启动 / 成长 / 成熟 3 阶段, 每阶段核心指标 + 投放策略不同, 不要混着追.
+
+(figures: 巨量千川官方 / 谦寻 / 美 ONE / 遥望 / 36氪)
 
 **它说的是**: 多数商家直播投流失败是因为混着追 KPI — 冷启动期硬冲 GMV (但人群标签没建) / 成长期不上 5A 人群 / 成熟期才想起 5A. 巨量千川官方明确给出 3 阶段 KPI: 冷启动 (互动数据 + 人群标签) / 成长 (转化率 + UV 值) / 成熟 (GMV).
 
@@ -165,6 +171,8 @@ generator: "master-skill v1.3"
 
 **一句话**: GTA = GMV → 5A 人群积累 → 投放触点, 中大品牌品牌资产沉淀 + ROI 双优化的标准方法论.
 
+(figures: 巨量引擎官方 / 朴朴超市 / 完美日记 / 蕉下 / 千川·乘方)
+
 **它说的是**: 巨量引擎官方 2024-2026 主推方法论. 5A 人群 (Z世代 / 精致妈妈 / 新锐白领 / 小镇青年 / 小镇中老年) 是定向投放底盘. 非大促节点持续累积人群标签, 大促节点用历史 5A 圈定投放, 跳过冷启动 — 实测 CPA 降 8% / ROI 升 30%.
 
 **证据来源**:
@@ -189,6 +197,8 @@ generator: "master-skill v1.3"
 ### 1.5 跑量是奖励, 资产是策略 (industry-amplified)
 
 **一句话**: 单次投流跑量是短期成果, 真正长期赢的是品牌资产 + 5A 人群 + 内容资产.
+
+(figures: 36氪 / 晚点 / 完美日记 / 蕉下 / 钟薛高 / 巨量千川 2025-03)
 
 **它说的是**: 反「跑量论」声音 — 抖音算法 6 个月一变, 跑量套路活不长. 真正抗算法的是: 品牌 IP / 5A 人群资产 / 内容素材库 / 私域承接. 跑量是结果, 不是策略.
 
@@ -348,12 +358,9 @@ generator: "master-skill v1.3"
 - **店播 vs 达人投流** — 决定品牌投放方式
 
 ### Sub-skills (女娲蒸馏的 top figures)
-
-| Figure | Sub-skill 路径 | 何时调用 |
-|--------|--------------|---------|
-| 巨量千川官方方法论 | sub-skills/juliang-qianchuan-official/SKILL.md | 当问题涉及 OCPM / 学习期 / 5A 人群 / GTA / 千川·乘方 等官方方法论 |
-| 罗永浩 / 交个朋友 | sub-skills/luo-yonghao-jiaopengyou/SKILL.md | 当问题涉及店播头部 / 头部主播 IP / 跨平台复刻 / 性价比+品质感选品时 |
-| 董宇辉 / 东方甄选 | sub-skills/dong-yuhui-dongfangzhenxuan/SKILL.md | 当问题涉及内容驱动直播 / 文化带货 / 知识型主播 / 长期内容资产时 |
+- 巨量千川官方 — 战略级官方方法论代表
+- 头部投手代表 — 创意驱动派 / 学习期铁律
+- 谦寻 / 头部 MCN — 直播 + 投流双轮派
 
 ---
 
@@ -389,15 +396,15 @@ when the dates below cross the recommended cadence (see references/extraction-fr
 
 | Module | last_updated | decay_risk | Recommended refresh cadence |
 |--------|-------------|-----------|---------------------------|
-| Mental models | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Standard playbook | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Tool stack | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Workflows / pipeline | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Expression DNA | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Sources (Track 5) | last_updated: 2026-05-02 | decay_risk: medium | 6 months |
-| Glossary / standards / regulations | last_updated: 2026-05-02 | decay_risk: medium | 6 months (regulations may force sooner) |
-| Intellectual genealogy | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Honest boundaries | last_updated: 2026-05-02 | decay_risk: low | re-assess each refresh |
+| Mental models | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
+| Standard playbook | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
+| Tool stack | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
+| Workflows / pipeline | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
+| Expression DNA | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
+| Sources (Track 5) | last_updated: 2026-05-03 | decay_risk: medium | 6 months |
+| Glossary / standards / regulations | last_updated: 2026-05-03 | decay_risk: medium | 6 months (regulations may force sooner) |
+| Intellectual genealogy | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
+| Honest boundaries | last_updated: 2026-05-03 | decay_risk: low | re-assess each refresh |
 
 last_updated values reflect the synthesis date. Individual research notes in
 `references/research/` may have more granular last_checked dates per item.

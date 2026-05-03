@@ -16,7 +16,7 @@
     "primary": "品牌账号运营",
     "secondary": "内容种草 + 投流"
   },
-  "last_research_date": "2026-05-02",
+  "last_research_date": "2026-05-03",
   "source_count": 110,
   "primary_source_ratio": 0.76,
   "tracks_covered": [
@@ -34,20 +34,20 @@
     {
       "slug": "gumai-jiahe-content",
       "path": "sub-skills/gumai-jiahe-content/SKILL.md",
-      "figure": "古麦嘉禾创始团队 (吴俊雷)",
-      "perspective": "内容驱动派 / IP 化方法论"
+      "figure": "古麦嘉禾",
+      "perspective": "MCN 矩阵账号 / 内容工业化 / 品效合一"
     },
     {
       "slug": "liu-siyi-qunxiang",
       "path": "sub-skills/liu-siyi-qunxiang/SKILL.md",
-      "figure": "群响刘思毅",
-      "perspective": "操盘手社群头部 / 私域 + 矩阵派"
+      "figure": "刘思毅 (群响)",
+      "perspective": "私域 + 小红书 / 创业者视角 / 长期主义"
     },
     {
       "slug": "qiangua-data-driven",
       "path": "sub-skills/qiangua-data-driven/SKILL.md",
-      "figure": "千瓜数据创始团队",
-      "perspective": "数据驱动派 / 工具派"
+      "figure": "千瓜数据",
+      "perspective": "数据驱动 / 行业报告 / KOL 投放策略"
     }
   ],
   "generator": "master-skill v1.3",
@@ -55,7 +55,7 @@
   "changelog": [
     {
       "version": "1.3",
-      "date": "2026-05-02",
+      "date": "2026-05-03",
       "what": "Initial generation"
     }
   ]

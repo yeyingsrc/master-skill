@@ -14,7 +14,7 @@ triggers:
 industry: "xiaohongshu operations"
 industry-cn: "小红书运营"
 locale: "zh-CN"
-last_research_date: "2026-05-02"
+last_research_date: "2026-05-03"
 source_count: 25
 profile: "practitioner"
 generator: "master-skill v1.3"
@@ -88,6 +88,8 @@ generator: "master-skill v1.3"
 ### 1.1 内容是种草, 不是销售 (核心 PASS)
 
 **一句话**: 小红书的内容逻辑是「让用户自己想买」, 不是「告诉用户来买」. 硬广直发必死.
+
+(figures: 小红书官方 / 千瓜数据 / 古麦嘉禾 / 36氪)
 
 **它说的是**: 平台算法 + 用户心智都偏向「真实分享 / 测评 / 经验」, 不接受「品牌官方说我好」. 一切爆文必须**伪素人化**或**真素人化**, 至少有真实使用场景 / 真人感. 用户来小红书是找经验, 不是找广告.
 
@@ -345,12 +347,9 @@ generator: "master-skill v1.3"
 - **小红书闭环 vs 跨平台联动** — 决定运营复杂度
 
 ### Sub-skills (女娲蒸馏的 top figures)
-
-| Figure | Sub-skill 路径 | 何时调用 |
-|--------|--------------|---------|
-| 古麦嘉禾创始团队 (吴俊雷) | sub-skills/gumai-jiahe-content/SKILL.md | 当问题涉及内容驱动 / IP 化 / 多账号矩阵 / 跨平台复刻时 |
-| 群响刘思毅 | sub-skills/liu-siyi-qunxiang/SKILL.md | 当问题涉及操盘手实战 / 私域承接 / 跨内容池协同 / 政策动向时 |
-| 千瓜数据创始团队 | sub-skills/qiangua-data-driven/SKILL.md | 当问题涉及数据驱动选题 / 互动率 benchmark / 收藏率信号 / 工具栈选型时 |
+- 古麦嘉禾创始团队 (吴俊雷) — 内容驱动派代表
+- 群响刘思毅 — 操盘手社群头部 / 矩阵派
+- 朴朴超市 KFS 操盘手 — 官方方法实战标杆
 
 ---
 
@@ -384,15 +383,15 @@ when the dates below cross the recommended cadence (see references/extraction-fr
 
 | Module | last_updated | decay_risk | Recommended refresh cadence |
 |--------|-------------|-----------|---------------------------|
-| Mental models | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Standard playbook | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Tool stack | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Workflows / pipeline | last_updated: 2026-05-02 | decay_risk: high | 3-6 months |
-| Expression DNA | last_updated: 2026-05-02 | decay_risk: low | 6-12 months |
-| Sources (Track 5) | last_updated: 2026-05-02 | decay_risk: medium | 6 months |
-| Glossary / standards / regulations | last_updated: 2026-05-02 | decay_risk: medium | 6 months (regulations may force sooner) |
-| Intellectual genealogy | last_updated: 2026-05-02 | decay_risk: low | 1-2 years |
-| Honest boundaries | last_updated: 2026-05-02 | decay_risk: low | re-assess each refresh |
+| Mental models | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
+| Standard playbook | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
+| Tool stack | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
+| Workflows / pipeline | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
+| Expression DNA | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
+| Sources (Track 5) | last_updated: 2026-05-03 | decay_risk: medium | 6 months |
+| Glossary / standards / regulations | last_updated: 2026-05-03 | decay_risk: medium | 6 months (regulations may force sooner) |
+| Intellectual genealogy | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
+| Honest boundaries | last_updated: 2026-05-03 | decay_risk: low | re-assess each refresh |
 
 last_updated values reflect the synthesis date. Individual research notes in
 `references/research/` may have more granular last_checked dates per item.

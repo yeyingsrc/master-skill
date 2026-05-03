@@ -8,6 +8,8 @@
 
 **一句话**: Google 长期主线是「为用户写, 不为搜索引擎写」. 套路 6 个月一过期, 真实价值是长期资产.
 
+(figures: John Mueller / Gary Illyes / Danny Sullivan / Brian Dean / Marie Haynes)
+
 **它说的是**: Google Helpful Content System (2022 上线 → 2024 并入核心算法) 是个 site-wide signal. 几页垃圾页拖累整站. 真正能赢的 SEO 是「我能提供用户搜索时真正需要的答案」.
 
 **证据来源**:
@@ -33,6 +35,8 @@
 ### 1.2 Pillar + Cluster 内容架构 (核心 PASS)
 
 **一句话**: Pillar (主题枢纽) + Cluster (长尾分支) 是中型品牌内容 SEO 的标准架构.
+
+(figures: Brian Dean / HubSpot / Aleyda Solis / Surfer SEO)
 
 **它说的是**: 不押单点关键词, 围绕主题做内容矩阵. Pillar 拿头部排名, Cluster 拿长尾流量. 内链双向, 锚文本自然多样化.
 
@@ -60,6 +64,8 @@
 
 **一句话**: 10 个 DA 50+ 链接 > 100 个 DA 10 链接. 白帽路径, 不要走 spam.
 
+(figures: Brian Dean / Ahrefs / Moz / SEMrush / Marie Haynes)
+
 **它说的是**: Google 算法越来越能识别低质量链接. 链接农场 / 私域链接网络 / 买链接 一更新就团灭. Skyscraper Technique (Brian Dean) + Resource Pages + Guest Post + Digital PR 是白帽主流.
 
 **证据来源**:
@@ -84,6 +90,8 @@
 ### 1.4 技术 SEO 是 baseline, 不是优势 (industry-amplified)
 
 **一句话**: Core Web Vitals + Mobile + Schema + Crawlability 是「不做就死」, 但做好不一定就赢.
+
+(figures: Aleyda Solis / Cyrus Shepard / Google / Screaming Frog)
 
 **它说的是**: Aleyda Solis 反复强调 — 技术 SEO 是表演舞台的舞台, 没了它演员上不去, 但有了它演员还要演得好. 内容 + 链接才是真正决定排名.
 
@@ -110,6 +118,8 @@
 ### 1.5 AI Search 是 2024-2026 新战场 (industry-amplified)
 
 **一句话**: 传统 SEO「rank and click」转向 AI Search「visibility and citations」 — 在 AI Overviews / ChatGPT / Perplexity 被引用比传统排名重要.
+
+(figures: Position.Digital / SEOmator / Search Engine Land / Otterly.ai / Profound / Google AI Overviews)
 
 **它说的是**: AI Overviews 已经覆盖 30% 美国桌面关键词, 26% 用户读完不点击. GEO (Generative Engine Optimization) / LLMO (LLM Optimization) 是新学科. 公司用 GEO 6-12 月看到 300-500% ROI.
 

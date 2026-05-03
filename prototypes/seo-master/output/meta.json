@@ -36,19 +36,19 @@
       "slug": "brian-dean-backlinko",
       "path": "sub-skills/brian-dean-backlinko/SKILL.md",
       "figure": "Brian Dean (Backlinko)",
-      "perspective": "Content-driven / Skyscraper / Pillar+Cluster"
+      "perspective": "Skyscraper Technique / 内容 + 链接建设白帽派"
     },
     {
       "slug": "aleyda-solis-orainti",
       "path": "sub-skills/aleyda-solis-orainti/SKILL.md",
-      "figure": "Aleyda Solis (Orainti / SEOFOMO)",
-      "perspective": "Technical + 国际化 SEO + Mobile-first"
+      "figure": "Aleyda Solis (Orainti)",
+      "perspective": "国际化 SEO / 技术 SEO / 多语言 / 多平台"
     },
     {
       "slug": "rand-fishkin-moz",
       "path": "sub-skills/rand-fishkin-moz/SKILL.md",
       "figure": "Rand Fishkin (Moz / SparkToro)",
-      "perspective": "长期主义 + 跨平台视野 + audience-first"
+      "perspective": "SEO 战略 / SparkToro 受众研究 / 长期主义"
     }
   ],
   "generator": "master-skill v1.3",
