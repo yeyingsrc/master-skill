@@ -5,10 +5,11 @@ from __future__ import annotations
 Reads target skill's meta.json (last_research_date), computes time-decay age,
 and outputs a refresh plan based on Phase 0C decision table:
 
-  < 1 month  : reject (too recent)
-  1-3 months : refresh Tools (02) + Workflows (03) + Sources (05 latest)
-  3-6 months : + Figures (01 recent moves) + Glossary (06 standards)
-  > 6 months : full re-run all 6 tracks (with archive)
+  < 1 month   : reject (too recent)
+  1-3 months  : refresh Tools (02) + Workflows (03) + Sources (05 latest)
+  3-6 months  : + Figures (01 recent moves) + Glossary (06 standards)
+  6-12 months : recommend synthesis (Phase 2) re-extract on refreshed tracks
+  ≥ 12 months : full re-run all 6 tracks + synthesis re-extract (with archive)
 
 Optionally archives old references/research/ to references/research/archive/{date}/
 so the agent can re-run targeted tracks without losing the previous version.

@@ -108,17 +108,22 @@ def resolve_target_root(host: str, target_override: Path | None) -> Path:
 
 
 def diff_summary(src: Path, dst: Path) -> list[str]:
-    """Compare directories shallowly. Return list of changes."""
+    """Compare directories recursively (full content). Return list of changes."""
     if not dst.exists():
         return [f"NEW: {dst} doesn't exist"]
+
+    def walk(cmp: filecmp.dircmp, prefix: str) -> list[str]:
+        out: list[str] = []
+        out.extend(f"ADD: {prefix}{f}" for f in cmp.left_only)
+        out.extend(f"REMOVE-on-target-only: {prefix}{f}" for f in cmp.right_only)
+        out.extend(f"MODIFY: {prefix}{f}" for f in cmp.diff_files)
+        out.extend(f"FUNNY: {prefix}{f}" for f in cmp.funny_files)
+        for sub_name, sub_cmp in cmp.subdirs.items():
+            out.extend(walk(sub_cmp, f"{prefix}{sub_name}/"))
+        return out
+
     cmp = filecmp.dircmp(src, dst)
-    changes: list[str] = []
-    if cmp.left_only:
-        changes.extend(f"ADD: {f}" for f in cmp.left_only)
-    if cmp.right_only:
-        changes.extend(f"REMOVE-on-target-only: {f}" for f in cmp.right_only)
-    if cmp.diff_files:
-        changes.extend(f"MODIFY: {f}" for f in cmp.diff_files)
+    changes = walk(cmp, "")
     if not changes:
         changes.append("IDENTICAL: nothing to do")
     return changes
@@ -179,8 +184,8 @@ def action_install(args: argparse.Namespace) -> int:
                     preview["mode"] = "dry-run"
                     results.append(preview)
                     continue
-                # Install for real
-                t_root = HOST_DEFAULTS[h]
+                # Install for real — honor --target override (P2 codex fix)
+                t_root = resolve_target_root(h, args.target)
                 t_dir = t_root / skill_name
                 if t_dir.exists() and not args.force:
                     if diff_summary(source, t_dir) == ["IDENTICAL: nothing to do"]:

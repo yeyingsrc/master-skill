@@ -79,22 +79,32 @@ def detect_cross_track_contradictions(tracks: dict[str, Any]) -> list[str]:
     """
     contradictions: list[str] = []
 
-    # Aggregate keywords from each track's Phase 2 interface
-    track_keywords: dict[str, set[str]] = {}
+    # Aggregate keywords from each track's Phase 2 interface.
+    # Preserve original case so the uppercase heuristic below can identify
+    # tool / proper-noun candidates (codex P2 fix). Compare set membership
+    # case-insensitively to avoid double-counting "AutoGen" vs "autogen".
+    track_keywords_raw: dict[str, set[str]] = {}
+    track_keywords_lower: dict[str, set[str]] = {}
     for track_key, t in tracks.items():
         if t.get("missing"):
             continue
-        text = (t.get("phase2_interface") or "").lower()
-        # Extract bullets that look like keyword lists ("- {{name}}")
+        text = t.get("phase2_interface") or ""
         words = re.findall(r"[\w一-鿿-]{3,}", text)
-        track_keywords[track_key] = set(w for w in words if len(w) >= 4)
+        raw = set(w for w in words if len(w) >= 4)
+        track_keywords_raw[track_key] = raw
+        track_keywords_lower[track_key] = set(w.lower() for w in raw)
 
     # Compare track 01 (figures) vs track 02 (tools): if a tool name is
     # mentioned in tools as 必备 but absent from any figure's discussion, flag
-    if "01-figures" in track_keywords and "02-tools" in track_keywords:
-        only_in_tools = track_keywords["02-tools"] - track_keywords["01-figures"]
+    if "01-figures" in track_keywords_lower and "02-tools" in track_keywords_lower:
+        only_in_tools_lower = (
+            track_keywords_lower["02-tools"] - track_keywords_lower["01-figures"]
+        )
+        only_in_tools_raw = {
+            w for w in track_keywords_raw["02-tools"] if w.lower() in only_in_tools_lower
+        }
         # Filter to items that look like tool names (not regular english words)
-        notable = [w for w in only_in_tools
+        notable = [w for w in only_in_tools_raw
                    if any(c.isupper() for c in w) and len(w) > 5]
         if len(notable) >= 5:
             contradictions.append(
@@ -105,9 +115,14 @@ def detect_cross_track_contradictions(tracks: dict[str, Any]) -> list[str]:
 
     # Compare track 04 (canon) vs track 01 (figures): canon authors should
     # appear as figures candidates
-    if "04-canon" in track_keywords and "01-figures" in track_keywords:
-        canon_only = track_keywords["04-canon"] - track_keywords["01-figures"]
-        notable = [w for w in canon_only
+    if "04-canon" in track_keywords_lower and "01-figures" in track_keywords_lower:
+        canon_only_lower = (
+            track_keywords_lower["04-canon"] - track_keywords_lower["01-figures"]
+        )
+        canon_only_raw = {
+            w for w in track_keywords_raw["04-canon"] if w.lower() in canon_only_lower
+        }
+        notable = [w for w in canon_only_raw
                    if any(c.isupper() for c in w) and 5 <= len(w) <= 20]
         if len(notable) >= 8:
             contradictions.append(
@@ -118,8 +133,12 @@ def detect_cross_track_contradictions(tracks: dict[str, Any]) -> list[str]:
     return contradictions
 
 
-def parse_track(path: Path, track_key: str) -> dict[str, Any]:
-    """Parse a single track .md file into a stats dict."""
+def parse_track(path: Path, track_key: str, industry_type: str = "technical") -> dict[str, Any]:
+    """Parse a single track .md file into a stats dict.
+
+    industry_type drives adaptive cold floors via adaptive_floor().
+    Defaults to 'technical' so existing callers stay backward compatible.
+    """
     if not path.exists():
         return {"missing": True, "path": str(path)}
 
@@ -162,7 +181,7 @@ def parse_track(path: Path, track_key: str) -> dict[str, Any]:
     total_sources = primary + secondary + reference
     primary_ratio = (primary / total_sources) if total_sources else 0.0
 
-    threshold = COLD_THRESHOLDS_DEFAULT.get(track_key, 5)
+    threshold = adaptive_floor(track_key, industry_type)
     item_below_floor = item_count < threshold
 
     return {
@@ -217,10 +236,20 @@ def aggregate(skill_dir: Path) -> dict[str, Any]:
     if not research_dir.exists():
         raise MergeError(f"references/research/ not found at {research_dir}")
 
+    # Read intake.json for industry_type (drives adaptive cold floors).
+    industry_type = "technical"
+    intake_path = skill_dir / "intake.json"
+    if intake_path.exists():
+        try:
+            intake = json.loads(intake_path.read_text(encoding="utf-8"))
+            industry_type = intake.get("industry_type") or "technical"
+        except (json.JSONDecodeError, OSError):
+            pass
+
     tracks: dict[str, Any] = {}
     for track_key, _ in TRACKS:
         path = research_dir / f"{track_key}.md"
-        tracks[track_key] = parse_track(path, track_key)
+        tracks[track_key] = parse_track(path, track_key, industry_type)
 
     # Aggregate
     present = [t for t in tracks.values() if not t.get("missing")]
@@ -240,6 +269,7 @@ def aggregate(skill_dir: Path) -> dict[str, Any]:
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "skill_dir": str(skill_dir),
+        "industry_type": industry_type,
         "tracks": tracks,
         "totals": {
             "primary": total_primary,
@@ -396,8 +426,10 @@ def cmd_merge(args: argparse.Namespace) -> int:
             summary["totals"]["overall_primary_ratio"] >= 0.5
             and not summary["is_cold_industry"]
             and not any(summary["tracks"][tk].get("missing") for tk, _ in TRACKS)
+            and not summary.get("cross_track_contradictions")
         ),
         "cold_tracks": summary["cold_tracks"],
+        "cross_track_contradictions": summary.get("cross_track_contradictions", []),
         "totals": summary["totals"],
     }, indent=2, ensure_ascii=False))
     return 0

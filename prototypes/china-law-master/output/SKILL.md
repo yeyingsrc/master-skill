@@ -23,7 +23,7 @@ triggers:
 industry: "Chinese law practice (commercial / civil / criminal)"
 industry-cn: "中国法律执业"
 locale: "zh-CN"
-last_research_date: "2026-05-03"
+last_research_date: "2026-05-04"
 source_count: 130
 profile: "practitioner"
 generator: "master-skill v1.3"
@@ -431,15 +431,15 @@ when the dates below cross the recommended cadence (see references/extraction-fr
 
 | Module | last_updated | decay_risk | Recommended refresh cadence |
 |--------|-------------|-----------|---------------------------|
-| Mental models | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
-| Standard playbook | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
-| Tool stack | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
-| Workflows / pipeline | last_updated: 2026-05-03 | decay_risk: high | 3-6 months |
-| Expression DNA | last_updated: 2026-05-03 | decay_risk: low | 6-12 months |
-| Sources (Track 5) | last_updated: 2026-05-03 | decay_risk: medium | 6 months |
-| Glossary / standards / regulations | last_updated: 2026-05-03 | decay_risk: medium | 6 months (regulations may force sooner) |
-| Intellectual genealogy | last_updated: 2026-05-03 | decay_risk: low | 1-2 years |
-| Honest boundaries | last_updated: 2026-05-03 | decay_risk: low | re-assess each refresh |
+| Mental models | last_updated: 2026-05-04 | decay_risk: low | 1-2 years |
+| Standard playbook | last_updated: 2026-05-04 | decay_risk: low | 6-12 months |
+| Tool stack | last_updated: 2026-05-04 | decay_risk: high | 3-6 months |
+| Workflows / pipeline | last_updated: 2026-05-04 | decay_risk: high | 3-6 months |
+| Expression DNA | last_updated: 2026-05-04 | decay_risk: low | 6-12 months |
+| Sources (Track 5) | last_updated: 2026-05-04 | decay_risk: medium | 6 months |
+| Glossary / standards / regulations | last_updated: 2026-05-04 | decay_risk: medium | 6 months (regulations may force sooner) |
+| Intellectual genealogy | last_updated: 2026-05-04 | decay_risk: low | 1-2 years |
+| Honest boundaries | last_updated: 2026-05-04 | decay_risk: low | re-assess each refresh |
 
 last_updated values reflect the synthesis date. Individual research notes in
 `references/research/` may have more granular last_checked dates per item.

@@ -355,6 +355,53 @@ def inject_synthesis_body(skill_md: str, synthesis_sections: dict[str, str],
 # ---------------------------------------------------------------------------
 # Writing
 
+def collect_existing_sub_skills(skill_dir: Path) -> list[dict]:
+    """Scan skill_dir/sub-skills/ and harvest manifests so they survive regen.
+
+    Codex P2 fix: skill_writer used to always write meta.sub_skills = [] on
+    regen, even when person sub-skills had been added under sub-skills/*.
+    This made meta.json drift out of sync with the filesystem until manually
+    patched. Idempotent: returns [] when dir is missing or empty.
+    """
+    sub_skills_dir = skill_dir / "sub-skills"
+    if not sub_skills_dir.exists() or not sub_skills_dir.is_dir():
+        return []
+    out: list[dict] = []
+    for child in sorted(sub_skills_dir.iterdir()):
+        if not child.is_dir():
+            continue
+        skill_md = child / "SKILL.md"
+        if not skill_md.exists():
+            continue
+        try:
+            text = skill_md.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        figure = ""
+        perspective = ""
+        fm_match = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
+        if fm_match:
+            fm_text = fm_match.group(1)
+            desc_m = re.search(r"^description:\s*(.+)$", fm_text, re.MULTILINE)
+            if desc_m:
+                desc = desc_m.group(1).strip().strip('"').strip("'")
+                seg = re.match(r"([^.。]+?)\s*视角[.。]\s*(.*)", desc)
+                if seg:
+                    figure = seg.group(1).strip()
+                    perspective = seg.group(2).strip()[:200]
+                else:
+                    head, _, rest = desc.partition(".")
+                    figure = head.strip()[:80]
+                    perspective = rest.strip()[:200]
+        out.append({
+            "slug": child.name,
+            "path": f"sub-skills/{child.name}/SKILL.md",
+            "figure": figure or child.name,
+            "perspective": perspective,
+        })
+    return out
+
+
 def now_iso_date() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -510,7 +557,7 @@ def action_create(
         "mental_models_count": mm_count,
         "playbook_rules_count": pb_count,
         "research_dimensions_count": dim_count,
-        "sub_skills": [],
+        "sub_skills": collect_existing_sub_skills(skill_dir),
         "generator": GENERATOR_VERSION,
         "version": GENERATOR_VERSION.split(" ")[-1].lstrip("v"),
         "changelog": [
