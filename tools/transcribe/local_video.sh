@@ -98,7 +98,8 @@ ensure_ffmpeg() {
         echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"" >&2
         exit 3
     fi
-    brew install ffmpeg
+    # Redirect installer chatter to stderr so stdout stays the transcript path.
+    brew install ffmpeg >&2
 }
 
 ensure_whisper() {
@@ -107,12 +108,15 @@ ensure_whisper() {
     fi
     echo "" >&2
     echo "[lazy-install] faster-whisper Python package is required (transcription)." >&2
-    echo "             will install via:  pip3 install faster-whisper" >&2
-    if ! confirm "Proceed with pip3 install faster-whisper?"; then
-        echo "ABORT: faster-whisper required. Run manually:  pip3 install faster-whisper" >&2
+    echo "             will install via:  python3 -m pip install faster-whisper" >&2
+    if ! confirm "Proceed with python3 -m pip install faster-whisper?"; then
+        echo "ABORT: faster-whisper required. Run manually:  python3 -m pip install faster-whisper" >&2
         exit 4
     fi
-    pip3 install faster-whisper
+    # Use python3 -m pip (not bare pip3) to guarantee the package lands in the
+    # interpreter that whisper_transcribe.py will actually run with. Stdout
+    # → stderr so we don't pollute the transcript-path stdout contract.
+    python3 -m pip install faster-whisper >&2
 }
 
 # ---------- Pipeline ----------
