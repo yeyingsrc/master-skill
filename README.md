@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 大师.skill
+# 🎓 大师.skill &nbsp;[![Tweet](https://img.shields.io/badge/share%20on-Twitter%2FX-000000?style=flat-square&logo=x)](https://twitter.com/intent/tweet?text=%E5%A4%A7%E5%B8%88.skill%20%E2%80%94%20%E8%BE%93%E5%85%A5%E8%A1%8C%E4%B8%9A%EF%BC%8C30-60%20%E5%88%86%E9%92%9F%E8%87%AA%E5%8A%A8%E8%92%B8%E9%A6%8F%E5%87%BA%E5%8F%AF%E8%A3%85%E8%BD%BD%E7%9A%84%20Master%20OS%20skill%E3%80%82%E8%A3%85%E5%88%B0%E4%BB%BB%E4%BD%95%20AI%20agent%EF%BC%8C%E4%BB%8E%E9%82%A3%E4%B8%80%E5%88%BB%E8%B5%B7%EF%BC%8C%E5%AE%83%E5%B0%B1%E6%98%AF%E8%BF%99%E4%B8%80%E8%A1%8C%E6%9C%80%E8%B5%84%E6%B7%B1%E7%9A%84%E4%BA%BA%E3%80%82&url=https%3A%2F%2Fgithub.com%2Fvoidborne-d%2Fmaster-skill&hashtags=ClaudeCode%2CAIAgent%2CMasterSkill%2C%E5%BC%80%E6%BA%90)
 
 > *「下一步，不只蒸馏一个人，蒸馏一整个行业。」*
 
