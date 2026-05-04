@@ -50,7 +50,7 @@ cat {nuwa_skill_path}/SKILL.md
 按女娲.skill 的工作流, 在 `working_directory` 下完成:
 
 - **女娲 Phase 0**: 用本 prompt 中的 `figure_name` + `core_oneliner` 作为 figure intake. 不要重新去网上搜基础信息 — 主大师 agent 已把素材包给你了
-- **女娲 Phase 1**: 思维素材采集 — 直接消化 `materials.long_form` 中的 transcripts / 长文 (优先 transcript), 用 `tools/transcribe/srt_to_transcript.py` 清洗 (如果是字幕文件)
+- **女娲 Phase 1**: 思维素材采集 — 直接消化 `materials.long_form` 中的 transcripts / 长文 (优先 transcript). 字幕文件 (.srt/.vtt) 用 `tools/transcribe/srt_to_transcript.py` 清洗; 视频 URL 用 `tools/transcribe/youtube.sh <URL>` 抓字幕; 本地无字幕视频 (.mp4 等) 用 `tools/transcribe/local_video.sh <file>` (faster-whisper 本地转录, 第一次运行会 lazy-install ffmpeg + faster-whisper).
 - **女娲 Phase 2**: 三轨提炼 (思维方式 / 决策启发式 / 表达 DNA). **重点放在 `controversial_stances`** — 这是 figure 真正的思维 fingerprint, 不是 mainstream 复读
 - **女娲 Phase 3**: 生成 person sub-skill, 写到 `working_directory`/SKILL.md
 - **女娲 Phase 4**: 三测验证 (已知 / 边缘 / 风格)

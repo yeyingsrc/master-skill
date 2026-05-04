@@ -79,6 +79,7 @@ attempt "auto-generated zh + en" \
 
 echo "FAIL: no subs found for $URL" >&2
 echo "" >&2
-echo "Suggestion: search for transcript on the web (e.g. podcastnotes.org for podcasts)" >&2
-echo "or download audio + transcribe with whisper.cpp (deferred to v0.4)" >&2
+echo "Suggestion: download the video locally (yt-dlp <URL> -o video.mp4) then" >&2
+echo "transcribe with: ./local_video.sh video.mp4   (uses faster-whisper, lazy install)" >&2
+echo "Or search for a transcript on the web (e.g. podcastnotes.org for podcasts)." >&2
 exit 3
