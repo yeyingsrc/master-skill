@@ -143,15 +143,23 @@ def parse_synthesis(synthesis_path: Path) -> dict:
         )
         for m in dim_pattern.finditer(sec9):
             body = m.group("body")
-            q = re.search(r"-\s*\*\*看什么\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
-            s = re.search(r"-\s*\*\*在哪看\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
-            o = re.search(r"-\s*\*\*输出格式\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
+            # Iter 26: tolerate both legacy 看什么/在哪看/输出格式 and iter-24+
+            # 轴/触发/输出 vocabularies.
+            def _alt(aliases: list[str], _body: str = body) -> str:
+                for label in aliases:
+                    pat = re.search(
+                        rf"-\s*\*\*{re.escape(label)}\*\*[：:]\s*(.+?)$",
+                        _body, re.MULTILINE,
+                    )
+                    if pat:
+                        return pat.group(1).strip()
+                return ""
             out["protocol"].append({
                 "n": int(m.group(1)),
                 "title": m.group(2).strip(),
-                "question": q.group(1).strip() if q else "",
-                "sources": s.group(1).strip() if s else "",
-                "output_format": o.group(1).strip() if o else "",
+                "question": _alt(["看什么", "轴"]),
+                "sources": _alt(["在哪看", "触发"]),
+                "output_format": _alt(["输出格式", "输出"]),
             })
 
     sec1 = _section(text, r"^## 1\.")
@@ -311,8 +319,11 @@ def parse_workflows(workflows_path: Path) -> list:
     text = workflows_path.read_text(encoding="utf-8")
 
     workflows = []
+    # Iter 26 (codex 4-audit P0-2b): accept both `### 1.` and `### W1.`
+    # / `### S1.` shapes. Iter 24 prototypes use `W1` (workflow) / `S1`
+    # (supplementary) prefixes; older prototypes use plain `1.`.
     wf_pattern = re.compile(
-        r"^### (\d+)\.\s+(.+?)$(?P<body>.*?)(?=^### \d+\.|^---|\Z)",
+        r"^###\s+(?:[WS])?(\d+)\.\s+(.+?)$(?P<body>.*?)(?=^###\s+(?:[WS])?\d+\.|^##\s|^---|\Z)",
         re.MULTILINE | re.DOTALL,
     )
 
@@ -328,16 +339,25 @@ def parse_workflows(workflows_path: Path) -> list:
 
         one_liner_m = re.search(r"\*\*One-liner\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
 
+        # Iter 26: tolerate both `- **入门 SOP**:\n  1. step` and inline
+        # `- 入门 SOP: 1) step1 2) step2` formats.
         sop_m = re.search(
-            r"\*\*入门 SOP\*\*[：:]?\s*\n(?P<list>.+?)(?=\n  - 每一步|\n- \*\*资深路径|\n- \*\*近期变化|\Z)",
+            r"(?:\*\*入门 SOP\*\*|入门 SOP)[^：:\n]*[：:]\s*\n?(?P<list>.+?)"
+            r"(?=\n\s*-\s+(?:\*\*)?(?:资深|每一步|近期变化|典型耗时|关键工具|关键人物|常见失败|来源|Last_updated)|\n\s*###|\Z)",
             body, re.DOTALL,
         )
         sop_steps = []
         if sop_m:
-            for line in sop_m.group("list").split("\n"):
+            list_text = sop_m.group("list")
+            # Try multi-line `1. ...` first
+            for line in list_text.split("\n"):
                 step_m = re.match(r"\s*(\d+)\.\s+(.+)$", line)
                 if step_m:
                     sop_steps.append(step_m.group(2).strip())
+            # Fall back to inline `1) Step1 2) Step2 ...` if no multi-line steps
+            if not sop_steps:
+                inline_steps = re.findall(r"\d+\)\s+([^0-9)]+?)(?=\s*\d+\)|\s*$)", list_text)
+                sop_steps = [s.strip(" ;,，;") for s in inline_steps if s.strip(" ;,，;")]
 
         fail_m = re.search(
             r"\*\*常见失败模式\*\*[：:]?\s*\n(?P<list>.+?)(?=\n- \*\*来源|\n- \*\*Last_updated|\Z)",

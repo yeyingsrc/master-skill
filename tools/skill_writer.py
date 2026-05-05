@@ -165,12 +165,42 @@ def count_protocol_dimensions(section_body: str) -> int:
 
 
 def count_research_sources(research_dir: Path) -> dict[str, int]:
-    """Iter 22 fix: walk research/*.md and count source markers for
-    primary_source_ratio computation in meta.json. Returns
-    {primary, secondary, reference, total, primary_ratio}."""
+    """Walk research/*.md and count sources for `meta.json.source_count` and
+    `primary_source_ratio`.
+
+    Iter 26 (codex 3rd-audit P0 #2a fix): prefer Source Manifest tables
+    (Q1 format with `T01-S001` source_ids and explicit `bucket`) when present;
+    fall back to legacy `[Primary]/[Secondary]/[Reference]` markers when no
+    manifest is found.
+    """
     if not research_dir or not research_dir.exists():
         return {"primary": 0, "secondary": 0, "reference": 0, "total": 0,
                 "primary_ratio": 0.0}
+
+    # Try manifest path first (iter 26 prefer)
+    skill_dir = research_dir.parent.parent
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent / "research"))
+        import source_manifest  # type: ignore
+        rows = source_manifest.parse_manifests(skill_dir)
+    except ImportError:
+        rows = []
+
+    if rows:
+        rb = source_manifest.primary_ratio(rows)
+        return {
+            "primary": rb.first_hand,        # verified + surrogate as one count
+            "verified_primary": rb.verified_primary,
+            "surrogate_primary": rb.surrogate_primary,
+            "secondary": rb.secondary,
+            "reference": rb.reference,
+            "blacklisted": rb.blacklisted,
+            "dead": rb.dead,
+            "total": rb.total,
+            "primary_ratio": round(rb.ratio, 4),
+        }
+
+    # Legacy: count free-text [Primary]/[Secondary]/[Reference] markers
     primary = secondary = reference = 0
     for md_file in research_dir.glob("*.md"):
         text = md_file.read_text(encoding="utf-8")
@@ -218,29 +248,48 @@ last_updated values reflect the synthesis date. Individual research notes in
 def format_protocol_dims_for_step2(agentic_protocol_section: str) -> str:
     """从 synthesis Section 9 抽出每个 9.X 维度, 渲染成 Agentic Protocol Step 2 的 markdown.
 
-    输出格式:
+    输出格式 (兼容两种 synthesis 写法):
         #### 维度 1: {title}
         - 看什么: {what}
         - 在哪看: {where}
         - 输出: {output_format}
+
+    Iter 26 (codex 3rd-audit P0 #2b): tolerate two synthesis vocabularies —
+      legacy: `**看什么** / **在哪看** / **输出格式**`
+      iter 24+ synthesis: `**轴** / **触发** / **输出**`
+    The 5 维度 in iter 24+ synthesis was 100% empty in produced SKILL.md
+    until this fix because the regex only matched legacy keys.
     """
     dims_md: list[str] = []
     pat = re.compile(
         r"^###\s+9\.(\d+)\s+(.+?)$(?P<body>.*?)(?=^###\s+9\.|\Z)",
         re.MULTILINE | re.DOTALL,
     )
+    # Each tuple: (canonical_label, alt_labels_to_match)
+    field_aliases = [
+        ("what", ["看什么", "轴"]),
+        ("where", ["在哪看", "触发"]),
+        ("output", ["输出格式", "输出"]),
+    ]
     for m in pat.finditer(agentic_protocol_section):
         dim_num = m.group(1)
         title = m.group(2).strip()
         body = m.group("body")
-        what_m = re.search(r"-\s*\*\*看什么\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
-        where_m = re.search(r"-\s*\*\*在哪看\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
-        out_m = re.search(r"-\s*\*\*输出格式\*\*[：:]\s*(.+?)$", body, re.MULTILINE)
+        extracted: dict[str, str] = {}
+        for canonical, aliases in field_aliases:
+            for label in aliases:
+                p = re.search(
+                    rf"-\s*\*\*{re.escape(label)}\*\*[：:]\s*(.+?)$",
+                    body, re.MULTILINE,
+                )
+                if p:
+                    extracted[canonical] = p.group(1).strip()
+                    break
         block = (
             f"#### 维度 {dim_num}: {title}\n"
-            f"- 看什么: {what_m.group(1).strip() if what_m else ''}\n"
-            f"- 在哪看: {where_m.group(1).strip() if where_m else ''}\n"
-            f"- 输出: {out_m.group(1).strip() if out_m else ''}"
+            f"- 看什么: {extracted.get('what', '')}\n"
+            f"- 在哪看: {extracted.get('where', '')}\n"
+            f"- 输出: {extracted.get('output', '')}"
         )
         dims_md.append(block)
     return "\n\n".join(dims_md)
@@ -382,9 +431,32 @@ def collect_existing_sub_skills(skill_dir: Path) -> list[dict]:
         fm_match = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
         if fm_match:
             fm_text = fm_match.group(1)
-            desc_m = re.search(r"^description:\s*(.+)$", fm_text, re.MULTILINE)
-            if desc_m:
-                desc = desc_m.group(1).strip().strip('"').strip("'")
+            # Iter 25/26: handle YAML block-scalar markers and inline strings.
+            # Block-scalar markers: `|`, `|-`, `|+`, `>`, `>-`, `>+` (any indent
+            # indicator suffix). Iter 26 fix (codex 3rd-audit P1 #3): the
+            # original regex only matched `|`, missed `|-/|+/>`.
+            block_m = re.search(
+                r"^description:\s*[|>][-+]?\s*\n((?:(?:[ \t]+.*)?\n)+)",
+                fm_text, re.MULTILINE,
+            )
+            inline_m = re.search(r"^description:\s*(.+)$", fm_text, re.MULTILINE)
+            desc = ""
+            if block_m:
+                # Strip leading indent from each line, join with spaces.
+                # Skip empty lines within the block.
+                desc_lines = [
+                    re.sub(r"^[ \t]+", "", line)
+                    for line in block_m.group(1).splitlines()
+                    if line.strip()
+                ]
+                desc = " ".join(desc_lines)
+            elif inline_m:
+                desc = inline_m.group(1).strip().strip('"').strip("'")
+                # Block-scalar markers only (with optional indent indicators):
+                # leave desc empty so we don't return literal `|` to caller.
+                if re.match(r"^[|>][-+]?$", desc):
+                    desc = ""
+            if desc:
                 seg = re.match(r"([^.。]+?)\s*视角[.。]\s*(.*)", desc)
                 if seg:
                     figure = seg.group(1).strip()
@@ -402,12 +474,89 @@ def collect_existing_sub_skills(skill_dir: Path) -> list[dict]:
     return out
 
 
+def _safe_copytree(src: Path, dst: Path) -> None:
+    """Copy src → dst safely. Iter 26 (codex 3rd-audit P1 #3 hardening):
+
+    - Skip when src == dst (in-place run)
+    - Refuse when one is contained in the other (would corrupt source)
+    - Use tmp + atomic rename so a failed copy doesn't leave half-deleted dst
+    """
+    src_resolved = src.resolve()
+    dst_resolved = dst.resolve()
+    if src_resolved == dst_resolved:
+        return  # already in place — common when running skill_writer in-place
+    # Containment guard: is src under dst, or dst under src?
+    src_str = str(src_resolved)
+    dst_str = str(dst_resolved)
+    if src_str.startswith(dst_str + "/") or dst_str.startswith(src_str + "/"):
+        # src under dst would mean rmtree(dst) deletes src too. dst under src
+        # would mean copytree(src, dst) recurses infinitely.
+        raise SkillWriterError(
+            f"unsafe copytree: src and dst overlap "
+            f"(src={src_str}, dst={dst_str}). "
+            f"Move research_dir outside the skill_dir or use --in-place."
+        )
+    # Tmp + atomic rename — if copy fails, dst remains intact
+    import tempfile
+    parent = dst.parent
+    parent.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix=".copytree-", dir=parent))
+    tmp_target = tmp / "data"
+    try:
+        shutil.copytree(src, tmp_target)
+        if dst.exists():
+            backup = dst.with_suffix(dst.suffix + ".bak.{}".format(now_iso_timestamp()))
+            dst.rename(backup)
+            try:
+                tmp_target.rename(dst)
+            except Exception:
+                # restore backup on failure
+                if dst.exists():
+                    shutil.rmtree(dst)
+                backup.rename(dst)
+                raise
+            else:
+                shutil.rmtree(backup, ignore_errors=True)
+        else:
+            tmp_target.rename(dst)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def now_iso_date() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
 def now_iso_timestamp() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    """Iter 26 (codex 4-audit P1 Safe Copy): nanosecond + pid for backup
+    filename uniqueness — second granularity collides under parallel calls."""
+    import os, time
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ns = time.time_ns() % 1_000_000  # microsecond fraction (6 digits)
+    return f"{ts}-{ns:06d}-{os.getpid()}"
+
+
+def prune_old_backups(path: Path, keep: int = 3) -> int:
+    """Keep at most `keep` backup files matching `<path>.bak.*`. Returns
+    count of deleted backups. Idempotent. Used to stop SKILL.md.bak.*
+    accumulation in prototype dirs."""
+    parent = path.parent
+    if not parent.exists():
+        return 0
+    base = path.name + ".bak."
+    candidates = sorted(
+        (p for p in parent.iterdir() if p.name.startswith(base)),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    deleted = 0
+    for old in candidates[keep:]:
+        try:
+            old.unlink()
+            deleted += 1
+        except OSError:
+            pass
+    return deleted
 
 
 def atomic_write(path: Path, content: str) -> None:
@@ -418,12 +567,15 @@ def atomic_write(path: Path, content: str) -> None:
     tmp_path.replace(path)
 
 
-def backup_if_exists(path: Path) -> Path | None:
-    """If path exists, copy to {path}.bak.{ts}, return backup path."""
+def backup_if_exists(path: Path, keep: int = 3) -> Path | None:
+    """If path exists, copy to {path}.bak.{ts}, return backup path. Iter 26:
+    also prune old backups so prototype dirs don't accumulate dozens of bak
+    files (codex 4-audit P1 Safe Copy)."""
     if not path.exists():
         return None
     backup = path.with_suffix(path.suffix + f".bak.{now_iso_timestamp()}")
     shutil.copy2(path, backup)
+    prune_old_backups(path, keep=keep)
     return backup
 
 
@@ -464,6 +616,15 @@ def action_create(
     triggers = intake.get("triggers", [])
     triggers_yaml = "\n".join(f'  - "{t}"' for t in triggers) or '  - "{{TODO: fill triggers}}"'
 
+    # Iter 26 (codex 4-audit P0-2a): compute research_stats BEFORE template
+    # replacement so the `{{N}}` source_count placeholder uses live manifest
+    # data instead of the stale intake value.
+    research_stats_for_template = count_research_sources(research_dir) if research_dir else {
+        "primary": intake.get("source_count", 0),
+        "total": intake.get("source_count", 0),
+        "primary_ratio": intake.get("primary_source_ratio", 0.0),
+    }
+
     # Pre-replace the YAML triggers block (iter 18 fix). The template has a
     # multi-line block like:
     #   triggers:
@@ -499,7 +660,7 @@ def action_create(
         "trigger-en-2": triggers[4] if len(triggers) > 4 else f"{industry} infra",
         "en | zh-CN | ja | ko | global": locale,
         "YYYY-MM-DD": research_date,
-        "N": str(intake.get("source_count", 0)),
+        "N": str(research_stats_for_template.get("total") or intake.get("source_count", 0)),
         "practitioner | learner | investor | consultant": profile,
         "X.Y": GENERATOR_VERSION.split(" ")[-1].lstrip("v"),
         "punchy one-liner — what this skill changes for the agent. Quote a top figure if natural.":
@@ -573,15 +734,16 @@ def action_create(
     refs_dir.mkdir(parents=True, exist_ok=True)
     if research_dir and research_dir.exists():
         target_research = refs_dir / "research"
-        if target_research.exists():
-            shutil.rmtree(target_research)
-        shutil.copytree(research_dir, target_research)
+        _safe_copytree(research_dir, target_research)
     # iter 22: copy synthesis.md alongside research so quality_check item 12
     # (multi-figure consensus) can find it. Also helps consumers read the full
     # Phase 2 output without having to walk back to the prototype dir.
+    # Iter 25 fix: skip copy when src == dst (in-place run).
     synthesis_src = research_dir.parent / "synthesis.md" if research_dir else None
+    synthesis_dst = refs_dir / "synthesis.md"
     if synthesis_src and synthesis_src.exists():
-        shutil.copy2(synthesis_src, refs_dir / "synthesis.md")
+        if synthesis_src.resolve() != synthesis_dst.resolve():
+            shutil.copy2(synthesis_src, synthesis_dst)
 
     # Empty placeholder dirs
     (skill_dir / "sub-skills").mkdir(parents=True, exist_ok=True)
