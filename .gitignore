@@ -26,6 +26,9 @@ prototypes/*/sources/
 *.mp3
 *.mp4
 
+# skill_writer backup-on-rewrite files (auto-pruned, but never commit)
+*.bak.*
+
 # OS / editor
 .DS_Store
 *.swp

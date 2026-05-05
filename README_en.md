@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎓 master-skill
+# 🎓 master-skill &nbsp;[![Tweet](https://img.shields.io/badge/share%20on-Twitter%2FX-000000?style=flat-square&logo=x)](https://twitter.com/intent/tweet?text=master-skill%20%E2%80%94%20give%20it%20an%20industry%2C%2030-60%20min%20later%20it%20auto-distills%20a%20loadable%20Master%20OS%20skill.%20Plug%20into%20any%20AI%20agent%2C%20instantly%20become%20%22the%20senior%20practitioner%20of%20that%20field.%22&url=https%3A%2F%2Fgithub.com%2Fvoidborne-d%2Fmaster-skill&hashtags=ClaudeCode%2CAIAgent%2CMasterSkill%2COpenSource)
 
-> *"Why stop at distilling people? Distill an entire industry."*
+> *"Next step — don't just distill a person. Distill an entire industry."*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
@@ -10,19 +10,33 @@
 
 <br>
 
-**master-skill distills an entire industry into one skill — the senior practitioner's judgment + the current best workflows + tool selection trees, packaged with an auto-generated bash command suite.**
+[colleague-skill](https://github.com/titanwings/colleague-skill) distills **one person** into AI.<br>
+[nuwa-skill](https://github.com/alchaincyf/nuwa-skill) distills **anyone's way of thinking** into AI.<br>
+
+But some things are bigger than one person —<br>
+**an entire industry's senior judgment, workflows, and tool stack.**
 
 <br>
 
-[colleague-skill](https://github.com/titanwings/colleague-skill) proved that distilling one specific person is viable.
-[nuwa-skill](https://github.com/alchaincyf/nuwa-skill) extended distillation from one person to anyone.
-**master-skill pushes distillation to an entire industry — not just cognition, but workflows and runnable tools.**
-
-Tell it your sub-niche. 30-60 minutes later, the full pipeline runs automatically: research, synthesis, skill generation, plus the bash tool suite. Drop into any AI agent — instantly enter "the senior practitioner of that field" mode.
+master-skill doesn't distill a single person.<br>
+It distills **the cognitive operating system of a whole industry.**
 
 <br>
 
-[🚀 Install](#-install) · [✨ Demo](#-demo) · [🛠️ Auto-distilled bash tools](#️-auto-distilled-bash-command-suite) · [🧬 Lineage](#-lineage) · [⭐ Distilled industries](#-distilled-industries)
+Tell it the sub-niche you work in,<br>
+and 30-60 minutes later, it auto-runs research, distillation, skill generation, plus a bash command suite.<br>
+
+Drop into any AI agent — from that moment on,<br>
+**it is the most senior practitioner in that field.**
+
+<br>
+
+> **With master-skill, you don't need to install any other skill —**<br>
+> **it auto-distills the right one for your industry.**
+
+<br>
+
+[🚀 Install](#-install) · [✨ Demos](#-demos) · [🛠️ Auto-distilled bash tools](#️-auto-distilled-bash-command-suite) · [🧬 Lineage](#-three-generation-lineage) · [⭐ Distilled industries](#-distilled-industries)
 
 [**中文 README →**](README.md)
 
@@ -30,55 +44,41 @@ Tell it your sub-niche. 30-60 minutes later, the full pipeline runs automaticall
 
 ---
 
+> 🔥 &nbsp;**2026.05.05 — v1.4 quality upgrade** — before, when an agent claimed "86% of my sources are first-hand," it was self-grading on the honor system. Now every URL is auto-classified, every skill must clear 16 quality checks, and known content farms (Zhihu / WeChat blogs / G2 / Capterra etc.) are hard-blocked at intake. **You can't distill garbage anymore.** Plus a new 9th end-to-end industry — **insurance brokers / agents (China)**.
+>
 > 📢 &nbsp;**2026.05.02 release** — generated skills don't just talk; they ship with a bash command suite. [Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
 >
 > 🔥 &nbsp;**2026.05.02 public** — first complete industry (LLM agent infrastructure) verified end-to-end.
 
 ---
 
-## 🎯 What it does
-
-[colleague-skill](https://github.com/titanwings/colleague-skill) distills **one specific person** into a skill (a coworker / friend / idol).
-[nuwa-skill](https://github.com/alchaincyf/nuwa-skill) distills **anyone's way of thinking** (Jobs / Munger / Musk / Naval...).
-**master-skill** distills **an entire sub-niche industry's cognitive OS** into a skill.
-
-Each is a **10× leap**:
-
-| | Scope | Output |
-|---|---|---|
-| 🧬 colleague-skill | **One** specific person | Skill that mimics work + persona of one person |
-| 🌟 nuwa-skill | **Anyone** alive or historical | Skill that judges using their cognitive frame |
-| 🎓 **master-skill** | **An entire** sub-niche field | Skill that turns the agent into "the senior practitioner of that field" |
-
----
-
-## ✨ Demo
+## ✨ Demos
 
 > Not a search engine. **The senior practitioner of this field, sitting next to you, right now.**
 
-#### 🤖 Demo · LLM agent infrastructure
+#### 🤖 Demo 1 · LLM agent infrastructure
 
 ```
 You    ❯ Should we migrate this RAG system to Vespa?
 
-Master ❯ This is a "scaffolding vs. concrete" judgment.
+Master ❯ This is a "framework as scaffolding vs. concrete" judgment.
 
          First check whether the retrieval bottleneck actually
-         lives at the vector index, or upstream in the embedding
-         model. If it's the embedding model, migrating is pouring
-         concrete around scaffolding — six months of model churn
-         will make you want to swap again.
+         lives at Vespa, or upstream in the embedding model. If
+         it's the embedding model, migrating is pouring concrete
+         around scaffolding — six months of model churn will make
+         you want to swap again.
 
          If retrieval is genuinely the wall: Vespa beats Pinecone
-         on native hybrid-search, but has your ops stack already
-         absorbed its ZooKeeper / Tensor complexity? The senior
-         take here — Filtering speed × Index size × Team Op
-         overhead, you pick two. Where's your pain?
+         on native hybrid-search support, but has your ops stack
+         already absorbed its ZooKeeper / Tensor complexity? The
+         senior take here — Filtering speed × Index size × Team Op
+         overhead, you pick two. Where's your bottleneck?
 
          Production cases: [3-4 real migration writeups + links]
 ```
 
-#### 🛒 Demo · Cross-border e-commerce (Amazon EU)
+#### 🛒 Demo 2 · Cross-border e-commerce (Amazon DE)
 
 ```
 You    ❯ Launching a new category on Amazon Germany — where do I start?
@@ -89,16 +89,33 @@ Master ❯ Three things on DE differ completely from US — answer first:
             This decides whether you can use Pan-EU FBA.
          2) Packaging law (VerpackG) + WEEE/battery registration?
             Without it, your listing gets reported and pulled day 1.
-         3) GS vs CE certification — is your category GS-mandatory?
-            This decides whether you can hit Idealo / price-comparison traffic.
+         3) GS vs CE — is your category GS-mandatory?
+            This decides whether you reach Idealo / price-comparison flow.
 
-         These aren't compliance checklists — they're hard gates
-         on whether you can sell at all. Once cleared, do keyword
-         research with Helium 10's German pack — don't translate from
-         US wordbanks; German search has much higher long-tail density.
+         These aren't compliance checklists — they're hard gates on
+         "can you sell at all". Once cleared, do keyword research with
+         Helium 10's German pack — don't translate from US wordbanks;
+         German search has much higher long-tail density.
 ```
 
-**This isn't stuffing wiki into a prompt** — it's giving you judgment using **the field's mental models + playbook**.
+#### 🎬 Demo 3 · Short-video paid ads
+
+```
+You    ❯ ROAS just won't go up — is it the bidding strategy?
+
+Master ❯ Bidding is the consequence, not the cause. Creative first:
+
+         What's your 3-second hold rate on cold audience? Below 35%
+         and tweaking bids does nothing — the platform's exploration
+         budget won't push volume to a creative that won't hold.
+
+         Once creative is clean, look at targeting. The senior take
+         here — "good creative × right targeting × bidding", get the
+         order wrong and the last two just burn budget. Show me your
+         creative-asset curve from the last 7 days.
+```
+
+**This isn't stuffing wiki into a prompt** — it's giving you judgment using **the field's mental models + decision rules**.
 
 Every generated skill ships with an **Agentic Protocol** — when faced with a new problem, the agent first researches it the way a senior practitioner would, then applies the OS to deliver judgment. **Not just sounding like a pro. Acting like one.**
 
@@ -113,34 +130,37 @@ Every generated skill **includes a `cli/` subtree by default** — the cognitive
 ```
 {industry}-master/
 └── cli/
-    ├── protocol/agentic.sh        # New problem → walk N research dimensions → output markdown report
-    ├── decision/{cluster}.sh      # Interactive decision tree from clustered playbook rules
+    ├── protocol/agentic.sh        # New problem → walk N research dimensions → output report
+    ├── decision/{topic}.sh        # Decision tree (clustered playbook rules)
     └── workflow/{slug}.sh         # SOP walkthrough + failure-mode self-check
 ```
 
-Every script supports `--help` / `--explain` / `--dry-run` / `--json`. One command, structured output:
+Every script supports four standard flags: `--help` / `--explain` (show the backing mental model) / `--dry-run` / `--json` (machine-readable output).
 
 ```bash
 # New problem: "should we migrate the RAG system to Vespa"
 $ ./cli/protocol/agentic.sh
-# → walks 5 research dimensions → generates agentic-protocol-{date}.md
+# → walks 5 research dimensions → generates report
 
+# Selection decision
 $ ./cli/decision/framework-select.sh
+
+# Walk a full workflow + self-check failure modes
 $ ./cli/workflow/build-rag-agent.sh
 
-# See backing mental models / playbook (no interaction)
+# Show the backing mental model (no interaction, just print)
 $ ./cli/decision/framework-select.sh --explain
 ```
 
-Pure bash + POSIX coreutils — **zero external dependencies** (no jq, no Python). Auto-generated by [`tools/cli_writer.py`](tools/cli_writer.py) from the distilled synthesis — you don't write a line of code; the tools **grow directly out of** the industry's workflows and decision rules.
+**Pure bash + system commands, zero external dependencies** (no jq, no Python). Auto-generated by [`tools/cli_writer.py`](tools/cli_writer.py) from the distilled synthesis — you don't write a line of code; the tools **grow directly out of** the industry's workflows and decision rules.
 
 Full spec: [`references/cli-spec.md`](references/cli-spec.md).
 
 ---
 
-## 🌐 Auto-invoke nuwa to distill top figures
+## 🌐 Auto-invoke nuwa to distill the industry's top figures
 
-> master-skill doesn't reinvent the wheel. The job of distilling industry top figures gets outsourced to nuwa-skill, results embed straight into `sub-skills/`.
+> master-skill doesn't reinvent the wheel. The job of distilling top figures gets outsourced to nuwa-skill, results embed straight into `sub-skills/`.
 
 ```
 {industry}-master/
@@ -151,9 +171,9 @@ Full spec: [`references/cli-spec.md`](references/cli-spec.md).
     └── {figure-3}/SKILL.md           ← e.g. Eugene Yan
 ```
 
-Master spawns **3 parallel subagents**, each running nuwa-skill's full 5-phase pipeline on one figure → person sub-skill embeds in.
+master-skill spawns 3 parallel subagents, each running nuwa-skill's full pipeline to produce one person sub-skill.
 
-When the user's question needs a specific figure's perspective, the agent loads the matching sub-skill — no full re-trigger.
+When the user later asks something that needs a specific figure's perspective, the agent loads the matching sub-skill — no full re-trigger of master.
 
 See [SKILL.md Phase 3.3-3.5](SKILL.md) + [`prompts/sub-skill-figures.md`](prompts/sub-skill-figures.md).
 
@@ -161,34 +181,50 @@ See [SKILL.md Phase 3.3-3.5](SKILL.md) + [`prompts/sub-skill-figures.md`](prompt
 
 ## 📦 What gets distilled
 
-Industry's cognitive operating system, not industry's encyclopedia. One skill packs four things:
+The industry's cognitive operating system, not its encyclopedia. One skill packs four things:
 
-- 🧠 &nbsp;**How they judge** — mental models + decision rules
+- 🧠 &nbsp;**How a senior practitioner thinks** — mental models + decision rules
 - ⚙️ &nbsp;**How they work** — current best-practice workflows, each step marked with decay timestamps
-- 🛠️ &nbsp;**What they use** — tool selection trees + anti-pattern checklists + **auto-generated bash command suite**
+- 🛠️ &nbsp;**What tools they pick** — selection decision trees + anti-pattern checklists + **auto-generated bash command suite**
 - 💬 &nbsp;**How they speak** — industry expression + outsider giveaways
 
-The 7 specific layers extracted:
+The 7 layers extracted:
 
 | Layer | What it is |
 |---|---|
 | **How they judge** | Mental models — the field's lens |
-| **How they decide** | Standard decision rules — "if X, then Y" heuristics |
+| **How they decide** | Standard decision rules — fast "if X, then Y" heuristics |
 | **What they use** | Tool stack + selection tree + anti-pattern checklist |
-| **How they work** | Workflows, each step marked with "Apr 2026 onward this step changes to Y" timestamps |
+| **How they work** | Workflows, each step marked with "from 2026-04 onward this step changes to Y" timestamps |
 | **How they speak** | Industry expression — jargon, cadence, outsider giveaways |
-| **What they avoid** | Anti-patterns — only outsiders make these mistakes |
+| **What they avoid** | Anti-patterns — the mistakes only outsiders make |
 | **What they don't know** | Honest boundaries — info cutoff, fastest-decaying modules |
 
 ### Honest boundaries
 
 Every skill explicitly states what it can't do:
 
-- **Tools / workflows** decay fastest (refresh every 3-6 months)
-- **Regulation / standards** modules decay even faster (must update within 12 months)
-- master-skill **can't replace real production debugging experience** — it gives cognitive frameworks, not incident response
+- Tools and workflows decay fastest — refresh every 3-6 months
+- Regulation and standards decay even faster — must update within 12 months
+- master-skill **can't replace real production experience** — it gives cognitive frameworks, not incident response runbooks
 
 **A skill that won't tell you its limits doesn't deserve trust.**
+
+---
+
+## 🔍 Why trust what it distills
+
+> A new skill comes online — how do I know it isn't making stuff up?
+
+**16 automatic checks. No pass, no ship.** Every generated skill must answer:
+
+- ✅ **Are the sources really first-hand?** — every URL is auto-classified (academic papers / official docs / authors' own blogs / vendor docs count as first-hand; news coverage / second-hand summaries count as secondary; Zhihu / WeChat blogs / Baidu Baike / CSDN / G2 / Capterra / content farms are **rejected outright**)
+- ✅ **Can the "this company is a big deal" claims be cross-referenced?** — every backbone conclusion needs ≥ 2 independent sources (different person / different platform); single-source claims are auto-demoted to a "fast rules" section, never enter the core mental models
+- ✅ **Are the sources recent enough?** — every source carries a date; anything over 18 months gets auto-half-discounted
+- ✅ **Did the mental models really appear in the source material?** — after the skill is written, the tool greps back through the research notes; any conclusion that can't be traced to original wording gets flagged
+- ✅ **What if the industry is too obscure for public sources?** — auto-detects "public material is too thin" and switches to deep-research mode: asks you for internal materials + auto-pulls from industry associations / regulator filings / job descriptions / university course syllabi as multi-source backup, instead of bluffing
+
+**Result**: the insurance broker prototype — 73 sources, 67 first-hand (91.8%), 0 blacklisted, 0 self-grading; 16 checks → 14 perfect + 1 partial pass + 0 fails.
 
 ---
 
@@ -223,7 +259,7 @@ Install to all hosts at once: `python3 tools/install.py install --host all`
 
 ## 🚀 Usage
 
-In a host with master-skill installed:
+In an agent with master-skill installed, just say:
 
 ```
 > Build me a master skill for LLM agent infra
@@ -233,23 +269,31 @@ In a host with master-skill installed:
 > update master LLM-agent-infra      # incremental refresh after 6 months
 ```
 
-master-skill confirms 6 dimensions with you (industry / sub-niche / region / role / local materials / new vs update), then launches a **6-track parallel research swarm**: figures / tools / workflows / canon / sources / glossary.
+master-skill confirms 6 things with you (industry / sub-niche / region / your role / any first-hand materials / new vs update), then launches **6-track parallel research**: industry figures / tool map / workflows / canon / sources / glossary.
 
-30-60 minutes later you get an `{industry}-master.skill` directory installable into any Claude Code / OpenClaw / Codex / Hermes agent — instantly turning it into "the senior practitioner of that field."
+30-60 minutes later you get an `{industry}-master` directory. Drop it into any agent — it instantly enters "the senior practitioner of that field" mode.
 
-### 💻 CLI pipeline (5 commands end-to-end)
+### 🎛️ Calling the generated skill
+
+```
+> Use llm-agent-infra-master to evaluate this framework choice
+> Use cross-border-ecommerce-master to look at my Amazon listing
+> Run llm-agent-infra-master's framework-select decision tree
+```
+
+### 💻 CLI pipeline
 
 ```bash
-python3 tools/research/merge_research.py merge --skill-dir ./prototype/      # Phase 1.5
-python3 tools/skill_writer.py create --skill-dir ./output ...                # Phase 3
-python3 tools/research/quality_check.py check --skill-dir ./output           # Phase 4.4
-python3 tools/install.py install --host claude --source ./output             # Deploy
+# End-to-end: research → cold-detect → write skill → quality check → install
+python3 tools/research/merge_research.py merge --skill-dir ./prototype/
+python3 tools/research/cold_detector.py --skill-dir ./prototype --stage wave1
+python3 tools/skill_writer.py create --skill-dir ./output ...
+python3 tools/research/quality_check.py check --skill-dir ./output
+python3 tools/install.py install --host claude --source ./output
 
-# Incremental refresh (v1.1)
+# 6 months later, incremental refresh
 python3 tools/update_skill.py plan --skill-dir <existing-skill>
-python3 tools/update_skill.py archive --skill-dir <skill>
-python3 tools/update_skill.py mark-in-progress --tracks tools,workflows
-# (agent re-runs selected tracks)
+# (agent re-runs the marked tracks)
 python3 tools/update_skill.py finalize --skill-dir <skill>
 ```
 
@@ -257,7 +301,7 @@ python3 tools/update_skill.py finalize --skill-dir <skill>
 
 ## ⭐ Distilled industries
 
-Each is end-to-end runnable, with full research data + generated SKILL.md + executable bash tool suite:
+Every one is end-to-end runnable, with full research data + generated SKILL.md + a working bash tool suite:
 
 | Industry | Category | Language | Path |
 |------|------|------|------|
@@ -269,10 +313,22 @@ Each is end-to-end runnable, with full research data + generated SKILL.md + exec
 | ✅ **Love coach** | Soft skills | Chinese | [love-coach-master/](prototypes/love-coach-master/) |
 | ✅ **Foot-and-ankle surgery** | Medical (regulated) | Chinese | [foot-ankle-surgery-master/](prototypes/foot-ankle-surgery-master/) |
 | ✅ **Chinese law practice** | Legal (regulated) | Chinese | [china-law-master/](prototypes/china-law-master/) |
+| 🆕 **Insurance broker / agent** | Finance (regulated) | Chinese | [insurance-broker-cn-master/](prototypes/insurance-broker-cn-master/) |
 
-Eight industries cross-cutting technical, commercial, content operations, soft skills, medical, and legal — master-skill works across all of them.
+9 industries cross-cutting technical / commercial / content ops / soft skills / medical / legal / finance — master-skill works across all of them.
 
-Research process is **fully transparent** — every prototype includes complete six-track research notes + the synthesis document, every mental model and decision rule traceable to its sources.
+**What's inside the latest "insurance broker" deliverable**:
+
+- 73 sources, 91.8% first-hand, 0 blacklisted
+- 5 core mental models (every one backed by ≥ 2 independent sources)
+- 8 decision rules (every one traceable back to the original research notes)
+- 3 person sub-skills (**Ye Yunyan** Ping An's sales legend + **Jiang Lihui** the Mingya independent-broker school + **Guzhu Lu Zhiyuan** the high-net-worth fraud-buster — three perspectives that challenge each other, not averaged)
+- 12 real-industry dialogue samples (across 4 registers: client-facing / peer / regulator / counter-example)
+- 7 ready-to-run bash scripts (5-step client cultivation / policy review / health disclosure + underwriting / interest-rate-switch decision / claims walkthrough / renewal management / peer-compliance boundaries)
+
+Plus a PASS-rated quality report (16 items → 14 perfect + 1 partial + 0 fails).
+
+The research process is **fully transparent** — every prototype includes complete six-track research notes + the synthesis document, every mental model and decision rule traceable to its sources.
 
 Want an industry not on the list? Install master-skill, say "build a master skill for XXX".
 
@@ -280,38 +336,112 @@ Want an industry not on the list? Install master-skill, say "build a master skil
 
 ## 🔬 How it works
 
-After you input a sub-niche, master-skill does these things:
+You give it a sub-niche, master-skill does the following:
 
 ```
-1. Industry intake          ← Push back when granularity is bad ("AI" → "LLM agent infra")
-2. Create skill directory   ← Self-contained, all artifacts inside
+1. Industry intake          ← Pushes back when granularity is bad ("AI" → "LLM agent infra")
+2. Create skill directory   ← All artifacts inside, self-contained
 3. 6-track parallel research ← 6 subagents: figures / tools / workflows / canon / sources / glossary
-   ─ Research review gate   ← User confirms quality before continuing
-4. Framework synthesis      ← Triple-gate validation blocks generic platitudes
-   ─ Synthesis review gate  ← User confirms the cognitive frame before generation
+   ─ Research review gate   ← You confirm research quality before continuing — bad input doesn't poison downstream
+4. Framework synthesis      ← Triple-gate validation (cross-scenario / generative power / exclusivity) blocks generic platitudes
+   ─ Synthesis review gate  ← You confirm the cognitive frame before generation
 5. Write the skill          ← Generate full directory, invoke nuwa for sub-skills, emit bash tools
-6. Three-test verification  ← Known / edge / voice blind tests
-7. Two-agent refinement     ← Optimize "activates and acts"
+6. Three-test verification  ← Known-question / edge-case / voice blind tests
+7. Two-agent refinement     ← Optimize the "activates and acts" quality
 ```
 
 Full spec in [SKILL.md](SKILL.md) — 524 lines of agent-loadable workflow. Methodology in [references/extraction-framework.md](references/extraction-framework.md) — triple-gate validation, three-tier tool extraction, school-of-thought handling, decay-rate table.
 
 ---
 
-## 🧬 Lineage
+## 🧬 Three-generation lineage
 
 master-skill stands on two shoulders:
 
+- **[colleague-skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — gave us the meta-skill pattern: intake → multi-source collect → analyze → write.
+- **[nuwa-skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — gave us 6-agent parallel research + triple quality gates. **master-skill calls nuwa in Phase 3 to distill the top 3 figures of the industry as sub-skills.**
+
+Three of one lineage, scaling outward.
+
+---
+
+## 📂 Project structure
+
 ```
-🧬 colleague-skill   distills one specific person      scope: 1 person
-🌟 nuwa-skill        distills a way of thinking        scope: anyone alive or historical
-🎓 master-skill      distills an entire industry       scope: a sub-niche field
+master-skill/
+├── SKILL.md                          # the master itself (core workflow spec)
+├── prompts/                          # prompt system
+│   ├── intake.md                     #   industry intake + cold-niche deep-mode 2nd intake
+│   ├── synthesis.md                  #   distillation guide (incl. Step 5b dialogue sample library)
+│   ├── quality_check.md              #   16-item mechanical rubric
+│   ├── sub-skill-figures.md          #   subagent template for invoking nuwa
+│   └── research/
+│       ├── _source_id_manifest.md    #   global source-ID convention + Surrogate Sources Policy
+│       └── 01-06.md                  #   six-track research prompts (incl. voice_samples field)
+├── tools/                            # Python tooling
+│   ├── skill_writer.py               #   generate skill directory
+│   ├── cli_writer.py                 #   generate bash tool subtree
+│   ├── update_skill.py               #   incremental refresh
+│   ├── install.py                    #   four-host installer
+│   ├── self_test.py                  #   regression tests across all prototypes + tools
+│   ├── research/                     # quality guardrails (new in v1.4)
+│   │   ├── source_verifier.py        #   per-URL auto-classify + black/whitelist
+│   │   ├── source_manifest.py        #   source ledger + consistency enforcement
+│   │   ├── claim_verifier.py         #   reverse-check every SKILL.md conclusion against source notes
+│   │   ├── cold_detector.py          #   obscure-industry auto-fallback (deep-research mode)
+│   │   ├── refresh_sources.py        #   periodic source-liveness check
+│   │   ├── quality_check.py          #   16 automatic checks
+│   │   └── merge_research.py         #   research review aggregator
+│   ├── collectors/                   # auto-pull industry seed material
+│   │   ├── github / arxiv / RSS / podcast (4 collectors)
+│   │   └── regulator / association / job-desc / syllabus (cold-niche fallback, 4 collectors)
+│   ├── ingest/                       # parse industry reports / papers / course slides
+│   │   └── PDF / EPUB / PPTX one-shot ingest
+│   └── transcribe/                   # video / podcast transcription
+│       ├── youtube.sh / local_video.sh   # caption pull + local-video transcription
+│       └── caption cleaning / signal-density scoring / mention extraction
+├── references/
+│   ├── skill-template.md             #   standard structure for generated skills
+│   ├── extraction-framework.md       #   distillation methodology (triple-gate / decay table / schools)
+│   └── cli-spec.md                   #   bash tool design spec
+└── prototypes/
+    └── 9 complete industry samples   #   see "Distilled industries" above
 ```
 
-- **[colleague-skill (titanwings/colleague-skill)](https://github.com/titanwings/colleague-skill)** — proved "distill a person" works. Source of the meta-skill pattern: intake → multi-source collect → analyze → write.
-- **[nuwa-skill (alchaincyf/nuwa-skill)](https://github.com/alchaincyf/nuwa-skill)** — proved "distill a way of thinking" beats "distill words." Source of the 6-agent parallel research + triple quality gates + research protocol architecture. **master-skill calls nuwa in Phase 3 to distill the top 3 figures of the industry as sub-skills.**
+---
 
-Three of one lineage, scaling outward — one person you know → anyone alive or dead → an entire field of human knowledge.
+## ⚠️ Notes
+
+**Research material quality = skill quality**. Different research dimensions have different source priorities:
+
+| Dimension | Source priority (high → low) |
+|------|------|
+| 🌟 Industry figures | Long-form by the figure themselves (book / long interview / blog series) **›** decision records (public commits / public statements) **›** secondary summaries |
+| 🛠️ Tool map | Official docs **›** engineer-written production cases **›** training tutorials / SEO content |
+| 📋 Workflows | Real flows on company engineering blogs **›** senior practitioner long interviews **›** training-org curricula |
+| 📚 Canon | Reading lists from industry people (≥ 3 independent recommenders) **›** academic surveys **›** secondary book reviews |
+| 📰 Sources | Industry-people subscription lists **›** mainstream long-form journalism **›** content farms |
+
+- In Chinese-language environments, Zhihu / WeChat blogs / Baidu Baike / CSDN are auto-excluded (unless author-original)
+- The earlier the info cutoff, the faster the tools/workflows modules decay — use `update master X` to incrementally refresh
+- This is v1.1 and still iterating fast. Found a bug? Open an issue.
+
+---
+
+## 📄 Roadmap
+
+| Version | Content | Status |
+|------|------|------|
+| v0.1-0.4 | Workflow spec + prompts + tooling + polish | ✅ |
+| v1.0 | First complete sample (LLM agent infra), public repo | ✅ |
+| v0.6 | Bash tool pipeline — generated skills ship with command suite | ✅ |
+| v1.1 | Cross-skill calls + incremental refresh + Chinese samples | ✅ |
+| v1.2 | Auto-clustered decision-tree topics + scheduled refresh + 5 industry samples (incl. Xiaohongshu / SEO / love coach) | ✅ |
+| v1.3 | Short-video paid ads / foot-and-ankle surgery / law = 8 industries cross-cutting coverage | ✅ |
+| v1.4 | **Quality guardrails + 9th industry** — auto-run 16 quality checks + URL verification + blacklist hard-block + cold-niche fallback (auto-pull from associations / regulators / job descs / course syllabi) + new **insurance broker / agent** sample | ✅ |
+| v2.x | PyPI packaging / GitHub Action auto-update / multi-language docs / tool marketplace | 🔲 |
+
+See [ROADMAP.md](ROADMAP.md).
 
 ---
 
@@ -323,9 +453,9 @@ MIT — use it, fork it, ship with it.
 
 <br>
 
-**🧬 colleague-skill** distills what **one person** does.<br>
+**🧬 colleague-skill** distills what **one specific person** does.<br>
 **🌟 nuwa-skill** distills how **anyone** thinks.<br>
-**🎓 master-skill** distills an **entire industry** — cognition + workflows + tools.<br>
+**🎓 master-skill** distills **an entire industry's** cognition + workflows + tools.<br>
 
 <br>
 
