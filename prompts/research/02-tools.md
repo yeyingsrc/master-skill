@@ -16,6 +16,16 @@
 
 文件存在则覆盖。
 
+## Source Manifest 引用规范 (iter 24, 强制)
+
+详见 `prompts/research/_source_id_manifest.md`. 摘要:
+
+1. 文件最前面写 `## Source Manifest` 表 (source_id / url / bucket / last_checked / author / note). 黑名单 URL 进表即报错
+2. 每条 claim (工具的 `投入产出比` / `适合 / 不适合` / `避坑` 等) 后挂 `evidence: [Sxxx]`
+3. URL 用 `python3 {master_skill_dir}/tools/research/source_verifier.py classify <URL>` 跑一遍, 取 bucket
+4. Phase 4 跑 `tools/research/quality_check.py` item 13 + 14 + 15 + 16 验证
+5. 冷僻行业: vendor docs 是 verified_primary; 行业大会 sponsor list / 招聘 JD 作 surrogate_primary 补充
+
 ## Wave 2 加成（从 wave 1 拿 seed）
 
 本 track 在 Phase 1 wave 2 启动，**已经能从 wave 1 拿到 seed 工具候选**：

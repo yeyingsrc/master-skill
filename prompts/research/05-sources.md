@@ -23,6 +23,16 @@
 
 文件存在则覆盖。
 
+## Source Manifest 引用规范 (iter 24, 强制)
+
+详见 `prompts/research/_source_id_manifest.md`. 摘要:
+
+1. 文件最前面写 `## Source Manifest` 表 (source_id / url / bucket / last_checked / author / note). 黑名单 URL 进表即报错; `mp.weixin.qq.com` 文章是黑名单 (但公众号的「频道身份」可作为本 track source 列表的 URL)
+2. 每个 source 的 `投入产出比`, `Audience tier`, `Decay risk` 等 claim 末尾挂 `evidence: [Sxxx]`
+3. URL 用 `python3 {master_skill_dir}/tools/research/source_verifier.py classify <URL>` 跑一遍取 bucket
+4. Phase 4 跑 `tools/research/quality_check.py` item 13 + 14 + 15 + 16 验证
+5. 冷僻行业: 大型行业会议 sponsor + sessions list + 协会会员 newsletter 作 surrogate_primary 补充
+
 ## Wave 1 加成（独立 track）
 
 本 track 在 Phase 1 wave 1 启动，**搜索路径独立**，不依赖其他 track 输出。Wave 1 跑完后输出会作为 seed 喂给：

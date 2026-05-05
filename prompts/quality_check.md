@@ -171,12 +171,30 @@ spawn 子 agent 任务:
 - 厂商话术拒绝: {{count}} 个 (target ≥ 1)
 - Register 接近度: ✅ / ⚠️ / ❌
 
-## 4.4 Mechanical rubric
+## 4.4 Mechanical rubric (16 项, iter 24)
 
-| 检查项 | 通过 | 备注 |
-|------|------|------|
-| 心智模型数 (3-7) | ✅ | 5 个 |
-| ... |
+跑 `tools/research/quality_check.py check --skill-dir <skill_dir>` 自动出全表. 16 项分组:
+
+| 组 | 项 | 检查 |
+|----|-----|------|
+| 结构 (1-4) | 1 | 心智模型数 (3-7) |
+| | 2 | 心智模型局限 100% 填 |
+| | 3 | Playbook 数 (5-10) |
+| | 4 | Playbook 案例 ≥ 1 |
+| 内容 (5-8) | 5 | 工具三层覆盖 |
+| | 6 | 工作流入门-资深差异 ≥ 80% |
+| | 7 | 表达 DNA 辨识度 |
+| | 8 | 诚实边界 ≥ 3 条 |
+| 来源 (9, 13-16) | 9 | 一手来源 ≥ 50% (自报) |
+| | 13 | URL 一手机械验证 ≥ 50% (manifest 优先) |
+| | 14 | 无黑名单 URL |
+| | 15 | freshness 标注 ≥ 70% |
+| | 16 | claim → evidence ≥ 2 source_ids (T01-S001 格式) |
+| 维度 (10-12) | 10 | Agentic Protocol 维度 (3-10) |
+| | 11 | 时效性标注完整 |
+| | 12 | 多 figure 共识门槛 |
+
+每项 status ∈ pass / partial / fail / needs_subagent / skipped.
 
 不通过项数: {{N}}
 

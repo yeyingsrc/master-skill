@@ -21,6 +21,16 @@
 
 文件存在则覆盖。
 
+## Source Manifest 引用规范 (iter 24, 强制)
+
+详见 `prompts/research/_source_id_manifest.md`. 摘要:
+
+1. 文件最前面写 `## Source Manifest` 表 (source_id / url / bucket / last_checked / author / note). 黑名单 URL 进表即报错
+2. 每条经典 / 论文的 `必读理由`, `争议`, `继承关系` 末尾挂 `evidence: [Sxxx]`
+3. URL (DOI / arXiv / 出版社 / 课程主页) 用 `python3 {master_skill_dir}/tools/research/source_verifier.py classify <URL>` 跑一遍取 bucket; 学术黑灰产平台 / Sci-Hub-style 是黑名单
+4. Phase 4 跑 `tools/research/quality_check.py` item 13 + 14 + 15 + 16 验证
+5. 冷僻行业: 大学课程 syllabus reading list + 行业协会推荐 + 监管引用文献 作 surrogate_primary, 把 canon 维度补回
+
 ## Wave 1 加成（独立 track，无 wave 依赖）
 
 本 track 在 Phase 1 wave 1 启动，搜索路径**最独立**：直接看 Goodreads / arXiv / 大学课程页 / 行业经典书单，不依赖其他 track 的输出。Wave 1 跑完后，本 track 的输出会作为 seed 喂给 Wave 2 的 figures（核心作者）+ tools（书 / 课程教的工具）。

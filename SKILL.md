@@ -35,6 +35,21 @@ allowed-tools: Read, Write, Edit, Bash, WebSearch, WebFetch
 
 ---
 
+## 路径占位符 (iter 24 重要)
+
+prompts 里两个不同的目录占位符:
+
+| 占位符 | 含义 | 例子 |
+|--------|------|------|
+| `{master_skill_dir}` | master-skill 仓库 (本仓库) 的 `skill/` 目录, 工具脚本住在这里 | `~/master-skill/skill/` 或 `/Users/foo/master-skill/skill/` |
+| `{skill_dir}` | 当前正在生成 / 更新 的**行业** skill 目录, 调研笔记 / SKILL.md / sub-skills 都写到这里 | `~/.claude/skills/llm-agent-infra-master/` |
+
+工具脚本 (source_verifier.py / cold_detector.py / quality_check.py / collectors / ingest / transcribe) **不复制**到生成的行业 skill 目录, agent 直接调 `{master_skill_dir}/tools/...`. 行业 skill 只装载 prompts + research notes + SKILL.md + sub-skills + cli/.
+
+如果运行环境的 master-skill 路径变了, agent 替换占位符即可; 不需要改任何工具源代码.
+
+---
+
 ## 执行流程
 
 ### Phase 0: 入口分流
@@ -175,6 +190,34 @@ iter 4 figures 跑通后发现：6 轨之间互相是 bootstrap 输入。Track 0
 - Track 04 (canon) — 必读书 / 论文 / 课，搜索路径最独立（看 Goodreads / arXiv / 大学课程页就行）
 - Track 05 (sources) — newsletter / podcast / 会议，搜索路径独立（搜「{industry} podcast」「{industry} newsletter」）
 - Track 06 (glossary) — 术语 + 标准，从行业入门书 / 维基 / 标准化机构 page 抓
+
+**Wave 1 加速器：先跑 collectors 拉机械 seed (iter 24)**
+
+Wave 1 启动前 2 分钟跑这 4 个 collector, 拉到结构化 seeds.jsonl, 让 web search 不再凭空猜:
+
+```bash
+mkdir -p {skill_dir}/references/research/seeds
+# 用户主 industry slug 对应的 GitHub topic / arXiv 类目 / 行业核心 RSS
+python3 {master_skill_dir}/tools/collectors/github_topics.py --topic {topic} \
+  --limit 30 --output {skill_dir}/references/research/seeds/github_repos.jsonl
+python3 {master_skill_dir}/tools/collectors/arxiv_collect.py --query "cat:cs.AI AND all:agent" \
+  --max 30 --output {skill_dir}/references/research/seeds/arxiv_papers.jsonl
+python3 {master_skill_dir}/tools/collectors/rss_collect.py --feed-list {skill_dir}/intake.feeds.txt \
+  --max 20 --output {skill_dir}/references/research/seeds/rss_items.jsonl
+python3 {master_skill_dir}/tools/collectors/podcast_rss.py --apple-id {N} \
+  --max 30 --output {skill_dir}/references/research/seeds/podcast_episodes.jsonl
+```
+
+Wave 1 subagent 必须**先 cat 这些 jsonl** 再启动 web search. 例如 Track 05 (sources) 看 podcast_episodes.jsonl 里反复出现的 host / show 直接进 retain 候选; Track 04 (canon) 看 arxiv_papers.jsonl 的 author 网络. 这把「凭直觉撒网」换成「从机械 seed 撒网」, 漏掉的高密度一手少很多.
+
+**Seeds JSONL 通用 schema** (collectors 都遵守):
+- `type`: `github_repo` / `arxiv_paper` / `rss_item` / `podcast_episode` (必填, agent 根据它路由)
+- `name` / `title`: 实体名
+- `url`: 一手 URL (跑 source_verifier classify 取 bucket)
+- `author` / `host` / `show_host`: 主创
+- `published` / `pushed_at` / `last_activity`: ISO 时间戳 (用于 freshness)
+- 类型特有字段: stars/forks (github), authors/abstract (arxiv), guests/duration_sec (podcast), summary (rss)
+- 任何 collector 输出都可作 seed; agent 在合并时用 `url` 去重
 
 **Wave 2（并行，用 Wave 1 的产出做 seed）— 「人 + 工具」轨**：
 - Track 01 (figures) — 用 Wave 1 的 canon 作者 + sources 嘉宾名单作为初始候选

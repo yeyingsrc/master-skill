@@ -90,9 +90,21 @@
 **目标产出**: 3-7 个心智模型。每个含：
 - 名称
 - 一句话描述
-- ≥ 2 处来源证据 (跨场景)
+- ≥ 2 处来源证据 — **必须以 `evidence: [Txx-Sxxx, Tyy-Syyy]` 形式挂出 source_ids** (来自六轨 Source Manifest, 见 `prompts/research/_source_id_manifest.md`). 跨 track 引用更佳, 体现共识跨场景
 - 应用方式 (when to invoke)
 - 局限 (mandatory — 不写就降级)
+
+**evidence 引用示例**:
+
+```markdown
+### 1.1 工具临时性 (mental model)
+- **一句话**: 「LLM agent framework 6-12 月被模型 native 化能力吃掉一层, 选型时按『能不能在一个周末剥掉』判断」
+- **应用方式**: 面对新框架/新工具, 先问「6 个月后这个能力会不会被模型 native」
+- **局限**: 仅适用于被模型能力曲线快速吃掉的层 (LLM agent infra / RAG framework / prompt eng tools); 对底层基础设施 (kubernetes / db) 不成立
+- **evidence**: [T01-S001, T01-S007, T05-S012]  # ≥ 2 跨人物 + ≥ 1 跨 track
+```
+
+`tools/research/quality_check.py` item 16 会扫所有 mental model, 不挂 ≥ 2 个 source_id 的会被标 fail (cross-source consensus rule 不达标 → 降级 playbook).
 
 **反模式 (DROP 这些常见陷阱)**:
 - 「关注用户体验」「先做 MVP」「数据驱动」 → 通用商业道理 (验证 3 ❌)
@@ -151,6 +163,39 @@
 | 厂商话术拒绝 | Track 06 「行业拒绝的厂商话术」直接用 |
 
 **关键约束**: 不模拟某个具体 figure，模拟「这一行的资深人聚一起讨论时的 register」。多人融合。
+
+#### Step 5b: 对话样本库 (iter 26 强制 — codex 三审 P1 #4 voice check 反馈)
+
+之前 voice check 盲测 partial 的根因是 §5 只列术语词表, 不给 in-context 对话样本. subagent 写「师兄、执业证悬、我们俩都背锅」靠 LLM 常识脑补, 不是靠 SKILL.md 给的语料. **修复: synthesis.md 必须输出对话样本库 4 类 × 各 ≥ 2 段**, 每段 ≥ 30 字, 来源是 Track 01 figures 的 voice_samples 字段:
+
+```markdown
+## 5.X 对话样本库 (industry voice 实战语料)
+
+### 5.X.1 客户版 (面客解释 / 教育)
+- 「{50-150 字 figure 原话或转述, 涉及监管 / 产品 / 健康告知 / 利率等}」(source: T01-SXXX, 原话 | 转述, 客户场景: 重疾选择/利率切换/...)
+- 「...」(source: ...)
+
+### 5.X.2 同业版 (私下 / 内训 / 同业访谈)
+- 「{30-100 字, 短句 + 行业黑话 + 直接判断}」(source: T01-SXXX, ...)
+- ...
+
+### 5.X.3 监管 / 专业版 (公开场合谈标准 / 学术 / 监管解读)
+- 「{50-150 字, 有引用 + 数据}」(source: T01-SXXX, ...)
+- ...
+
+### 5.X.4 反例版 (这一行的资深人**绝不会**这样说的话, 错位 / 被错位包装的销售话术)
+- 「{反例话术原文}」(source: T06 outsider-tell / 厂商话术拒绝, why 反例: ...)
+- ...
+```
+
+**voice_confidence 计算**:
+- ≥ 2 段 / 类 × 4 类 = 8 段, 60% 标 `(原话)` → `voice_confidence: high`
+- 4-7 段, 多数标 `(转述)` → `voice_confidence: medium`
+- < 4 段 OR 多数标 `(推断)` → `voice_confidence: low` → quality_check item 7 不能 pass, **诚实边界节必须明示「voice 维度信号薄弱, 主 SKILL.md 风格输出靠 LLM 默认而非真行业语料」**
+
+**关键**: 不能编. 没找到原话就标 `(转述)` 或 `(推断)`. 写进 SKILL.md §5 时把每段都带上 source_id, 让用户回溯.
+
+**Cross-skill consistency**: 4 类对话样本要让人能区分「哪段像 figure A 说的」「哪段像 figure B 说的」 — 流派分裂在表达层也应体现. 不是把所有 figure 的 voice 调和成一个平均 register.
 
 ### Step 6: 质量基准 + 反模式 (Phase 2.6)
 

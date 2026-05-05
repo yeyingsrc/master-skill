@@ -16,6 +16,16 @@
 
 文件存在则覆盖。
 
+## Source Manifest 引用规范 (iter 24, 强制)
+
+详见 `prompts/research/_source_id_manifest.md`. 摘要:
+
+1. 文件最前面写 `## Source Manifest` 表 (source_id / url / bucket / last_checked / author / note). 黑名单 URL 进表即报错
+2. 每条 claim 后挂 `evidence: [Sxxx]`
+3. URL 用 `python3 {master_skill_dir}/tools/research/source_verifier.py classify <URL>` 跑一遍, 取 bucket
+4. Phase 4 跑 `tools/research/quality_check.py` item 13 (URL 一手机械验证 ≥ 50%) + item 14 (无黑名单) + item 15 (freshness ≥ 70%) + item 16 (claim 引用 ≥ 2 source_ids)
+5. 冷僻行业 (`cold_detector` verdict = `cold_deep_mode`): 用 Surrogate Sources Policy (协会理事列表 / 课程 syllabus / 监管 / JD / vendor docs) 把 figures / canon 维度补回, 但严格标 `bucket: surrogate_primary`, 不冒充 primary
+
 ## 6 步流程
 
 ### Step 1: 候选清单（Wide Net）
@@ -87,6 +97,12 @@
   - 🎬 {{conference talk / 长视频 + URL}}
   - （如果某类没有，留空，标注「⚠️ 无 / 未找到」）
 - **核心思想关键词** (3-5 个): {{他反复强调的概念，将进入 Phase 2 候选心智模型清单}}
+- **voice_samples** (iter 26 强制 — 系统升级 voice DNA): 收集这位 figure 在不同 register 下的**完整对话片段或独白原话**, 至少 3 段, 标 source_id 和「原话/转述」:
+  - 客户解释样本 (≥ 1 段, 50-150 字): figure 怎么把行业术语翻译给客户. 例: 「不可抗辩条款 ≠ 必赔, 它只解决告知问题, 不替你扛理赔范围. 您朋友说的『2 年免死金牌』是民间简化版」(source: 谷主 podcast E52, 转述)
+  - 同业讨论样本 (≥ 1 段, 30-100 字): figure 在私下 / 内训 / 同业访谈里怎么说话. 例: 「这个 case 7-3 是阳性, 走人工核保大概率加费 30-50%」(source: 江立辉明亚内训, 转述)
+  - 监管 / 专业讨论样本 (≥ 1 段, 50-150 字): figure 在公开场合谈监管 / 标准 / 学术问题时的语言. 例: 「2024 利率切换的本质是把利差损风险显性化, 监管不是要打压寿险, 是要让定价更接近真实利率」(source: 13 个精算师公众号, 原话)
+  - 标注规则: 每段后写 `(source: T0X-SXXX, 原话 | 转述 | 推断)`. 「推断」必须诚实标, 不能伪装成原话
+  - **没找到 voice_samples → 写「⚠️ 暂未找到 ≥ 30 字直接原话片段」**, 不要编. Phase 4 voice check 会因此降级 voice_confidence 到 low
 - **sub_skill_candidate**: `true` / `false` + 一句理由
   - `true` 标准：有 ≥ 30 min 长访谈材料 + 思想体系自洽 + 在行业中影响力前 5 + 用户的 focus 与其领域对齐
   - `false` 也可以解释为「重要但不够独立成 sub-skill」（例：靠工程产品输出而非个人思想）
@@ -141,11 +157,13 @@
 
 行业 figures 的最高价值材料经常是 podcast / conference talk / YouTube 长访谈。处理流程：
 
-1. **优先：抓字幕**
+1. **优先：抓字幕** (工具住在 master-skill 仓库, 不在生成的行业 skill 内)
    ```bash
-   bash {skill_dir}/scripts/transcribe/youtube.sh "{url}" "{skill_dir}/sources/transcripts/{slug}.txt"
+   bash {master_skill_dir}/tools/transcribe/youtube.sh "{url}" "{skill_dir}/sources/transcripts/"
+   # 然后清洗 .srt → .txt (或加 --jsonl 输出结构化时间戳/speaker/word_count)
+   python3 {master_skill_dir}/tools/transcribe/srt_to_transcript.py "{skill_dir}/sources/transcripts/<slug>.srt" "{skill_dir}/sources/transcripts/<slug>.txt"
    ```
-   （工具尚未实现 — v0.3。当前可用 `yt-dlp --write-auto-sub --sub-lang en,zh-CN --skip-download "{url}"` 手动跑）
+   字幕抓不到 → 用 `{master_skill_dir}/tools/transcribe/local_video.sh <video.mp4>` (本地转录, 第一次运行会 lazy-install ffmpeg + faster-whisper). 长访谈想 dial up 信号 → 跑完后链 `transcript_scorer.py --top 50` 抽 actionable 段落.
 
 2. **次选：搜 transcript 站**
    - en: podcastnotes.org, transcripts.byanker.com, descript blog

@@ -252,3 +252,63 @@ ASSISTANT 回复:
 - ❌ 不警告坏粒度直接接受（输出垃圾 skill）
 - ❌ 不问 local_materials（错过最高质量信号）
 - ❌ 把 intake 写成问卷格式（不是 form，是对话）
+
+---
+
+## Cold deep-mode 二次 intake (iter 24, Q5b)
+
+**触发条件**: Phase 1 wave 1 跑完后, 主大师 agent 跑 `tools/research/cold_detector.py --skill-dir <skill_dir>`. 如果 verdict 是 `cold_deep_mode` 或 `cold_too_thin` (exit 1 或 2), 不能继续走 wave 2 — 必须先回到用户做二次 intake.
+
+**工具调用**:
+
+```bash
+# Wave 1 → Wave 2 之间检查 (只看 canon / sources / glossary)
+python3 {master_skill_dir}/tools/research/cold_detector.py --skill-dir {skill_dir} --stage wave1
+# exit 0  → normal,    继续 wave 2
+# exit 1  → cold_deep_mode, 暂停, 跑下面的二次 intake
+# exit 2  → cold_too_thin,  暂停 + 主动建议改 industry 范围 (见下面)
+```
+
+> `{master_skill_dir}` = master-skill 仓库根的 `skill/` 目录 (e.g. `~/master-skill/skill/`),
+> 不是生成行业 skill 的 `{skill_dir}`. 工具住在 master 仓库, 不复制到行业 skill (避免每个行业都拖一份).
+> Phase 1 wave 3 之后建议再跑一次 `--stage full`, 这次会把 figures / tools / workflows 也算进去.
+
+### Deep-mode 二次 intake 话术
+
+```
+ASSISTANT (cold_deep_mode):
+「我跑了一遍 wave 1, {industry} 这一行的公开材料偏薄
+({trigger 列表 — 例如: figures 只找到 4 / canon 只 6 / verified_primary 35%}).
+继续走 wave 2 + 网络搜会越搜越偏 SEO 农场, 蒸出来的 OS 厚度会受限.
+
+我建议先停一下, 问你 3 件事 — 你给一个能挖深的素材就比我在网上扫 1000 篇高质量:
+
+1) 你公司 / 团队 / 你自己有没有内部 wiki / SOP / 操作手册? 粘贴 1-2 个核心文档就行
+2) 你订阅 / 关注的 niche channel — Slack 群 / Discord / 微信群 / 公众号 / X 私圈? 给我 2-3 个名字
+3) 你做过的实战 case study (匿名化即可) — 比如「我去年帮 X 客户解决 Y 问题, 走的是 Z 路径」, 1-2 个
+
+任意一项有就好. 不全有也行, 我会照常推进, 但 SKILL.md 的诚实边界节会标明数据厚度.」
+```
+
+### Cold_too_thin (≥ 3 thresholds 触发) 额外路径
+
+```
+ASSISTANT (cold_too_thin):
+「{industry} 这一行公开材料**非常薄** (3+ 维度都不足). 即使你给我内部资料, 我也会
+在最终 SKILL.md 的诚实边界节明确标「跨度有限 / 厚度受限」, 否则会误导后来用户.
+
+两个方向你选一个:
+A) 接受这个限制, 我们做出来一份诚实标记弱点的 skill — 还是有用, 但**不要期望**
+   像 'LLM agent infra' 这种公开材料丰富的领域那种厚度
+B) 把 industry 改宽一点 — 比如 '{建议的临近更宽行业}' (但仍贴近你的实际工作),
+   能蒸出更厚的 OS, 你再在使用时收窄到当前细分
+
+回 A / B / 或继续给我 3 件内部材料强行走 A.」
+```
+
+### 用户回内部素材时的处理
+
+- 全部按 `local_materials.mode = mixed` 处理, paths 写入 intake.json
+- 标 `cold_deep_mode_engaged: true` 在 intake.json 顶层
+- 重新启动 wave 2 之前**先**让用户素材进 source pool — 它们权重最高 (verified_primary)
+- 跑 surrogate collectors (见 prompts/research/*.md 的 Surrogate Sources Policy 节)

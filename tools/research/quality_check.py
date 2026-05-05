@@ -18,11 +18,21 @@ Pure stdlib. macOS python3 out-of-the-box.
 from __future__ import annotations
 
 import argparse
+import datetime as _dt
 import json
 import re
 import sys
 from pathlib import Path
 from typing import Any, Callable
+
+# Sibling modules — pure stdlib, safe to import unconditionally.
+try:
+    from . import source_verifier  # type: ignore
+    from . import source_manifest  # type: ignore
+except ImportError:  # script-mode (python3 quality_check.py ...)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import source_verifier  # type: ignore[no-redef]
+    import source_manifest  # type: ignore[no-redef]
 
 # ---------------------------------------------------------------------------
 
@@ -237,10 +247,51 @@ def check_workflow_senior_differences(skill_text: str) -> tuple[str, str]:
 
 
 def check_voice_dna(skill_text: str, skill_dir: Path) -> tuple[str, str]:
-    """Item 7: voice DNA. Iter 23 — partial-mechanical surrogate via Tier-1
-    jargon counting + vendor-话术 rejection check. Full voice check still needs
-    subagent (Phase 4.3) but this catches obvious failures cheaply.
+    """Item 7: voice DNA mechanical surrogate. Iter 26 (codex 3rd-audit P1 #4):
+    extended to also check the dialogue-sample library (synthesis Step 5b)
+    that iter 26 made mandatory. Without ≥ 2 samples per register × 4
+    registers, the voice surrogate cannot pass — quoted samples are what let
+    Phase 4.3 subagent inherit real industry voice instead of LLM-default
+    register.
     """
+    # Iter 26: voice samples library check (synthesis.md §5.X)
+    syn_path = skill_dir / "references" / "synthesis.md"
+    if syn_path.exists():
+        syn_text = syn_path.read_text(encoding="utf-8")
+        # Look for §5 dialogue sample library (4 sub-sections)
+        sample_section = re.search(
+            r"##\s+5\.\s+表达\s+DNA(.*?)(?=^##\s+\d+\.|\Z)",
+            syn_text, re.MULTILINE | re.DOTALL,
+        )
+        if sample_section:
+            body = sample_section.group(1)
+            # Count "原话 | 转述 | 推断" tags as samples
+            sample_tags = re.findall(
+                r"\(\s*source:[^\)]*?(原话|转述|推断)[^\)]*?\)",
+                body,
+            )
+            n_samples = len(sample_tags)
+            n_yuan_hua = sum(1 for t in sample_tags if t == "原话")
+            n_inferred = sum(1 for t in sample_tags if t == "推断")
+            if n_samples >= 8 and n_yuan_hua / max(n_samples, 1) >= 0.5:
+                return "pass", (
+                    f"voice samples library: {n_samples} entries, "
+                    f"{n_yuan_hua} 原话 ({n_yuan_hua/n_samples*100:.0f}%) — voice_confidence: high"
+                )
+            if n_samples >= 4 and n_inferred / max(n_samples, 1) <= 0.3:
+                return "partial", (
+                    f"voice samples library: {n_samples} entries (target ≥ 8), "
+                    f"voice_confidence: medium — Phase 4.3 subagent run still recommended "
+                    f"to confirm voice fidelity"
+                )
+            if n_samples > 0:
+                return "fail", (
+                    f"voice samples library: only {n_samples} entries "
+                    f"(target ≥ 8 across 4 registers × 2), voice_confidence: low — "
+                    f"诚实边界节必须明示 voice 维度信号薄弱"
+                )
+            # n_samples == 0 — fall through to legacy jargon-counting surrogate
+
     # Try to load Track 06 glossary to get Tier-1 jargon list
     glossary_path = skill_dir / "references" / "research" / "06-glossary.md"
     tier1_terms: set[str] = set()
@@ -446,6 +497,360 @@ def check_multi_figure_consensus(skill_dir: Path) -> tuple[str, str]:
 
 
 # ---------------------------------------------------------------------------
+# Mechanical URL-verification checks (added iter 24 — Q1 quality gate).
+# These complement check_primary_ratio (item 9) which uses self-reported
+# [Primary] markers; the checks below classify the actual URLs.
+
+
+def _parse_manifests(skill_dir: Path) -> list[dict[str, str]]:
+    """Thin wrapper around source_manifest.parse_manifests for backwards
+    compat with the existing rubric checks (which expected dict rows)."""
+    rows = source_manifest.parse_manifests(skill_dir)
+    return [
+        {
+            "source_id": r.source_id, "url": r.url, "bucket": r.bucket,
+            "last_checked": r.last_checked, "file": r.file,
+        }
+        for r in rows
+    ]
+
+
+def _scan_research_urls(skill_dir: Path, locale: str = "all") -> dict[str, Any] | None:
+    """Run source_verifier.scan_dir on research/ and return the report. Cached
+    on first call within the same rubric run."""
+    research_dir = skill_dir / "references" / "research"
+    if not research_dir.exists():
+        return None
+    try:
+        return source_verifier.scan_dir(research_dir, locale=locale, check_live=False)
+    except Exception:
+        return None
+
+
+def check_verified_primary_precision(skill_dir: Path) -> tuple[str, str]:
+    """Item 13: mechanical primary-ratio. Combines:
+
+      1. Manifest declarations (`## Source Manifest` rows: bucket is what
+         the agent committed to). `verified_primary` and `surrogate_primary`
+         both count as "first-hand-tier" for the ratio.
+      2. URL classification fallback when no manifest is present (agent on
+         legacy [Primary]/[Secondary] tagging).
+
+    PASS if first-hand tier ≥ 50% AND total ≥ 5 sources.
+    PARTIAL if ratio < 0.5 but total < 10 (small sample).
+    FAIL if ratio < 0.5 with ≥ 10 sources.
+    SKIPPED if no URLs and no manifest (research notes use named-only sources).
+    """
+    rows = _parse_manifests(skill_dir)
+    if rows:
+        total = len(rows)
+        first_hand = sum(
+            1 for r in rows if r["bucket"] in ("verified_primary", "surrogate_primary")
+        )
+        verified = sum(1 for r in rows if r["bucket"] == "verified_primary")
+        surrogate = sum(1 for r in rows if r["bucket"] == "surrogate_primary")
+        ratio = first_hand / total
+        detail_breakdown = (
+            f" (verified_primary={verified}, surrogate_primary={surrogate})"
+            if surrogate else ""
+        )
+        if ratio >= 0.5 and total >= 5:
+            return "pass", f"manifest first-hand {first_hand}/{total} = {ratio*100:.1f}%{detail_breakdown}"
+        if total < 10:
+            return "partial", (
+                f"manifest first-hand {first_hand}/{total} = {ratio*100:.1f}%{detail_breakdown} — "
+                f"sample too small ({total} < 10) to fail definitively"
+            )
+        return "fail", (
+            f"manifest first-hand {first_hand}/{total} = {ratio*100:.1f}%{detail_breakdown} "
+            f"(< 50%, agent declared too many secondary/reference)"
+        )
+
+    # Legacy fallback: classify URLs in markdown body (no manifest declared)
+    rep = _scan_research_urls(skill_dir)
+    if rep is None or rep["total_urls"] == 0:
+        return "skipped", (
+            "no Source Manifest and no URLs in research/ — agent on named-only "
+            "sources; see prompts/research/_source_id_manifest.md to enable Q1"
+        )
+    primary = rep["counts"].get("verified_primary", 0)
+    total = rep["total_urls"]
+    ratio = rep["verified_primary_ratio"]
+    if ratio >= 0.5 and primary >= 5:
+        return "pass", f"URL-classified verified_primary {primary}/{total} = {ratio*100:.1f}% (legacy mode)"
+    if total < 10:
+        return "partial", (
+            f"URL-classified verified_primary {primary}/{total} = {ratio*100:.1f}% (legacy mode) — "
+            f"sample too small ({total} < 10) to fail definitively"
+        )
+    return "fail", (
+        f"URL-classified verified_primary {primary}/{total} = {ratio*100:.1f}% (legacy mode, < 50%)"
+    )
+
+
+def check_blacklist_violations(skill_dir: Path) -> tuple[str, str]:
+    """Item 14: zero blacklist URLs + manifest-vs-auto bucket consistency.
+
+    Catches three failure modes:
+      1. Agent declared `blacklisted` (intentional negative-test entries)
+      2. Agent declared anything else, but auto-classifier says blacklisted
+      3. Agent declared an UPGRADE (e.g. verified_primary on a secondary URL)
+         without using `surrogate_primary` + note (Q5 escape valve)
+
+    All three are quality gates — the manifest must not lie to us.
+    """
+    rows = source_manifest.parse_manifests(skill_dir)
+    if not rows:
+        # Legacy fallback
+        rep = _scan_research_urls(skill_dir)
+        if rep is None or rep["total_urls"] == 0:
+            return "skipped", "no URLs to check"
+        bl = rep["counts"].get("blacklisted", 0)
+        if bl == 0:
+            return "pass", f"0 blacklisted URLs across {rep['total_urls']} sources (legacy scan)"
+        examples = [u for u, info in rep["urls"].items() if info["bucket"] == "blacklisted"][:3]
+        return "fail", (
+            f"{bl} blacklisted URLs detected (legacy scan) — replace with verified primaries: "
+            + " ; ".join(examples)
+        )
+
+    # Run the unified consistency check
+    mismatches = source_manifest.check_bucket_consistency(rows)
+    violations = [m for m in mismatches if m.severity == "violation"]
+
+    bl_count = sum(1 for r in rows if r.bucket == "blacklisted")
+    bl_examples = [f"{r.source_id} {r.url}" for r in rows if r.bucket == "blacklisted"][:3]
+
+    # Iter 26 (codex 4-audit P0-1c): even with a manifest, scan all URLs in
+    # research markdown body — catches blacklisted URLs cited in prose that
+    # never got into the manifest (e.g. "see also https://zhihu.com/...").
+    body_blacklisted: list[str] = []
+    rep = _scan_research_urls(skill_dir)
+    if rep is not None:
+        manifest_urls = {r.url for r in rows}
+        for u, info in rep["urls"].items():
+            if u in manifest_urls:
+                continue  # already evaluated in manifest path
+            if info["bucket"] == "blacklisted":
+                body_blacklisted.append(u)
+
+    issues: list[str] = []
+    if bl_count > 0:
+        issues.append(f"{bl_count} declared blacklisted: " + " ; ".join(bl_examples))
+    if violations:
+        issues.append(
+            f"{len(violations)} manifest-bucket violations (declared > auto without surrogate)"
+        )
+        issues.extend(f"  • {v.row.source_id}: {v.reason[:90]}" for v in violations[:3])
+    if body_blacklisted:
+        issues.append(
+            f"{len(body_blacklisted)} blacklisted URLs in prose (not in manifest): "
+            + " ; ".join(body_blacklisted[:3])
+        )
+
+    if not issues:
+        total = len(rows)
+        return "pass", (
+            f"0 blacklisted, 0 manifest-bucket violations, "
+            f"0 prose-cited blacklisted URLs ({total} manifest entries)"
+        )
+    return "fail", " | ".join(issues)
+
+
+# Date patterns we accept as freshness markers in research notes.
+_DATE_RE = re.compile(
+    r"\b(?:collected|last_checked|last_updated|last_updated_date|last_published_date|"
+    r"last_episode_date|last_edition_date)\s*[:：]\s*(\d{4})-(\d{2})(?:-(\d{2}))?\b"
+)
+
+
+def check_claim_evidence_coverage(skill_dir: Path) -> tuple[str, str]:
+    """Item 16: each mental model has `evidence: [Sxxx, Syyy]` citing ≥ 2
+    distinct source_ids. Cross-source consensus rule (Q2).
+
+    Skipped when no Source Manifest is present in research/ (backwards compat
+    with iter ≤ 23 prototypes that only used [Primary]/[Secondary] tags).
+    """
+    research_dir = skill_dir / "references" / "research"
+    if not research_dir.exists():
+        return "skipped", "no research/ dir"
+
+    # Look for any Source Manifest table — sufficient signal that this skill
+    # uses the new source_ids convention.
+    has_manifest = False
+    for f in research_dir.glob("*.md"):
+        text = f.read_text(encoding="utf-8")
+        if re.search(r"^##\s+Source\s+Manifest", text, re.MULTILINE):
+            has_manifest = True
+            break
+    if not has_manifest:
+        return "skipped", (
+            "no `## Source Manifest` block in research/ — agent on legacy "
+            "[Primary]/[Secondary] tagging. Run new prompts/research/*.md "
+            "with `evidence: [Sxxx]` annotations to enable Q2."
+        )
+
+    # Inspect synthesis.md (Phase 2 output) — that's where mental models live
+    syn_path = skill_dir / "references" / "synthesis.md"
+    if not syn_path.exists():
+        return "skipped", "no synthesis.md to inspect"
+    text = syn_path.read_text(encoding="utf-8")
+    section = re.search(
+        r"##\s+(?:1\.\s+)?心智模型(.*?)(?=^##\s|\Z)",
+        text, re.MULTILINE | re.DOTALL,
+    )
+    if not section:
+        return "skipped", "no 心智模型 section"
+    body = section.group(1)
+    models = re.split(r"^###\s+1\.\d+\s+", body, flags=re.MULTILINE)[1:]
+    if not models:
+        return "skipped", "no model subsections"
+
+    insufficient: list[int] = []
+    # Accept both legacy `S001` and new `T01-S001` formats. Track-prefixed IDs
+    # are recommended (Q2 cross-track consensus); plain `S001` is deprecated
+    # but still parsed for backwards compat with iter ≤ 23.
+    sid_pattern = re.compile(r"^(?:T\d{2}-)?S\d+$")
+    # Iter 26: accept all markdown variations:
+    #   evidence: [...]                      bare
+    #   **evidence**: [...]                  bold word, colon outside
+    #   **evidence:** [...]                  bold word + colon together
+    #   evidence : [...]                     space before colon
+    evidence_re = re.compile(
+        r"\*{0,2}evidence\*{0,2}\s*[:：]\*{0,2}\s*\[\s*([^\]]+)\]",
+        re.IGNORECASE,
+    )
+    for i, m in enumerate(models):
+        sid_matches = evidence_re.findall(m)
+        ids: set[str] = set()
+        for tag_group in sid_matches:
+            for tok in re.split(r"[,，;；\s]+", tag_group):
+                tok = tok.strip()
+                if sid_pattern.match(tok):
+                    ids.add(tok)
+        if len(ids) < 2:
+            insufficient.append(i + 1)
+
+    if not insufficient:
+        return "pass", f"all {len(models)} models cite ≥ 2 distinct source_ids"
+    if len(insufficient) <= len(models) // 3:
+        return "partial", (
+            f"{len(insufficient)}/{len(models)} models lack `evidence: [≥2 Sxxx]` — "
+            f"models {insufficient[:3]} need cross-source citations"
+        )
+    return "fail", (
+        f"{len(insufficient)}/{len(models)} models lack `evidence: [≥2 Sxxx]` — "
+        f"consensus rule violated (Q2). Promote single-source claims to playbook "
+        f"or add a second source."
+    )
+
+
+def check_freshness_dates(skill_dir: Path) -> tuple[str, str]:
+    """Item 15: ≥ 70% of sources have a fresh (≤ 18 months old) date marker.
+
+    Two sources of date info, in priority order:
+      1. Manifest table column 4 (`| ... | YYYY-MM-DD |`) — preferred.
+         Each row counts as one entry.
+      2. Legacy: free-text `collected:` / `last_checked:` / `last_updated:`
+         markers within `### N` entries in 01-figures / 02-tools / 05-sources.
+
+    Stale dates (> 18 months) count as 0.5 instead of 1.0.
+    """
+    today = _dt.date.today()
+    eighteen_months_ago = today - _dt.timedelta(days=18 * 30)
+
+    rows = _parse_manifests(skill_dir)
+    if rows:
+        total = len(rows)
+        score = 0.0
+        stale = 0
+        undated = 0
+        for r in rows:
+            d_str = r["last_checked"]
+            if not d_str or d_str in ("—", "-", "n/a", "N/A"):
+                undated += 1
+                continue
+            try:
+                parts = d_str.split("-")
+                y, mo, d = int(parts[0]), int(parts[1]), int(parts[2]) if len(parts) > 2 else 1
+                date = _dt.date(y, mo, d)
+            except (ValueError, IndexError):
+                undated += 1
+                continue
+            if date >= eighteen_months_ago:
+                score += 1.0
+            else:
+                score += 0.5
+                stale += 1
+        coverage = score / total
+        if coverage >= 0.7:
+            msg = f"manifest: {int(coverage*100)}% entries fresh-dated"
+            if stale:
+                msg += f" ({stale} stale > 18 mo)"
+            if undated:
+                msg += f" ({undated} undated)"
+            return "pass", msg
+        if coverage >= 0.4:
+            return "partial", (
+                f"manifest: {int(coverage*100)}% entries dated (target ≥ 70%) — "
+                f"{undated} undated, {stale} stale"
+            )
+        return "fail", (
+            f"manifest: {int(coverage*100)}% entries fresh-dated — too many "
+            f"undated/stale rows; update flow can't run reliably"
+        )
+
+    # Legacy: free-text date markers in research entries
+    research_dir = skill_dir / "references" / "research"
+    if not research_dir.exists():
+        return "skipped", "no research/ dir"
+    track_files = ["01-figures.md", "02-tools.md", "05-sources.md"]
+    total_entries = 0
+    score = 0.0
+    stale_count = 0
+    for f in track_files:
+        p = research_dir / f
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        sections = re.split(r"^###\s+", text, flags=re.MULTILINE)[1:]
+        for s in sections:
+            total_entries += 1
+            dates: list[_dt.date] = []
+            for m in _DATE_RE.finditer(s):
+                try:
+                    y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3) or 1)
+                    dates.append(_dt.date(y, mo, d))
+                except ValueError:
+                    continue
+            if not dates:
+                continue
+            newest = max(dates)
+            if newest >= eighteen_months_ago:
+                score += 1.0
+            else:
+                score += 0.5
+                stale_count += 1
+    if total_entries == 0:
+        return "skipped", "no entries (### sections) found in 01/02/05"
+    coverage = score / total_entries
+    if coverage >= 0.7:
+        msg = f"legacy: {int(coverage*100)}% entries dated (free-text mode)"
+        if stale_count:
+            msg += f" ({stale_count} stale > 18 mo)"
+        return "pass", msg
+    if coverage >= 0.4:
+        return "partial", (
+            f"legacy: {int(coverage*100)}% entries dated (target ≥ 70%) — "
+            f"{total_entries - int(score)} of {total_entries} missing or stale"
+        )
+    return "fail", (
+        f"legacy: {int(coverage*100)}% entries dated — most lack collected:/last_checked:; "
+        f"update flow can't run reliably"
+    )
+
+
+# ---------------------------------------------------------------------------
 # Main rubric runner
 
 RUBRIC_ITEMS: list[tuple[str, str, str]] = [
@@ -457,10 +862,14 @@ RUBRIC_ITEMS: list[tuple[str, str, str]] = [
     ("6", "工作流入门-资深差异 ≥ 80%", "check_workflow_senior_differences"),
     ("7", "表达 DNA 辨识度", "check_voice_dna"),
     ("8", "诚实边界 ≥ 3 条", "check_honest_boundaries"),
-    ("9", "一手来源 ≥ 50%", "check_primary_ratio"),
+    ("9", "一手来源 ≥ 50% (自报)", "check_primary_ratio"),
     ("10", "Agentic Protocol 维度 (3-10)", "check_agentic_protocol_dims"),
     ("11", "时效性标注完整", "check_time_decay_marks"),
     ("12", "多 figure 共识门槛", "check_multi_figure_consensus"),
+    ("13", "URL 一手机械验证 ≥ 50%", "check_verified_primary_precision"),
+    ("14", "无黑名单 URL", "check_blacklist_violations"),
+    ("15", "freshness 标注 ≥ 70%", "check_freshness_dates"),
+    ("16", "claim → evidence ≥ 2 source_ids", "check_claim_evidence_coverage"),
 ]
 
 
@@ -482,6 +891,10 @@ def run_rubric(skill_dir: Path) -> dict[str, Any]:
         "check_agentic_protocol_dims": lambda: check_agentic_protocol_dims(skill_text, meta),
         "check_time_decay_marks": lambda: check_time_decay_marks(skill_text),
         "check_multi_figure_consensus": lambda: check_multi_figure_consensus(skill_dir),
+        "check_verified_primary_precision": lambda: check_verified_primary_precision(skill_dir),
+        "check_blacklist_violations": lambda: check_blacklist_violations(skill_dir),
+        "check_freshness_dates": lambda: check_freshness_dates(skill_dir),
+        "check_claim_evidence_coverage": lambda: check_claim_evidence_coverage(skill_dir),
     }
 
     results: list[dict[str, Any]] = []
