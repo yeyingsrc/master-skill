@@ -44,6 +44,8 @@
 
 ---
 
+> 🔥 &nbsp;**2026.05.05 — iter 26 质量工程升级** — Source Manifest 机械验证 / 16 项 quality_check rubric / 跨 manifest 一致性强制 / collectors + ingest + surrogate 全套 / 9 个端到端 prototype（新增**保险经纪人**）。
+>
 > 📢 &nbsp;**2026.05.02 发布** — 生成的 skill 不只能对话，还自带一套 bash 命令工具帮你执行。[Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
 >
 > 🔥 &nbsp;**2026.05.02 公开** — 第一个完整行业（LLM agent 基础设施）端到端跑通验证。
@@ -206,6 +208,31 @@ $ ./cli/decision/framework-select.sh --explain
 
 ---
 
+## 🔍 质量工程（v1.4 / iter 24-26）
+
+> 这一行的资深人不会信「agent 自报一手 86%」。机械验证才靠得住。
+
+每个生成的 skill **都通过 16 项机械 rubric** 检验，全部通过才算交付：
+
+| 类别 | 项 | 验证 |
+|------|-----|------|
+| 结构 | 1-4 | 心智模型 3-7 / 局限 100% 填 / Playbook 5-10 + 每条 ≥ 1 案例 |
+| 内容 | 5-8 | 工具三层覆盖 / 工作流入门-资深差异 ≥ 80% / 表达 DNA 辨识度 / 诚实边界 ≥ 3 条 |
+| 来源 | 9, 13-16 | **一手机械验证 ≥ 50%**（manifest URL 跑 source_verifier，不是 agent 自报）/ **0 黑名单 URL**（zh-CN: 知乎/公众号/百度百科/CSDN；en: G2/Capterra/PR-newswire）/ **manifest bucket 一致性强制**（agent 不能把 secondary 升级成 verified_primary，唯一例外是 surrogate_primary + note 字段说明类型）/ **freshness ≥ 70%**（每条 source 必须有 last_checked 日期）/ **claim → ≥ 2 source_id evidence**（每个 mental model 必须挂跨 source 共识引用） |
+| 维度 | 10-12 | Agentic Protocol 维度 3-10 / 时效性标注完整 / 多 figure 共识门槛 |
+
+辅助工具：
+
+- **`tools/research/source_manifest.py`** — 跨 quality_check / cold_detector / claim_verifier 共用的 manifest 一致性单一来源
+- **`tools/research/source_verifier.py`** — URL → 5 桶分类（verified_primary / surrogate_primary / secondary / reference / blacklisted / dead），含 zh-CN + en 黑白名单
+- **`tools/research/claim_verifier.py`** — SKILL.md 写完后反向搜每条 claim 是不是真在 research/ 里有 ≥ 2 文件共现 + 引用的 source_id 真存在 manifest 里
+- **`tools/research/cold_detector.py`** — 冷僻行业兜底：figures<5 / sources<5 / canon<8 / verified_primary<40% 任一触发 → 切换 deep mode（用 surrogate collectors + 二次 intake 用户内部素材，不是简单退场）
+- **`tools/research/refresh_sources.py`** — manifest URL 定期 HEAD-check，死链 / 域名漂移自动 flag
+
+**Source Manifest 规范**（[`prompts/research/_source_id_manifest.md`](prompts/research/_source_id_manifest.md)）：每个 research 文件最前面写 `## Source Manifest` 表（`T01-S001` 全局 source_id / url / bucket / last_checked / author / note），心智模型用 `evidence: [T01-S001, T05-S012]` 跨 track 引用。失效场景：`auto bucket = blacklisted/dead` 时 declared 必须等于 auto，**不允许 surrogate_primary 绕过黑名单**。
+
+---
+
 ## ⚡ 安装
 
 ```bash
@@ -262,11 +289,24 @@ git clone https://github.com/voidborne-d/master-skill.git <TARGET>
 ### 💻 命令行直接跑
 
 ```bash
-# 5 步端到端流程
+# 端到端流程
 python3 tools/research/merge_research.py merge --skill-dir ./prototype/   # 调研评审
+python3 tools/research/cold_detector.py --skill-dir ./prototype --stage wave1   # 冷僻检测（wave1 → 全跑）
 python3 tools/skill_writer.py create --skill-dir ./output ...             # 生成 skill
-python3 tools/research/quality_check.py check --skill-dir ./output        # 质量检查
+python3 tools/research/quality_check.py check --skill-dir ./output        # 16 项 mechanical rubric
+python3 tools/research/claim_verifier.py --skill-dir ./output             # SKILL.md claim 反向核对
+python3 tools/research/source_manifest.py --skill-dir ./output --check-consistency  # manifest 一致性
 python3 tools/install.py install --host claude --source ./output          # 安装到宿主
+
+# Wave 0 collectors（用前先抓 seed，撒大网更准）
+python3 tools/collectors/github_topics.py --topic llm-agent --limit 30 --output seeds/repos.jsonl
+python3 tools/collectors/arxiv_collect.py --query "cat:cs.AI" --max 30 --output seeds/papers.jsonl
+python3 tools/collectors/podcast_rss.py --apple-id 1674008350 --max 20 --output seeds/episodes.jsonl
+python3 tools/collectors/regulator_collect.py --locale en --query "insurance" --output seeds/regulator.jsonl
+# 冷僻行业 surrogate seeds（agent 拿到后 WebFetch 填实）
+python3 tools/collectors/association_collect.py --locale zh-CN --industry "保险经纪"
+python3 tools/collectors/jd_collect.py --locale zh-CN --role "保险经纪人"
+python3 tools/collectors/syllabus_collect.py --locale zh-CN --industry "保险精算"
 
 # 增量刷新（v1.1）
 python3 tools/update_skill.py plan --skill-dir <已有的 skill>           # 1. 看哪些模块该刷
@@ -292,8 +332,12 @@ python3 tools/update_skill.py finalize --skill-dir <skill>              # 4. 完
 | ✅ **恋爱高手** | 软技能 | 中文 | [love-coach-master/](prototypes/love-coach-master/) |
 | ✅ **足踝外科** | 医疗（强监管） | 中文 | [foot-ankle-surgery-master/](prototypes/foot-ankle-surgery-master/) |
 | ✅ **法律执业**（中国法） | 法律（强监管） | 中文 | [china-law-master/](prototypes/china-law-master/) |
+| 🆕 **保险经纪人 / 代理人** | 金融（强监管） | 中文 | [insurance-broker-cn-master/](prototypes/insurance-broker-cn-master/) |
 
-8 个行业横切技术、商业、内容运营、软技能、医疗、法律 — 大师.skill 框架对各类行业都跑得通。
+9 个行业横切技术 / 商业 / 内容运营 / 软技能 / 医疗 / 法律 / 金融 — 大师.skill 框架对各类行业都跑得通。
+
+**最新 prototype（保险经纪人）的产物指标**：73 个 manifest URL（67 first-hand = 91.8%，0 黑名单，0 一致性违规）/ 5 心智模型全部跨 ≥ 2 source_id 引用 / 8 playbook 全 supported / 3 sub-skills（叶云燕 平安系 + 江立辉 明亚独立经纪 + 谷主 高净值打假）/ 12 段对话样本库 4 register / 7 个 cli/workflow shell 脚本。
+quality_check 16 项: 14 pass / 1 partial (voice_confidence: medium, 因素材是转述非原话) / 0 fail. claim_verifier: 13 supported / 0 weak / 0 unsupported.
 
 调研过程**完全透明**。每个样本都附完整的六路调研笔记 + 蒸馏文档，可以追溯每条心智模型、每条决策规则是从哪几个来源出来的。
 
@@ -338,26 +382,48 @@ python3 tools/update_skill.py finalize --skill-dir <skill>              # 4. 完
 master-skill/
 ├── SKILL.md                          # 大师本体（核心工作流规约）
 ├── prompts/                          # 提示词系统
-│   ├── intake.md                     #   行业澄清
-│   ├── research/01-06.md             #   六路调研提示词
-│   ├── synthesis.md                  #   蒸馏指引
-│   ├── quality_check.md              #   质量检查标准
-│   └── sub-skill-figures.md          #   调女娲的子 agent 模板
-├── tools/                            # 7 个 Python 工具
-│   ├── skill_writer.py               #   生成 skill 目录
-│   ├── cli_writer.py                 #   生成 bash 工具子目录（v0.6）
+│   ├── intake.md                     #   行业澄清 + 冷僻 deep-mode 二次 intake
+│   ├── synthesis.md                  #   蒸馏指引（含 Step 5b 对话样本库）
+│   ├── quality_check.md              #   16 项 mechanical rubric
+│   ├── sub-skill-figures.md          #   调女娲的子 agent 模板
+│   └── research/
+│       ├── _source_id_manifest.md    #   T01-S001 全局 source_id 规范 + Surrogate Sources Policy
+│       └── 01-06.md                  #   六路调研提示词（含 voice_samples 字段）
+├── tools/                            # 18+ Python 工具
+│   ├── skill_writer.py               #   生成 skill 目录（_safe_copytree + manifest 驱动 source_count）
+│   ├── cli_writer.py                 #   生成 bash 工具子目录（兼容 W?N workflow 格式）
 │   ├── update_skill.py               #   增量刷新（v1.1）
 │   ├── install.py                    #   四宿主安装器
-│   ├── research/merge_research.py    #   调研评审聚合
-│   ├── research/quality_check.py     #   自动质量检查
-│   └── transcribe/                   #   字幕下载 + 文本处理
+│   ├── self_test.py                  #   每个 prototype + 工具 + iter 26 边界 fixture 全跑
+│   ├── research/                     # iter 24-26 质量工程
+│   │   ├── source_manifest.py        #   manifest 解析 + bucket 一致性强制
+│   │   ├── source_verifier.py        #   URL → 5 桶分类（zh-CN + en 黑白名单）
+│   │   ├── claim_verifier.py         #   SKILL.md claim 反向核对 + evidence_id 验证
+│   │   ├── cold_detector.py          #   wave1 / full 阶段冷僻检测 + deep-mode 兜底
+│   │   ├── refresh_sources.py        #   manifest URL HEAD-check
+│   │   ├── merge_research.py         #   调研评审聚合
+│   │   └── quality_check.py          #   16 项 rubric（manifest 优先 + voice_confidence）
+│   ├── collectors/                   # 8 个 wave 0 seed collector
+│   │   ├── github_topics.py / arxiv_collect.py / rss_collect.py / podcast_rss.py
+│   │   └── regulator / association / jd / syllabus_collect.py（surrogate 4 件）
+│   ├── ingest/                       # 文档 ingest（lazy install）
+│   │   ├── pdf_to_chunks.py / epub_to_chunks.py / pptx_to_chunks.py
+│   │   └── _lazy.py                  #   AUTO_YES + 非 tty 拒绝
+│   └── transcribe/                   # 转录三件套
+│       ├── youtube.sh / local_video.sh
+│       ├── srt_to_transcript.py      #   --jsonl 结构化输出 + speaker label 抽取
+│       ├── whisper_transcribe.py     #   --diarize via pyannote (lazy install + tmp + atomic)
+│       ├── transcript_scorer.py      #   actionable_score + length normalize + opener hard-zero
+│       └── extract_mentions.py       #   heuristic person/tool/book/company NER
 ├── references/
 │   ├── skill-template.md             #   生成产物的标准结构
-│   ├── extraction-framework.md       #   蒸馏方法论（想深入看这个）
+│   ├── extraction-framework.md       #   蒸馏方法论（三重验证 / 衰减表 / 流派分歧）
 │   └── cli-spec.md                   #   bash 工具的设计文档
 └── prototypes/
+    ├── _fixtures/blacklist-test.md   #   self_test 黑名单 fixture
     ├── llm-agent-infra-master/       #   完整样本（v1.0）
-    └── cross-border-ecommerce-master/  #   中文精简样本（v1.1）
+    ├── cross-border-ecommerce-master/  # 中文精简样本（v1.1）
+    └── 7 个其他 prototype            #   小红书 / 短视频 / SEO / 恋爱 / 足踝 / 法律 / 保险
 ```
 
 ---
@@ -390,7 +456,8 @@ master-skill/
 | v1.1 | 调用别的 skill + 增量刷新 + 中文样本 | ✅ |
 | v1.2 | 决策树主题自动学 + 定时刷新 + 5 个行业样本（含小红书 / SEO / 恋爱） | ✅ |
 | v1.3 | 短视频投流 / 足踝外科 / 法律 = 8 个行业横切覆盖 | ✅ |
-| v2.x | PyPI 打包 / GitHub Action 自动更新 / 多语言文档 | 🔲 |
+| v1.4 (iter 24-26) | **质量工程升级** — Source Manifest 全局 source_id / 16 项机械 rubric / 跨 manifest 一致性强制 / 4 个 surrogate collector（regulator/association/jd/syllabus）/ 9 个端到端 prototype（新增**保险经纪人**） | ✅ |
+| v2.x | PyPI 打包 / GitHub Action 自动更新 / 多语言文档 / 工具 marketplace | 🔲 |
 
 详见 [ROADMAP.md](ROADMAP.md)。
 
