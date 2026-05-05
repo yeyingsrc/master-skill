@@ -44,7 +44,7 @@
 
 ---
 
-> 🔥 &nbsp;**2026.05.05 — iter 26 质量工程升级** — Source Manifest 机械验证 / 16 项 quality_check rubric / 跨 manifest 一致性强制 / collectors + ingest + surrogate 全套 / 9 个端到端 prototype（新增**保险经纪人**）。
+> 🔥 &nbsp;**2026.05.05 大升级 v1.4** — 以前 agent 说「我用了 86% 一手来源」全靠自己打分，现在每条来源自动跑 URL 验真、16 道质量检验、黑名单（知乎 / 公众号 / G2 等）强拦截，**蒸不出垃圾**。同时多了第 9 个完整行业 — **保险经纪人 / 代理人**。
 >
 > 📢 &nbsp;**2026.05.02 发布** — 生成的 skill 不只能对话，还自带一套 bash 命令工具帮你执行。[Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
 >
