@@ -44,7 +44,9 @@ Drop into any AI agent — from that moment on,<br>
 
 ---
 
-> 🔥 &nbsp;**2026.05.05 — v1.4 quality upgrade** — before, when an agent claimed "86% of my sources are first-hand," it was self-grading on the honor system. Now every URL is auto-classified, every skill must clear 16 quality checks, and known content farms (Zhihu / WeChat blogs / G2 / Capterra etc.) are hard-blocked at intake. **You can't distill garbage anymore.** Plus a new 9th end-to-end industry — **insurance brokers / agents (China)**.
+> 🆕 &nbsp;**2026.05.08 — 10th industry: Bazi metaphysics / Chinese fortune-telling** — the first **semi-sensitive + school-divergent** industry distilled. Five schools (子平派 Ziping / 盲派 Mangpai / 五术派 Wushu / 新派 Newschool / 学院派 Academic) give different readings of the same chart, and the skill **preserves disagreement instead of averaging**. The 2026-01-01 amendment to China's Public Security Administration Punishment Law (Article 27, business-side compliance) is baked into the decision rules. 3 cross-school person sub-skills shipped: **段建业** (mainland Mangpai) + **倪海厦** (Hong Kong/Taiwan five-arts) + **梁湘润** (子平 academic-track).
+>
+> 🔥 &nbsp;**2026.05.05 — v1.4 quality upgrade** — before, when an agent claimed "86% of my sources are first-hand," it was self-grading on the honor system. Now every URL is auto-classified, every skill must clear 16 quality checks, and known content farms (Zhihu / WeChat blogs / G2 / Capterra etc.) are hard-blocked at intake. **You can't distill garbage anymore.** Plus a 9th end-to-end industry — **insurance brokers / agents (China)**.
 >
 > 📢 &nbsp;**2026.05.02 release** — generated skills don't just talk; they ship with a bash command suite. [Release notes →](https://github.com/voidborne-d/master-skill/releases/tag/v1.1)
 >
@@ -313,20 +315,31 @@ Every one is end-to-end runnable, with full research data + generated SKILL.md +
 | ✅ **Love coach** | Soft skills | Chinese | [love-coach-master/](prototypes/love-coach-master/) |
 | ✅ **Foot-and-ankle surgery** | Medical (regulated) | Chinese | [foot-ankle-surgery-master/](prototypes/foot-ankle-surgery-master/) |
 | ✅ **Chinese law practice** | Legal (regulated) | Chinese | [china-law-master/](prototypes/china-law-master/) |
-| 🆕 **Insurance broker / agent** | Finance (regulated) | Chinese | [insurance-broker-cn-master/](prototypes/insurance-broker-cn-master/) |
+| ✅ **Insurance broker / agent** | Finance (regulated) | Chinese | [insurance-broker-cn-master/](prototypes/insurance-broker-cn-master/) |
+| 🆕 **Bazi metaphysics / fortune-telling** | Traditional culture (semi-sensitive) | Chinese | [bazi-metaphysics-master/](prototypes/bazi-metaphysics-master/) |
 
-9 industries cross-cutting technical / commercial / content ops / soft skills / medical / legal / finance — master-skill works across all of them.
+10 industries cross-cutting technical / commercial / content ops / soft skills / medical / legal / finance / traditional culture — master-skill handles even the case where five schools give different readings of the same chart and the skill must preserve the disagreement instead of averaging.
 
-**What's inside the latest "insurance broker" deliverable**:
+**What's inside the latest "Bazi metaphysics" deliverable**:
 
-- 73 sources, 91.8% first-hand, 0 blacklisted
-- 5 core mental models (every one backed by ≥ 2 independent sources)
-- 8 decision rules (every one traceable back to the original research notes)
-- 3 person sub-skills (**Ye Yunyan** Ping An's sales legend + **Jiang Lihui** the Mingya independent-broker school + **Guzhu Lu Zhiyuan** the high-net-worth fraud-buster — three perspectives that challenge each other, not averaged)
-- 12 real-industry dialogue samples (across 4 registers: client-facing / peer / regulator / counter-example)
-- 7 ready-to-run bash scripts (5-step client cultivation / policy review / health disclosure + underwriting / interest-rate-switch decision / claims walkthrough / renewal management / peer-compliance boundaries)
+- 125 sources, 72.8% first-hand, 0 blacklisted
+- 6 core mental models (**格局 + 用神** Pattern + Useful God / **调候 寒暖燥湿** Climate balancing / **象法 vs 理法** Image-method vs reasoning-method / **五术整合** Five-arts integration / **评注信任度判断** Commentary-trust meta-framework / **time-decay tiering**) — cross-school coverage, no school favored
+- 10 decision rules, including a dedicated rule for the 2026-01-01 China Public Security Administration Punishment Law amendment governing fortune-telling commerce
+- 3 cross-school person sub-skills:
+  - **段建业 Duan Jianye** (mainland Mangpai) — "象法 image-method" anchored across 6 sections
+  - **倪海厦 Ni Haixia** (Hong Kong/Taiwan five-arts) — "five arts as one + medicine and destiny share a root"
+  - **梁湘润 Liang Xiangrun** (HK/TW Ziping academic-track) — "commentary-trust meta-framework + 3-stage learning curriculum"
+- 12 real-industry dialogue samples (4 registers: peer / learner-asking / chart-subject consultation / counter-example)
+- 4 one-shot bash decision scripts + 1 agentic research-protocol script
+- A complete **school-disagreement matrix** — 5 schools × 6 dimensions, **disagreement preserved, not averaged**
 
-Plus a PASS-rated quality report (16 items → 14 perfect + 1 partial + 0 fails).
+All four QC checks PASS:
+- mechanical rubric: 13 perfect + 2 partial + 0 fail (16 items)
+- claim verifier: 16 supported / 0 weak / 0 unsupported — every conclusion traceable to source-note co-occurrence
+- source manifest: 0 violation
+- cross-prototype regression: 0 issue across all 10 skills
+
+**Sensitivity note**: Bazi practice is a semi-sensitive industry under mainland Chinese law (Article 27 of the Public Security Administration Punishment Law, 2026-01-01 amendment). What this skill distills is **the cognitive system + school disagreements + classical-text reading paths** — not sales scripts or pricing templates. Six explicit honest-boundary clauses spell out "does not replace the chart subject's own decision / psychological counseling / medical advice / business strategy" plus the legal differences between mainland China and HK/Taiwan/overseas Chinese regions.
 
 The research process is **fully transparent** — every prototype includes complete six-track research notes + the synthesis document, every mental model and decision rule traceable to its sources.
 
@@ -439,6 +452,7 @@ master-skill/
 | v1.2 | Auto-clustered decision-tree topics + scheduled refresh + 5 industry samples (incl. Xiaohongshu / SEO / love coach) | ✅ |
 | v1.3 | Short-video paid ads / foot-and-ankle surgery / law = 8 industries cross-cutting coverage | ✅ |
 | v1.4 | **Quality guardrails + 9th industry** — auto-run 16 quality checks + URL verification + blacklist hard-block + cold-niche fallback (auto-pull from associations / regulators / job descs / course syllabi) + new **insurance broker / agent** sample | ✅ |
+| v1.5 | **10th industry — Bazi metaphysics / fortune-telling** — first semi-sensitive + school-divergent industry; preserves disagreement instead of averaging when 5 schools give different readings; source_verifier extended with 4 zh-CN classical archives (ctext / guoxuedashi / wikisource / archive.org), benefiting all metaphysics + TCM + history canon work going forward | ✅ |
 | v2.x | PyPI packaging / GitHub Action auto-update / multi-language docs / tool marketplace | 🔲 |
 
 See [ROADMAP.md](ROADMAP.md).

@@ -86,6 +86,40 @@
 
 8 个 prototype 横切覆盖技术 / 商业 / 内容运营 / 软技能 / 医疗 / 法律。
 
+## v1.4 — 质量工程升级 + 第 9 个行业 ✅ (2026-05-05)
+
+iter 24-26 集中 14 项 Q1-Q6 改造, 把 "agent 自报一手率" 替换为机械验证.
+
+- [x] Source Manifest convention (T01-S001 全局 source_id + URL 5 桶分类)
+- [x] 16 项 quality_check rubric (含 URL 验真 / 黑名单 / 一致性 / claim 反查)
+- [x] source_verifier (zh-CN + en 黑白名单 / blacklist hard-block)
+- [x] source_manifest 一致性 gate (declared > auto without surrogate note → violation)
+- [x] claim_verifier (反查 SKILL.md 每条结论是否在原文有支撑)
+- [x] cold_detector --stage wave1|full (行业冷僻自动兜底)
+- [x] 8 个 collectors (github / arxiv / RSS / podcast + 4 surrogate: regulator / association / JD / syllabus)
+- [x] 4 个 ingest 工具 (PDF / EPUB / PPTX → JSONL chunks)
+- [x] transcribe 升级 (faster-whisper + pyannote diarize + transcript_scorer + extract_mentions)
+- [x] skill_writer atomic write + bounded backup prune
+- [x] 4 轮 codex 独立审计每轮 fix
+- [x] 第 9 个行业 prototype: insurance-broker-cn-master (73 sources / 91.8% 一手 / 0 黑名单 / 16 项 14 满分 1 部分 0 失败 PASS)
+- [x] README 重写 — 删除中英混杂 + 开发术语, "蒸不出垃圾" banner
+
+## v1.5 — 第 10 个行业 + 学派分歧蒸馏 ✅ (2026-05-08)
+
+第一个半敏感 + 学派分歧大行业蒸出来, 验证大师.skill 框架对"同盘多派给不同结论"行业的处理能力.
+
+- [x] bazi-metaphysics-master prototype (八字命理 + 玄学算命)
+  - 6 轨调研 1183 行, 125 manifest URLs, 72.8% 一手, 0 黑名单
+  - synthesis 379 行, 6 心智模型 + 10 决策规则 + 12 对话样本 (4 register) + 5 流派矩阵
+  - SKILL.md 426 行 + cli/ (1 protocol + 4 decision)
+  - 3 sub-skills 跨派对位 (段建业盲派 530 / 倪海厦五术 463 / 梁湘润子平学科化 373)
+  - 4 项质检全部 PASS (rubric / claim / manifest / self_test)
+- [x] 学派分歧保留, 不平均化 — 子平 / 盲派 / 五术 / 新派 / 学院派 5 派 6 维度对照矩阵
+- [x] 大陆法律语境 — 治安管理处罚法 27 条 2026-01-01 新版 W8 商业合规决策树
+- [x] source_verifier 加 4 个 zh-CN 古籍 archive 主源 (ctext.org / guoxuedashi.net / zh.wikisource.org / archive.org) — 永久工具改进, 命理 + 中医 + 历史 canon 通用
+- [x] README_en.md 同步至 v1.4 / v1.5
+- [x] /tmp/normalize_headers.py + /tmp/fix_manifest.py 临时 helper (cold_detector 期望 ### 头 / manifest bucket auto-fix)
+
 ## v1.x — 计划中
 
 - [ ] Phase 1 子 agent 主动用 brave-search / agent-reach
