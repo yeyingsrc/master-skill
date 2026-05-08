@@ -140,6 +140,14 @@ PRIMARY_DOMAINS_EXACT: set[str] = {
     "www.bis.org",       # Bank for International Settlements
     "www.imf.org",
     "www.worldbank.org",
+    # Iter 27: Chinese classics digital archives — canonical text ground truth
+    # for any zh-CN classics-heavy industry (bazi-metaphysics, china-law historical
+    # canon, traditional Chinese medicine, etc.).
+    "ctext.org",                  # Chinese Text Project — 古籍数字化主源
+    "www.guoxuedashi.net",        # 国学大师 — 综合古籍数据库
+    "zh.wikisource.org",          # 中文维基文库 — 公共领域古籍
+    "archive.org",                # Internet Archive — 民国整理本 PDF / 长内容档案
+    "www.archive.org",
 }
 
 # Suffix patterns for primary (TLD or sub-domain end-match).
