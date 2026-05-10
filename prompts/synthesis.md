@@ -2,6 +2,30 @@
 
 > Phase 2 的执行剧本。SKILL.md Phase 2 调用本文件。
 
+## 跨步骤硬规矩 (iter 27 — codex 审计后强化)
+
+### A. 数字 / deadline / 拒审率 必带来源 + 日期 + 置信度
+
+任何 `%` / 具体数字 / `YYYY-MM-DD` deadline / 价格 / 拒审率 在 synthesis 出现, 必满足以下之一:
+
+- (a) 紧跟 source_id (e.g. `12% 拒审 (T03-S017)`)
+- (b) 标注业内估计来源 (e.g. `拒绝率 20-40% 业内估计 / Apple 不公开`)
+- (c) 引官方原文 URL (e.g. `Apple 公开 90% < 24h, developer.apple.com/app-store/review/`)
+- (d) 注明置信度 (e.g. `需 self-verify / 第三方数据观察 / Capgo 数据 / 业内估`)
+
+**反模式**: 编 specific 数字 (e.g. `98% < 48h` / `40% reject` / `800+ 备案` / `$299 org`) 没源 = hallucination risk. codex 一审就抓 — 见 ios-app-launch prototype 2026-05-10 codex 审计.
+
+### B. Agentic Protocol §9 维度互斥性
+
+§9 的 5-7 个研究维度**必互斥, 不 overlap**. 反模式:
+- "学派语境" + "学派分歧识别" 重复 (前者识别用户在哪派, 后者 6 派对照 — 都涉及派别)
+- "区域语境" + "国内合规派" 重叠 (区域 = CN 自动触发国内合规)
+- "stage 边界" + "时效新鲜度" 边界模糊 (老 stage 不一定意味老攻略)
+
+**自检**: 5 维度能否独立产出**不同**结论? 若 A 结论 = B 结论, 合并. 不要为凑数硬切.
+
+---
+
 ## 你的任务
 
 读 6 轨 research notes (`{skill_dir}/references/research/01-06.md`)，按 [extraction-framework.md](../references/extraction-framework.md) 的方法论提炼出**行业 Master OS** 的 9 个组件，写到 `{skill_dir}/references/synthesis.md`，作为 Phase 3 的输入。
@@ -222,6 +246,7 @@
 - 信源失衡（中英文 / 一手二手）
 - 行业是否闭源 / 公开材料受限
 - 法规 / 标准近期变化的预期影响（喂从 Track 06）
+- **数字 / 拒审率 / deadline 必带来源 + 置信度** (iter 27 强制, codex 审计后加): synthesis 里所有 `%` / `$` / 具体数字 / 法律日期都需 source_id 或 caveat (业内估计 / Apple 不公开 / 第三方观察 等). 任何 `X% reject` / `Y deadline` / `$Z price` 没标 source = hallucination risk
 
 **至少 3 条具体局限**。「不能替代真人」太宽泛，不算合格。
 
@@ -240,6 +265,8 @@
 - ❌ 「搜索相关信息」(没具体到搜索动作)
 - ❌ 跨行业相同的研究维度 (失去 Agentic Protocol 的核心价值 — 这一行的特定研究方式)
 - ❌ 维度数量超过心智模型数 ×2 (Agentic Protocol 应该精炼，不是穷举)
+- ❌ 维度 overlap (e.g. "学派语境" + "学派分歧识别" 重复 — 都涉及派别). **自检见跨步骤硬规矩 §B**: 5 维度能否独立产出不同结论? 若 A 结论 = B 结论, 合并
+- ❌ 维度推不出独立结论 (A 维度结论 = B 维度结论 → 应该合并, 不要硬切)
 
 **CLI 化暗示 (v0.6+)**: Phase 3 的 `cli_writer.py` 会把 Section 9 的所有维度直接编排进 `cli/protocol/agentic.sh` 交互脚本（每个维度一个分节问询用户）。所以「看什么 / 在哪看 / 输出格式」三段是脚本必填字段，不可省略。**输出格式越具体，user 拿到的报告就越能用**（不要写成「相关信息」「合理结论」这类空话）。
 

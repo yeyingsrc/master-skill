@@ -745,6 +745,80 @@ def check_claim_evidence_coverage(skill_dir: Path) -> tuple[str, str]:
     )
 
 
+def check_anchor_citations(skill_text: str) -> tuple[str, str]:
+    """Item 17 (iter 27 — codex audit follow-up 2026-05-10): every concrete
+    number / percentage / date / "N+ 备案" claim in SKILL.md should be
+    accompanied by a source_id (T0X-S\\d+) OR a confidence caveat keyword.
+
+    Surfaces hallucinated numbers like "98% < 48h", "40% reject", "$299 org",
+    "800+ 备案" that have no traceable source — the codex audit pattern that
+    bit ios-app-launch on 2026-05-10.
+
+    Heuristic: for each number cluster matching one of the high-risk patterns,
+    look in the surrounding ±200 chars for either:
+      - source_id pattern T0\\d-S\\d+
+      - URL (developer.apple.com / .gov.cn / similar)
+      - caveat keyword (业内估计 / Apple 不公开 / self-verify / 第三方 /
+        non-official / non-Apple / Capgo / 估计 / 业内观察 / Apple 公开 /
+        约 / 大约 / approximately / range)
+
+    Skips well-known non-empirical numbers (3-7 心智模型 / 5-10 Playbook 等
+    rubric范围 mention) by checking for "(in [N, M])" pattern.
+    """
+    # High-risk patterns: percentages, prices, specific large numbers, ISO dates
+    RISKY_PATTERNS = [
+        (r"\b\d{1,3}(?:\.\d+)?%", "percentage"),
+        (r"\$\d{2,4}(?:[,.]\d{3})*(?:/\s*(?:yr|year|month|m|annum|day))?", "price"),
+        (r"\b\d{2,5}\+?\s*(?:备案|登记|sources|apps|customers|users|签|学员|启动|installs)", "count"),
+    ]
+    CAVEAT_KEYWORDS = (
+        "业内估计", "业内观察", "业内 range", "业内估", "apple 不公开", "self-verify",
+        "第三方", "non-official", "non-apple", "capgo", "估计", "业内",
+        "official", "公开", "developer.apple.com", "estimate", "estimated",
+        "approximately", "大约", "约 ", "range", ".gov.cn", ".gov", "需 verify",
+        "需自查", "self verify", "需验证", "data.ai", "sensortower", "revenuecat",
+    )
+    SOURCE_ID_RE = re.compile(r"T\d{2}-S\d+")
+
+    flagged: list[tuple[str, str]] = []
+    total = 0
+    for pat, kind in RISKY_PATTERNS:
+        for m in re.finditer(pat, skill_text, re.IGNORECASE):
+            # Skip rubric-range mentions like "(in [3, 7])"
+            ctx_short = skill_text[max(0, m.start() - 30):m.end() + 30]
+            if re.search(r"\(in\s*\[\d", ctx_short):
+                continue
+            total += 1
+            window_start = max(0, m.start() - 200)
+            window_end = min(len(skill_text), m.end() + 200)
+            window = skill_text[window_start:window_end]
+            window_low = window.lower()
+            has_source = bool(SOURCE_ID_RE.search(window))
+            has_caveat = any(kw.lower() in window_low for kw in CAVEAT_KEYWORDS)
+            if not (has_source or has_caveat):
+                flagged.append((m.group(0), kind))
+
+    if total == 0:
+        return "skipped", "no concrete numbers / dates / prices found"
+    pct_safe = (total - len(flagged)) / total
+    examples = ", ".join(f'"{x[0]}"({x[1]})' for x in flagged[:3])
+    if pct_safe >= 0.85:
+        return "pass", (
+            f"{total - len(flagged)}/{total} numbers cited (source_id or caveat) "
+            f"= {pct_safe*100:.0f}%"
+        )
+    if pct_safe >= 0.70:
+        return "partial", (
+            f"{len(flagged)}/{total} numbers without source / caveat "
+            f"({pct_safe*100:.0f}% cited) — examples: {examples}"
+        )
+    return "fail", (
+        f"{len(flagged)}/{total} numbers lack source / caveat "
+        f"({pct_safe*100:.0f}% cited) — possible hallucination. examples: {examples}. "
+        f"每个具体 % / $ / 备案数 / 法律日期需 source_id 或 caveat (业内估计 / Apple 不公开 / 等)"
+    )
+
+
 def check_freshness_dates(skill_dir: Path) -> tuple[str, str]:
     """Item 15: ≥ 70% of sources have a fresh (≤ 18 months old) date marker.
 
@@ -870,6 +944,7 @@ RUBRIC_ITEMS: list[tuple[str, str, str]] = [
     ("14", "无黑名单 URL", "check_blacklist_violations"),
     ("15", "freshness 标注 ≥ 70%", "check_freshness_dates"),
     ("16", "claim → evidence ≥ 2 source_ids", "check_claim_evidence_coverage"),
+    ("17", "数字 / deadline / 拒审率 必带来源 + 置信度", "check_anchor_citations"),
 ]
 
 
@@ -895,6 +970,7 @@ def run_rubric(skill_dir: Path) -> dict[str, Any]:
         "check_blacklist_violations": lambda: check_blacklist_violations(skill_dir),
         "check_freshness_dates": lambda: check_freshness_dates(skill_dir),
         "check_claim_evidence_coverage": lambda: check_claim_evidence_coverage(skill_dir),
+        "check_anchor_citations": lambda: check_anchor_citations(skill_text),
     }
 
     results: list[dict[str, Any]] = []
