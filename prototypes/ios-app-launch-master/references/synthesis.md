@@ -187,7 +187,7 @@
   - 9 月 iOS major: 提前 30 天兼容性 test + Privacy / nutrition labels review
   - 月度: ASC release notes 邮件 + ARG diff watch
   - 季度: 自家 app metrics review (crash / rating / keyword rank)
-  - 强制 deadline: ATT (2021-04) / Privacy Manifest (2024-05-01) / Anti-steering (2024-01) / DMA (2024-03-07) / iOS 26 SDK (2026-04-28) / EU CTF (2026-01) / Age Rating 5 档 (2026-01-31)
+  - 强制 deadline: ATT (2021-04) / Privacy Manifest (2024-05-01) / Anti-steering (2024-01) / DMA (2024-03-07) / iOS 26 SDK (2026-04-28) / EU CTC (2026-01) / Age Rating 5 档 (2026-01-31)
 - **关键**: 12 月不更新 = 政策变化 → app 下架 (反例)
 - **学派对照**: Apple 派 (deadline 强 push) / 大厂派 (有 release schedule) / Indie 派 (常忽视, 反例) / 国内合规 (备案续期)
 - **案例**: 2024-05-01 Privacy Manifest 强制后 12% Q1 2025 拒审是 indie 没 update 第三方 SDK
@@ -231,13 +231,13 @@
 
 **Trigger**: 决定做 iOS app + Apple Developer 注册. **Output**: ASC = "Ready for Sale" + 真可下载 link.
 
-1. **Apple Developer 注册** ($99/yr 个人 / $299 org, 1-3 工作日 D-U-N-S 验证). 跳 → 无 ship 资格
+1. **Apple Developer 注册** ($99/yr 个人 / 公司主体, 1-3 工作日 D-U-N-S 验证. 注: $299/yr Apple Developer Enterprise Program 是给内部分发的, **不能上 App Store**, 别混淆). 跳 → 无 ship 资格
 2. **Xcode 项目配置**: Bundle ID + Provisioning Profile + Distribution Certificate + Capabilities. **iOS 26 SDK + Xcode 26 强制 2026-04-28**
-3. **ASC App 创建 + Metadata**: name (30 字) + subtitle (30) + keyword (100) + description + nutrition labels + age rating (**2026-01-31 起新 5 档 4+/9+/13+/16+/18+ 强制**) + Pricing. 跳任一字段 → metadata reject (40% 拒审是 2.1 incomplete information)
-4. **Privacy Manifest + 三方 SDK**: 2024-05-01 强制 + 2025-02-12 起 SDK signed 强制. **Q1 2025 Apple 12% 拒审是 Privacy Manifest 违规**. 跳 → ITMS-91061/91065 直接拒
+3. **ASC App 创建 + Metadata**: name (30 字) + subtitle (30) + keyword (100) + description + nutrition labels + age rating (**2026-01-31 起新 5 档 4+/9+/13+/16+/18+ 强制**) + Pricing. 跳任一字段 → metadata reject. ARG 2.1 (Information Needed / 资料不完整) 是常见 reject 类目之一 (Apple 不公开具体百分比, 业内观察是 metadata 不完整 ≥ 隐私披露 不一致)
+4. **Privacy Manifest + 三方 SDK**: 2024-05-01 强制 + 2025-02-12 起 SDK signed 强制. **Q1 2025 Capgo 第三方数据观察 ~12% 拒审是 Privacy Manifest 违规** (非 Apple 官方公开, 业内估计). 跳 → ITMS-91061/91065 直接拒
 5. **Archive & Upload**: Xcode Organizer / Fastlane (`gym` + `pilot`). 跳 Validate App → 浪费 1 review cycle
 6. **TestFlight Beta**: 100 internal 无审 / 10000 external **第一版必走 Beta App Review 24-48h**. 跳 → 直接 App Review 踩 crash 1-2 周回炉
-7. **App Review 提审**: **2026 平均 90% 24h / 98% 48h, 但首次 + 复杂 1-2 周**. Expedited Review 限频 (~2 次/年, 关键发布前救命)
+7. **App Review 提审**: **Apple 官方公开 90% < 24h** (developer.apple.com/app-store/review/), 48h 数字 Apple 未公开 (业内估 ≥ 95% 但需 self-verify). 首次 + 复杂 case 仍可能 1-2 周. Expedited Review 限频 (~2 次/年, 关键发布前救命)
 8. **Release**: Manual / Automatic / Phased Release (7 天 1/2/5/10/20/50/100%, 可暂停 ≤30 天但**不能回滚**)
 
 **资深差异 (skip / optimize / add)**:
@@ -426,7 +426,7 @@ evidence: [T01-S001, T01-S005, T01-S013, T01-S015, T01-S016, T03-S001, T03-S004,
 
 2. **行业时效衰减极快 (12 月内必 update)**: 衰减最快 4 模块:
    - **Apple 政策** (年度 WWDC + 季度 ASC + iOS major. 强制 deadlines: Privacy Manifest 2024-05-01 / Anti-steering 2024-01 / DMA 2024-03-07 / iOS 26 SDK 2026-04-28)
-   - **国内法律 / 备案** (网信办算法备案 2025-2026 持续收紧, 2026-Q1 累计 800+; PIPL 实施细则持续)
+   - **国内法律 / 备案** (网信办算法备案 2025-2026 持续收紧, 2026-Q1 累计 796 备案 + 481 登记 (cac.gov.cn 公开数据); PIPL 实施细则持续)
    - **工具 / pricing** (AppsFlyer 在 ATT 后受冲击; Adapty / Superwall 抢 RevenueCat 中端市场 18-24 月)
    - **反垄断诉讼** (Epic v Apple anti-steering 上诉持续 2024-01 终审 + 2025-04 强化; EU DMA 演化)
 
@@ -442,6 +442,10 @@ evidence: [T01-S001, T01-S005, T01-S013, T01-S015, T01-S016, T03-S001, T03-S004,
 5. **voice_confidence: high** — §5.3 12 段中 5 段直接来自长 podcast / 法庭文档 / 公开 X long thread (high), 5 段转述 (medium-high), 2 段推断 (medium). 6 学派接近真行业人. **agent 用本 skill 时不要逐字搬样本句**, 当 register / 关键词参考用自己话重说
 
 6. **Apple 偶有"特殊渠道"** (大客户 Account Manager + WWDC 私下 alignment) 但**对 indie 不开放**. 不要假设有这个 channel — 99% dev 是单 Resolution Center 沟通
+
+7. **数字 / deadline / 拒审率必带来源 + 日期 + 置信度** (新, 由 codex 审计 2026-05-10 加): Apple 公开的数字 (e.g. 90% <24h review, transparency report 年度数字) 必引 developer.apple.com 原文 + 日期; 第三方数据 (Capgo / Sensor Tower / RevenueCat / Apptopia 等) 必标 "non-Apple 业内估计"; 拒绝率 20-40% 是业内 range, **Apple 不公开**. 任何 "X% 拒审" 没标"业内估计 (来源)" 都是 hallucination 风险
+
+8. **反垄断诉讼 + Apple 选择性执法不公开**: Apple 实际公开年度拒审数 (App Store transparency report) 但**不公开 reviewer 决策逻辑**. 反垄断诉讼 (Epic v Apple anti-steering 终审 2024-01 + 2025-04 强化 / EU DMA / Spotify) 各区结果不一致 (US 部分允许 link-out / EU 完全允许 + sideloading + CTC 0.50€/install / 大陆完全不允许). 跨区 dev 必查最新法律状态, 不假设 "海外通用规则"
 
 ---
 
@@ -512,7 +516,7 @@ evidence: [T01-S001, T01-S005, T01-S013, T01-S015, T01-S016, T03-S001, T03-S004,
 - **30% Tax 立场不对称**: 反 Apple 派 (Sweeney/DHH) vs 多数 indie (接受) — 蒸馏不偏任一派. 单 dev 抗议 = 没 ship 的现实
 - **国内一手长访谈稀薄**: 国内合规派多 B2B 公司 (鸟哥笔记 / 七麦 创始人个人 IP 弱); indie 通过硬地骇客嘉宾形式发声不是个人长博客 — voice 一手率受 verifier 限制
 - **Apple "特殊渠道" 不公开**: 大客户 Account Manager + WWDC 私下 alignment 真实存在但 indie 没有这个 channel — 蒸馏不假设有
-- **iOS 26 SDK 2026-04-28 + Age Rating 5 档 2026-01-31 + EU CTF 5% 2026-01** 等近期 deadlines 是关键 update 节点
+- **iOS 26 SDK 2026-04-28 + Age Rating 5 档 2026-01-31 + EU CTC 5% 2026-01** 等近期 deadlines 是关键 update 节点
 
 ---
 
@@ -524,7 +528,7 @@ evidence: [T01-S001, T01-S005, T01-S013, T01-S015, T01-S016, T03-S001, T03-S004,
 - **冷僻信号**: 候选心智模型 ≥ 6, playbook ≥ 10. iOS 上架数据厚 (Apple 官方 + .gov 反垄断诉讼一手 + indie 长博客 corpus + ASO 数据平台官方文章 + 国内 .gov.cn). 不是 thin niche, 是政策高变化 + signal-to-noise 中等
 - **关键 decay 时点**:
   - **3 月**: ASC monthly notes / WWDC 6 月 / iOS major 9 月
-  - **12 月**: 强制 deadlines (iOS 26 SDK 2026-04-28 / Age Rating 5 档 2026-01-31 / EU CTF 2026-01 / DMA 持续 / 国内备案持续收紧)
+  - **12 月**: 强制 deadlines (iOS 26 SDK 2026-04-28 / Age Rating 5 档 2026-01-31 / EU CTC 2026-01 / DMA 持续 / 国内备案持续收紧)
   - **24 月**: 工具 / pricing 变化 (Adapty / Superwall 主流化, AppsFlyer ATT 后转型, RevenueCat 仍是 dominant)
 - **本 skill 12 月后必须 update**: ios-app-launch 是 platform-specific + 高 decay 行业, 不 update 等于过期
 - **跳 sub-skills (用户指示)**: 节省 1 个 cron 周期, 总产出仍完整 (research notes + synthesis + SKILL.md + cli + 全套 quality check)
