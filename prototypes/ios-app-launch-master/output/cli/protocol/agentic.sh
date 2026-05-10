@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../lib/common.sh"
 
 INDUSTRY="iOS 应用上架大师 (审核 + ASO + 合规 + 国内/海外多区 + 付费策略)"
-DIM_COUNT=3
+DIM_COUNT=5
 
 usage() {
   cat <<EOF
@@ -29,10 +29,12 @@ explain() {
   cat <<'EOT'
 这个 Agentic Protocol 把这一行人面对新问题的研究维度结构化。
 
-研究维度 (3 个):
-  9.1 sub_skill 候选 (跳过, 用户指示)
-  9.2 cli 候选 (cli_writer.py 抽取)
-  9.3 Cumulative findings (跨 track 矛盾标注)
+研究维度 (5 个):
+  9.1 学派语境 (用户在 6 派哪派)
+  9.2 stage 边界 (0→1 上架 vs 已运营 vs scale-up)
+  9.3 区域语境 (US / EU / CN / 多区)
+  9.4 时效新鲜度 (12 月内 vs 老攻略)
+  9.5 学派分歧识别 (6 派会怎么各自答)
 
 来源: synthesis.md Section 9 + Section 1.
 EOT
@@ -49,24 +51,32 @@ for arg in "$@"; do
 done
 
 declare -a DIM_TITLES=(
-  "sub_skill 候选 (跳过, 用户指示)"
-  "cli 候选 (cli_writer.py 抽取)"
-  "Cumulative findings (跨 track 矛盾标注)"
+  "学派语境 (用户在 6 派哪派)"
+  "stage 边界 (0→1 上架 vs 已运营 vs scale-up)"
+  "区域语境 (US / EU / CN / 多区)"
+  "时效新鲜度 (12 月内 vs 老攻略)"
+  "学派分歧识别 (6 派会怎么各自答)"
 )
 declare -a DIM_QUESTIONS=(
-  ""
-  ""
-  ""
+  "用户用什么术语. 判断他在 Apple 官方派 / 海外 Indie / 大厂 release eng / ASO 优化派 / 反 Apple 反垄断 / 国内合规 哪派. 决定 §2 决策规则的应用版本"
+  "用户处于什么阶段. 0→1 第一次上架 / 已上架持续运营 / scale-up 多区扩展 / 拒审救火 / 政策适配"
+  "用户上架的目标区域. US 默认 Apple 单家 / EU DMA 后允许 link-out + sideloading / CN 4 件套 (ICP + 算法备案 + 游戏版号 + 8-10 应用市场) / 多区策略"
+  "用户依赖的政策 / 工具 / 数字是不是 12 月内的. iOS 政策高频变化 (年度 WWDC + 季度 ASC + iOS major). 老的需先 D3 复盘"
+  "同一问题 6 派会怎么各自答. 揭示分歧根源是学派身份 (Apple 派 vs 反 Apple) / GTM 哲学 (Indie audience-first vs ASO 数据驱动) / 区域 (海外 vs 国内) 而非 \"对错\""
 )
 declare -a DIM_SOURCES=(
-  ""
-  ""
-  ""
+  "看用户原话关键词. 例: \"ARG 5.1.1 条款\" → Apple 派; \"我又被拒了\" / \"ATP 提到\" → Indie 派; \"CPP A/B / keyword 排名\" → ASO 派; \"30% Tax / DMA\" → 反 Apple 派; \"ICP 备案 / 算法备案 / 8 大市场\" → 国内合规派"
+  "用户问题的具体动作 (e.g. \"我准备提审\" → 0→1; \"我又被拒了\" → 拒审救火; \"扩到 EU 还是 CN\" → 多区扩展; \"Privacy Manifest 怎么搞\" → 政策适配)"
+  "用户原话区域线索 (e.g. \"在国内上架\" → CN; \"Lemon Squeezy\" → 海外 indie; \"DMA 后\" → EU; \"多区策略\" → 多区)"
+  "用户引用的 deadline / 规则 / 工具版本. 例: \"Privacy Manifest 强制 2024-05-01\" / \"iOS 26 SDK 2026-04-28\" / \"Age Rating 5 档 2026-01-31\" / \"DMA 2024-03-07\" 都是 12 月内强制"
+  "§7 智识谱系 6 派对照矩阵 + §1.4 / 1.5 / 1.6 跨派 mental model"
 )
 declare -a DIM_OUTPUT_FORMATS=(
-  ""
-  ""
-  ""
+  "一行学派标签 (e.g. \"用户在 Indie 派, 最相关心智模型 1.6 拒绝是日常 + 决策规则 D2 Resolution Center 短回复\")"
+  "stage 标签 + 适用决策规则号 (e.g. \"stage = 拒审救火, 走 D2 + W2 工作流\")"
+  "区域 + 必应 obligations (e.g. \"区域 = CN, 必应 D5 + D7 + D8 国内 4 件套, 不能抄海外 link-out\")"
+  "时效标签 (新鲜 / 12 月内 / 老攻略需复盘) + 强制 deadline 提醒"
+  "列出 2-3 派的不同 take, 标\"分歧根源 = X\". 用户自己看选哪派, 不强加"
 )
 declare -a DIM_FINDINGS=()
 

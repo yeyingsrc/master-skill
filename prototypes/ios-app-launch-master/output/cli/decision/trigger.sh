@@ -12,7 +12,7 @@ usage() {
   cat <<EOF
 trigger.sh — ${TOPIC} 决策助手 for ${INDUSTRY}
 
-基于 8 条 playbook 规则的交互式决策评估。
+基于 9 条 playbook 规则的交互式决策评估。
 你描述情景, 工具帮你判断哪条规则适用, 并给推荐。
 
 USAGE:
@@ -28,7 +28,8 @@ explain() {
   cat <<'EOT'
 这个决策助手把 Trigger 主题下的 playbook 规则组合成交互树。
 
-基于 8 条规则:
+基于 9 条规则:
+  • 如果 D1 — 拒绝率治理: 降低拒绝率 + 快速恢复 → 则 - **trigger**: 准备首次提审 / app 重大版本
   • 如果 D2 — Rejection 处理: Resolution Center 短/具体/引 ARG → 则 - **trigger**: 收到 Apple 拒绝信
   • 如果 D3 — 政策时效跟踪节奏 → 则 - **trigger**: 持续运营 + WWDC / iOS major / ASC 更新
   • 如果 D4 — ASO 优化: 数据驱动 vs Audience 驱动 → 则 - **trigger**: 上架后 30-90 天 + 持续 iterate
@@ -53,6 +54,7 @@ for arg in "$@"; do
 done
 
 declare -a RULE_CONDITIONS=(
+  "D1 — 拒绝率治理: 降低拒绝率 + 快速恢复"
   "D2 — Rejection 处理: Resolution Center 短/具体/引 ARG"
   "D3 — 政策时效跟踪节奏"
   "D4 — ASO 优化: 数据驱动 vs Audience 驱动"
@@ -63,6 +65,7 @@ declare -a RULE_CONDITIONS=(
   "D9 — 工具栈选择: stage-appropriate"
 )
 declare -a RULE_ACTIONS=(
+  "- **trigger**: 准备首次提审 / app 重大版本"
   "- **trigger**: 收到 Apple 拒绝信"
   "- **trigger**: 持续运营 + WWDC / iOS major / ASC 更新"
   "- **trigger**: 上架后 30-90 天 + 持续 iterate"

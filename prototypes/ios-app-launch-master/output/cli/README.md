@@ -23,10 +23,9 @@
 
 | 脚本 | 作用 |
 |------|------|
-| `protocol/agentic.sh` | Agentic Protocol (3 维度) — 拿到新问题时按这一行的研究维度做功课 |
-| `decision/trigger.sh` | Trigger 决策树 (8 条规则) |
+| `protocol/agentic.sh` | Agentic Protocol (5 维度) — 拿到新问题时按这一行的研究维度做功课 |
+| `decision/trigger.sh` | Trigger 决策树 (9 条规则) |
 | `decision/topic-2.sh` | 持续 决策树 (1 条规则) |
-| `decision/topic-3.sh` | 拒绝 决策树 (1 条规则) |
 
 ## 设计与生成
 

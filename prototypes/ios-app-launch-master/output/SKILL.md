@@ -60,20 +60,30 @@ generator: "master-skill v1.3"
 
 ⚠️ 必须使用工具（WebSearch / WebFetch / agent-reach 等）获取真实信息。
 
-#### 维度 1: sub_skill 候选 (跳过, 用户指示)
-- 看什么: 
-- 在哪看: 
-- 输出: 
+#### 维度 1: 学派语境 (用户在 6 派哪派)
+- 看什么: 用户用什么术语. 判断他在 Apple 官方派 / 海外 Indie / 大厂 release eng / ASO 优化派 / 反 Apple 反垄断 / 国内合规 哪派. 决定 §2 决策规则的应用版本
+- 在哪看: 看用户原话关键词. 例: "ARG 5.1.1 条款" → Apple 派; "我又被拒了" / "ATP 提到" → Indie 派; "CPP A/B / keyword 排名" → ASO 派; "30% Tax / DMA" → 反 Apple 派; "ICP 备案 / 算法备案 / 8 大市场" → 国内合规派
+- 输出: 一行学派标签 (e.g. "用户在 Indie 派, 最相关心智模型 1.6 拒绝是日常 + 决策规则 D2 Resolution Center 短回复")
 
-#### 维度 2: cli 候选 (cli_writer.py 抽取)
-- 看什么: 
-- 在哪看: 
-- 输出: 
+#### 维度 2: stage 边界 (0→1 上架 vs 已运营 vs scale-up)
+- 看什么: 用户处于什么阶段. 0→1 第一次上架 / 已上架持续运营 / scale-up 多区扩展 / 拒审救火 / 政策适配
+- 在哪看: 用户问题的具体动作 (e.g. "我准备提审" → 0→1; "我又被拒了" → 拒审救火; "扩到 EU 还是 CN" → 多区扩展; "Privacy Manifest 怎么搞" → 政策适配)
+- 输出: stage 标签 + 适用决策规则号 (e.g. "stage = 拒审救火, 走 D2 + W2 工作流")
 
-#### 维度 3: Cumulative findings (跨 track 矛盾标注)
-- 看什么: 
-- 在哪看: 
-- 输出: 
+#### 维度 3: 区域语境 (US / EU / CN / 多区)
+- 看什么: 用户上架的目标区域. US 默认 Apple 单家 / EU DMA 后允许 link-out + sideloading / CN 4 件套 (ICP + 算法备案 + 游戏版号 + 8-10 应用市场) / 多区策略
+- 在哪看: 用户原话区域线索 (e.g. "在国内上架" → CN; "Lemon Squeezy" → 海外 indie; "DMA 后" → EU; "多区策略" → 多区)
+- 输出: 区域 + 必应 obligations (e.g. "区域 = CN, 必应 D5 + D7 + D8 国内 4 件套, 不能抄海外 link-out")
+
+#### 维度 4: 时效新鲜度 (12 月内 vs 老攻略)
+- 看什么: 用户依赖的政策 / 工具 / 数字是不是 12 月内的. iOS 政策高频变化 (年度 WWDC + 季度 ASC + iOS major). 老的需先 D3 复盘
+- 在哪看: 用户引用的 deadline / 规则 / 工具版本. 例: "Privacy Manifest 强制 2024-05-01" / "iOS 26 SDK 2026-04-28" / "Age Rating 5 档 2026-01-31" / "DMA 2024-03-07" 都是 12 月内强制
+- 输出: 时效标签 (新鲜 / 12 月内 / 老攻略需复盘) + 强制 deadline 提醒
+
+#### 维度 5: 学派分歧识别 (6 派会怎么各自答)
+- 看什么: 同一问题 6 派会怎么各自答. 揭示分歧根源是学派身份 (Apple 派 vs 反 Apple) / GTM 哲学 (Indie audience-first vs ASO 数据驱动) / 区域 (海外 vs 国内) 而非 "对错"
+- 在哪看: §7 智识谱系 6 派对照矩阵 + §1.4 / 1.5 / 1.6 跨派 mental model
+- 输出: 列出 2-3 派的不同 take, 标"分歧根源 = X". 用户自己看选哪派, 不强加
 
 研究完成后，把事实摘要内部整理（不直接展示给用户），进入 Step 3。用户应该看到的是经过框架处理的判断，不是 raw research dump。
 
@@ -298,14 +308,54 @@ generator: "master-skill v1.3"
 
 ## 工作流 / Pipeline
 
-(详见 03-workflows.md)
-
-- **W1 上架 0 → 1 主流程**: Apple Developer 注册 → Xcode 配置 → ASC App 创建 → archive & upload → TestFlight beta → 提审 → review (24h-7d) → release. indie 1-3 周, 大厂 release engineering team 流水线
-- **W2 Rejection 救火**: Resolution Center 短/具体/引 ARG 条款号. 95% rejection 是 metadata + 隐私披露错. Expedited Review 限频, 关键发布前救命. 学派分歧最大: indie 公开战 (DHH/Marco) vs 大厂私下 Apple Account Manager vs 国内 5.6 China Mainland 行政申诉
-- **W5 国内合规 4 件套**: ICP 备案 (工信部) → 算法备案 (网信办) → 游戏版号 (仅游戏, 极严) → 国内多市场审核. 跟海外完全不同体系. 4-12 周
-- **W8 持续维护**: WWDC 6 月 / iOS major 9 月 / ASC 月度 / 强制 deadlines. 12 月不更新 = 下架风险
-
 (完整 8 个 workflow + 学派分歧 + 失败模式 / 衰减点见 03-workflows.md)
+
+### W1 上架 0 → 1 主流程 (8 步 SOP)
+
+**Trigger**: 决定做 iOS app + Apple Developer 注册. **Output**: ASC = "Ready for Sale" + 真可下载 link.
+
+1. **Apple Developer 注册** ($99/yr 个人 / $299 org, 1-3 工作日 D-U-N-S 验证). 跳 → 无 ship 资格
+2. **Xcode 项目配置**: Bundle ID + Provisioning Profile + Distribution Certificate + Capabilities. **iOS 26 SDK + Xcode 26 强制 2026-04-28**
+3. **ASC App 创建 + Metadata**: name (30 字) + subtitle (30) + keyword (100) + description + nutrition labels + age rating (**2026-01-31 起新 5 档 4+/9+/13+/16+/18+ 强制**) + Pricing. 跳任一字段 → metadata reject (40% 拒审是 2.1 incomplete information)
+4. **Privacy Manifest + 三方 SDK**: 2024-05-01 强制 + 2025-02-12 起 SDK signed 强制. **Q1 2025 Apple 12% 拒审是 Privacy Manifest 违规**. 跳 → ITMS-91061/91065 直接拒
+5. **Archive & Upload**: Xcode Organizer / Fastlane (`gym` + `pilot`). 跳 Validate App → 浪费 1 review cycle
+6. **TestFlight Beta**: 100 internal 无审 / 10000 external **第一版必走 Beta App Review 24-48h**. 跳 → 直接 App Review 踩 crash 1-2 周回炉
+7. **App Review 提审**: **2026 平均 90% 24h / 98% 48h, 但首次 + 复杂 1-2 周**. Expedited Review 限频 (~2 次/年, 关键发布前救命)
+8. **Release**: Manual / Automatic / Phased Release (7 天 1/2/5/10/20/50/100%, 可暂停 ≤30 天但**不能回滚**)
+
+**资深差异 (skip / optimize / add)**:
+- *skip*: 海外 indie (Marco/Smith) 跳 ASA 启动 + ASO 顾问, 1.0 靠编辑推荐 + community shoutout
+- *optimize*: 大厂优化为 Fastlane + Bitrise/GHA mac runner + ASC API 全自动; indie 优化为 Xcode Organizer 手提 + 关键词预研 4-6 周前 (name+subtitle+100 字占搜索权重 ≈70%)
+- *add*: 资深 add 4 件**额外**步骤 — (a) 下架预演 build < 2h 可重传 (b) 法律审 ARG 用自家 app 对照 5.x 国别条款 (Marco DNA) (c) 关键词预研 4-6 周前 (d) 三方 SDK Privacy Manifest 提前 1 周对账 (30+ SDK 缺 1 拒)
+
+**学派 DNA**: 海外 indie 1-2 人 1-3 周 (Fastlane + RevenueCat + AppFollow free, 跳 CI/CD); 大厂 5-15 人 + release manager 专职 + Bitrise/Xcode Cloud + ASC API 全自动; 国内出海 海外栈 + 七麦 + 国内多市场并行, **备案前置 W5** (没跑通 ICP 不能提国区)
+
+**典型耗时**: 入门 1-3 周 / 资深 3-5 天. **关键失败模式**: Bundle ID 改 = 新 app / Privacy Manifest 漏 SDK / TF 公链当 production / metadata reject 后重传 binary / 首次 external TF 提前 < 1 天
+
+(详见 03-workflows.md W1 完整版)
+
+### W2 Rejection 救火
+
+Resolution Center 短/具体/引 ARG 条款号 (50-200 字, e.g. "已按 ARG 5.1.1(v) 修改隐私描述"). **95% rejection 是 metadata + 隐私披露错**, 改了重传即可. Expedited Review 限频, 关键发布前救命. 学派分歧: indie 公开战 (DHH/Marco) vs 大厂私下 Apple Account Manager vs 国内 5.6 China Mainland 行政申诉.
+
+**资深差异**: *skip*: 老 dev 跳"先 panic 公开吐槽"直接读 ARG 找条款; *optimize*: 大厂 release engineering 优化为 template 化 Resolution 回复 + Apple AM 私下渠道; *add*: 资深 add 自家 ARG 对照 spreadsheet (Marco DNA) + Expedited Review 节奏管理 (~2 次/年额外配额).
+
+### W5 国内合规 4 件套 (大陆出海 / 国内市场)
+
+**第 1 步 ICP 备案** (工信部 beian.miit.gov.cn) — App Store 国区 2024-04 起强制. 个人 / 公司主体, 4-8 周. 没备案号 = 国区下架.
+**第 2 步 算法备案** (网信办 beian.cac.gov.cn) — 涉及推荐算法 / 生成式 AI 强制 (2022-, 2026-Q1 累计 800+). 4-12 周.
+**第 3 步 游戏版号** (出版署 nppa.gov.cn, 仅游戏) — 极严, 6 月-2 年, 不保过.
+**第 4 步 国内应用市场审核** — 华为 / 小米 / OPPO / vivo / 应用宝 / 360 / 百度 各自后台 + 各自标准, 通常比 Apple 更严内容审核.
+
+跟海外完全不同体系. 4-12 周整体. 抄海外路径做大陆 = 死.
+
+**资深差异**: *skip*: 海外 indie 跳整个 W5 (不上国区即可, 失国内市场份额); *optimize*: 国内出海 dev 优化为 4 件套并行启动 + 海外栈 备案前置; *add*: 资深 add 国内代运营 + 多市场 metadata diff (8-10 市场各自审核标准, 不能一套 metadata 应对全部) 额外配置.
+
+### W8 持续维护 + 政策跟踪
+
+WWDC 6 月 (必看 "What's New in App Review" + "What's New in App Store Connect") / iOS major 9 月 (提前 30 天兼容性 test) / ASC 月度 release notes / 强制 deadlines (Privacy Manifest 2024-05-01 / Anti-steering 2024-01 / DMA 2024-03-07 / iOS 26 SDK 2026-04-28 / Age Rating 5 档 2026-01-31). **12 月不更新 = 政策变化 → app 下架** (反例).
+
+**资深差异**: *skip*: 老 dev 跳"等下次 ASC 通知"主动订阅 Apple Developer email + RSS; *optimize*: 大厂 release manager 优化为季度政策 review + cross-team alignment; *add*: 资深 add WWDC session 当周内部 share + 自家 SDK 列 Privacy Manifest diff + 强制 deadline 30 天前预演 (额外 30-60 工程小时).
 
 ---
 
