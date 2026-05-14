@@ -143,7 +143,7 @@
       "skill/prototypes/monetize-agents-master(AI 赚钱 — AI agent 商业化,本 skill 是写作者 / 内容人变现)"
     ],
     "overlap_assessment": "与 private-domain-ops 重叠 ~25%(都涉及读者沉淀 + 复购),但本 skill 主战场是 newsletter 而非微信生态,且更国际化。与 short-video-ads 几乎无重叠(文字 vs 视频)。与 monetize-agents 几乎无重叠(创作者经济 vs AI 商业化)。独立 skill 可行,但 SKILL.md 应当在 sub-skill 层把 'WeChat 公众号变现' 部分明确画清楚(也许沉淀到 private-domain-ops sub-skill 而非本 skill 主体)。"
-  ],
+  },
   "estimated_research_effort": {
     "track_01_figures": "medium-heavy (海外 + 国内合计 12-15 个,公开作品多但需精读)",
     "track_02_tools": "medium (5 大类,2025 default 较清晰)",

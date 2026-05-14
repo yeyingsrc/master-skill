@@ -146,7 +146,7 @@
       "skill/prototypes/xiaohongshu-ops-master(小红书运营 — 平台不同 / 形式不同 / 受众不同)"
     ],
     "overlap_assessment": "与 short-video-ads 重叠 ~10%(都涉及流量),但本 skill 完全不在公域内打,重点是 WeChat 内的承接 + 触达 + 转化 + 复购。与 douyin-live-commerce 重叠 ~15%(头部直播间常引流私域复购),但本 skill 不涉及直播运营本身。独立 skill。"
-  ],
+  },
   "estimated_research_effort": {
     "track_01_figures": "medium (8-12 个核心人物,大多公开作品多)",
     "track_02_tools": "medium-heavy (5 大类各 3-5 个 + 选型 rationale,SCRM 类工具多且功能高度同质)",
